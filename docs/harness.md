@@ -65,3 +65,9 @@ Same package (`CampfireKit`), same launch argument, same simulator model and OS,
 ## Known limits
 
 XCUITest only sees rows that are on screen, so the harness reads positions from the state label and does not assert on rows outside the window. Memory is `XCTMemoryMetric` (peak physical footprint).
+
+## Status on the device (17 Oct)
+
+Done and checked on the iPhone 12: signing and install of the smoke app, `xctrace` attach by process id, the App Launch trace (`launch_ms` reads about 600 ms for the smoke app), the Animation Hitches and Allocations recordings, and the exports in `summarize.py`. The whole XCUITest suite passed on an iPhone 17 simulator (6 tests, 0 failures), which also proved the state-label parsing and the `xcresult` reading. Not yet run on the phone: anything that taps. The test runner stops with "Timed out while enabling automation mode" until **Settings > Developer > Enable UI Automation** is switched on on the phone (and the phone is unlocked). Until then fling/stream hitches, fps and the hitch metric names in `summary.json` are untested on real frames.
+
+Rough edges: `time_to_40_rows_ms` includes XCUITest's launch and lookup overhead (about 3 s on top of the app's own launch), so compare builds, not absolute values. The Simulator reports no hitch or frame-rate metrics at all; on the phone, `xctest_hitch_metrics` lists whatever `XCTHitchMetric` returns. Peak memory from XCUITest is the peak physical footprint ("Memory Peak Physical"); Allocations gives the live heap at the end of its trace, not a peak.

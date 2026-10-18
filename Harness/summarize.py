@@ -148,6 +148,11 @@ def pick(metrics, test, *needles, convert=1.0):
     return None
 
 
+def hitch_metrics(metrics, test):
+    """Every XCTHitchMetric reading of a test (names and units as Xcode reports them), medians only."""
+    return {n: v["median"] for n, v in metrics.get(test, {}).items() if "hitch" in n.lower()}
+
+
 def to_ms(metrics, test, *needles):
     for name, v in metrics.get(test, {}).items():
         if all(n.lower() in name.lower() for n in needles):
@@ -169,20 +174,17 @@ def cmd_summary(args):
         },
         "time_to_40_rows_ms": to_ms(m, "testTimeTo40Rows", "clock"),
         "fling": {
-            "xctest_fps": pick(m, "testFling", "frame rate"),
-            "xctest_hitch_time_ratio": pick(m, "testFling", "hitch time ratio"),
-            "xctest_hitches_ms": pick(m, "testFling", "hitch", "duration"),
+            "xctest_hitch_metrics": hitch_metrics(m, "testFling"),
             "instruments": hitches(d / "fling.trace") if (d / "fling.trace").exists() else None,
         },
         "jump_ms": to_ms(m, "testJumpTo2500", "clock"),
         "load_older_ms": to_ms(m, "testLoadOlder", "clock"),
         "stream": {
-            "xctest_fps": pick(m, "testLiveStream", "frame rate"),
-            "xctest_hitch_time_ratio": pick(m, "testLiveStream", "hitch time ratio"),
+            "xctest_hitch_metrics": hitch_metrics(m, "testLiveStream"),
             "instruments": hitches(d / "stream.trace") if (d / "stream.trace").exists() else None,
         },
         "peak_memory_mb": {
-            "xctest_peak_physical": {t: pick(m, t, "memory", "peak") for t in
+            "xctest_peak_physical": {t: pick(m, t, "memory peak physical", convert=1/1000) for t in
                                      ("testLaunch", "testFling", "testJumpTo2500", "testLoadOlder", "testLiveStream")},
             "instruments_allocations": allocations(d / "memory.trace") if (d / "memory.trace").exists() else None,
         },
