@@ -8,7 +8,10 @@ enum Bar {
     static let jump = "Jump to 2500"
     static let older = "Load older"
     static let start = "Start stream"
+    static let textSize = "Text size +"
+    static let boostBurst = "Boost burst"
     static let streamDone = "Stream done"
-    /// The state label reads: first id, last id, loaded count, pinned.
-    static let stateKeys = ["first", "last", "loaded", "pinned"]
+    /// The state label reads, in exactly this form (PROMPT.md):
+    /// `first 49961 last 50000 loaded 40 pinned yes top 49990 y -12.5 ms 8`
+    static let stateKeys = ["first", "last", "loaded", "pinned", "top", "y", "ms"]
 }

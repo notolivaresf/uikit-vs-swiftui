@@ -1,41 +1,49 @@
 import XCTest
 
-/// One pass of each scenario, for Instruments. `Harness/record.sh` starts one of these tests, attaches `xctrace`
-/// to the app while the test waits (`attachWindow` seconds after the debug bar shows), and stops the trace when the
-/// scenario is over. They measure nothing themselves; the numbers come from the trace.
+/// One pass of each scenario, for Instruments. `Harness/record.sh` starts the app under `xctrace --launch`
+/// (so the trace covers the whole process), then runs one of these tests, which takes over the running app with
+/// `activate()` instead of launching it, plays the scenario and ends. They measure nothing themselves; the
+/// numbers come from the trace. Each scenario starts and ends with a few idle seconds so the trace's frames
+/// split cleanly into the scenario and the rest.
 final class TraceScenarios: BenchCase {
-    /// Time given to `xctrace` to attach before the scenario starts.
-    static let attachWindow: TimeInterval = 25
+    static let idle: TimeInterval = 3
 
-    private func launchAndWaitForAttach() {
-        app.launch()
+    private func takeOver() {
+        app.activate()
         waitForBar()
-        print("UVS_APP_UP")
-        Thread.sleep(forTimeInterval: Self.attachWindow)
         reset()
+        RunLoop.current.run(until: Date().addingTimeInterval(Self.idle))
+        print("UVS_SCENARIO_START")
+    }
+
+    private func done() {
+        RunLoop.current.run(until: Date().addingTimeInterval(Self.idle))
+        print("UVS_SCENARIO_DONE")
     }
 
     func testTraceFling() {
-        launchAndWaitForAttach()
+        takeOver()
         for _ in 0..<40 { list.swipeDown(velocity: .fast) }
         for _ in 0..<40 { list.swipeUp(velocity: .fast) }
-        print("UVS_SCENARIO_DONE")
+        done()
     }
 
     func testTraceStream() {
-        launchAndWaitForAttach()
+        takeOver()
         button(Bar.start).tap()
         XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
-        print("UVS_SCENARIO_DONE")
+        done()
     }
 
-    /// Memory: load a lot of rows (jump, older pages, a fling) so peak memory has something to show.
+    /// Memory: load a lot of rows (jump, older pages, a fling, the stream) so the heap has something to show.
     func testTraceMemory() {
-        launchAndWaitForAttach()
-        button(Bar.jump).tap()
-        _ = waitUntil { let s = self.state(); return s.first <= 2_500 && s.last >= 2_500 }
-        for _ in 0..<10 { button(Bar.older).tap() }
+        takeOver()
+        tap(Bar.jump)
+        for _ in 0..<10 { tap(Bar.older) }
         for _ in 0..<20 { list.swipeDown(velocity: .fast) }
-        print("UVS_SCENARIO_DONE")
+        reset()
+        button(Bar.start).tap()
+        XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
+        done()
     }
 }

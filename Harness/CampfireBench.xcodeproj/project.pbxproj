@@ -10,6 +10,7 @@
 		22557F31E21D222580A0DB6F /* BenchCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C8466C48F57DCD793780B0 /* BenchCase.swift */; };
 		6B803182834A7FF09EFEB151 /* ChatBenchmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */; };
 		796CADEFD2C7C4522FFC7929 /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453884A051D31B7ADBED488 /* Identifiers.swift */; };
+		982CD026F404B23811C71DB8 /* StressBenchmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C7C043CC61CA5F3EA97621 /* StressBenchmarks.swift */; };
 		EE8DF645A3A12DD30ADA7207 /* TraceScenarios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */; };
 /* End PBXBuildFile section */
 
@@ -19,6 +20,7 @@
 		47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceScenarios.swift; sourceTree = "<group>"; };
 		7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBenchmarks.swift; sourceTree = "<group>"; };
 		B1B84A031E6992EF69263781 /* CampfireBenchUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CampfireBenchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3C7C043CC61CA5F3EA97621 /* StressBenchmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressBenchmarks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -28,6 +30,7 @@
 				43C8466C48F57DCD793780B0 /* BenchCase.swift */,
 				7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */,
 				3453884A051D31B7ADBED488 /* Identifiers.swift */,
+				D3C7C043CC61CA5F3EA97621 /* StressBenchmarks.swift */,
 				47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */,
 			);
 			path = Tests;
@@ -111,6 +114,7 @@
 				22557F31E21D222580A0DB6F /* BenchCase.swift in Sources */,
 				6B803182834A7FF09EFEB151 /* ChatBenchmarks.swift in Sources */,
 				796CADEFD2C7C4522FFC7929 /* Identifiers.swift in Sources */,
+				982CD026F404B23811C71DB8 /* StressBenchmarks.swift in Sources */,
 				EE8DF645A3A12DD30ADA7207 /* TraceScenarios.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
