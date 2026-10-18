@@ -47,9 +47,19 @@ class BenchCase: XCTestCase {
         super.tearDown()
     }
 
+    /// testFling and testMemory run 1 iteration (plus XCTest's warm-up), the rest 5 (Fernando, 18 Oct: in smoke
+    /// round 8 testMemory took 19 min and testFling 12 min at 5; the fling and stream traces already give the
+    /// frames and hitches). Same for every build.
+    static let singleIterationTests: Set<String> = ["testFling", "testMemory"]
+
+    var iterationCount: Int {
+        let test = name.split(separator: " ").last.map { String($0.dropLast()) } ?? ""
+        return Self.singleIterationTests.contains(test) ? 1 : Self.iterations
+    }
+
     var options: XCTMeasureOptions {
         let o = XCTMeasureOptions()
-        o.iterationCount = Self.iterations
+        o.iterationCount = iterationCount
         return o
     }
 

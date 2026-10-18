@@ -274,6 +274,7 @@ def to_ms(metrics, test, *needles):
 
 
 ITERATIONS = 5
+ITERATIONS_BY_TEST = {"testFling": 1, "testMemory": 1}  # Fernando 18 Oct: 1 iteration for these two
 
 
 def results(*logs):
@@ -302,7 +303,7 @@ def results(*logs):
     # measure() runs one extra, first iteration that XCTest itself throws away (warm-up); drop its reading too,
     # so the app's numbers cover the same 5 iterations as the XCTest metrics.
     for test, vals in out.items():
-        if len(vals) == ITERATIONS + 1:
+        if len(vals) == ITERATIONS_BY_TEST.get(test, ITERATIONS) + 1:
             out[test] = vals[1:]
     return out
 
@@ -346,7 +347,7 @@ def cmd_summary(args):
     mem = lambda needle: pick(m, "testMemory", needle, convert=1/1000)
     s = {
         "device": "iPhone 12, iOS 26.0",
-        "iterations_per_test": 5,
+        "iterations_per_test": {"default": ITERATIONS, **ITERATIONS_BY_TEST},
         "launch_ms": {
             "cold_instruments_app_launch": stats(launches),
             "freshly_installed": not (d / "logs" / "launch-not-fresh.txt").exists(),

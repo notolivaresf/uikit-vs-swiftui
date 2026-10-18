@@ -1,7 +1,8 @@
 import XCTest
 
 /// Benchmarks for the installed app `campfire.bench`, launched with `-uvsBenchmark YES`.
-/// Five iterations per measure block; run the suite in 3 alternating rounds per build. The tests never differ
+/// Five iterations per measure block, except testFling and testMemory, which run one (Fernando, 18 Oct: they took
+/// 12 and 19 min in smoke round 8; the fling and stream traces already measure frames and hitches); run the suite in 3 alternating rounds per build. The tests never differ
 /// between the UIKit and SwiftUI builds.
 ///
 /// Times that count come from the app's own state label (`ms`: from the tap until its result is laid out, or
