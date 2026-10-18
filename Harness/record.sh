@@ -66,10 +66,14 @@ xctestrun="$(ls -t "$derived"/Build/Products/*.xctestrun | head -1)"
 xct=(xcodebuild test-without-building -xctestrun "$xctestrun" -destination "id=$device_udid")
 
 # xctrace with a hard wall-clock cap: perl sets an alarm and execs xctrace, so SIGALRM ends it after $1 seconds
-# even if it never finishes saving.
+# even if it never finishes saving. Run in the background, so the kill -INT that stops a recording must reach
+# xctrace itself: `exec` makes the background subshell become perl, and perl execs xcrun, which execs xctrace,
+# so $! is xctrace's pid (without it $! was the subshell, Ctrl-C never arrived and every trace ran to its time
+# limit). Perl also puts SIGINT back to default, which bash sets to ignored for background jobs. Call it only
+# with `&`: in the foreground the exec would replace this script.
 capped_xctrace() {
   local cap="$1"; shift
-  /usr/bin/perl -e '$t = shift; alarm $t; exec @ARGV or die "exec: $!"' "$cap" xcrun xctrace "$@"
+  exec /usr/bin/perl -e '$SIG{INT} = "DEFAULT"; $t = shift; alarm $t; exec @ARGV or die "exec: $!"' "$cap" xcrun xctrace "$@"
 }
 
 # Waits for the recording to start (xctrace prints "Ctrl-C to stop"), at most 120 s. Returns 1 if it never did.

@@ -4,3 +4,6 @@ DerivedData/
 *.xcresult
 .DS_Store
 build/
+__pycache__/
+*.pyc
+runs/smoke/
