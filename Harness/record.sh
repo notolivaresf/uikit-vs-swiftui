@@ -177,18 +177,19 @@ done
 [ -n "$app_path" ] || echo "launch samples ran on the installed copy (no --app-path), not freshly installed" | tee "$out/logs/launch-not-fresh.txt"
 echo "launch traces done"
 
-# 2. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
-#    rotation, boost burst, text selection and context menu (5 iterations each where measured).
-"${xct[@]}" -only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks \
-  -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
-echo "suites finished"
-
-# 3. Scenario traces, light instrument sets: Hitches for the hitches, Frame Lifetimes and Display so every
-#    frame is listed (Hitches alone lists only a sample of them). The Allocations heap trace (2 GB) only with
+# 2. Scenario traces, before the suites (after the suites, in smoke round 6, the fling trace's swipes
+#    did not scroll the app: 84 frames instead of about 4,300; run alone they scroll). Light instrument sets:
+#    Hitches for the hitches, Frame Lifetimes and Display so every frame is listed (Hitches alone lists only a sample of them). The Allocations heap trace (2 GB) only with
 #    --heap-trace; memory numbers come from testMemory.
 trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
 trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
 [ $heap_trace -eq 1 ] && trace_scenario testTraceMemory memory 200 Allocations
+
+# 3. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
+#    rotation, boost burst, text selection and context menu (5 iterations each where measured).
+"${xct[@]}" -only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks \
+  -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
+echo "suites finished"
 
 # 4. Numbers.
 python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" || fail "summarize"

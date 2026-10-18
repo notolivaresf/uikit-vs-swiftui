@@ -23,11 +23,11 @@ Steps, all in `runs/<build>/<round>/`:
 
 1. Build the tests once (`build-for-testing`); every later step runs `test-without-building`.
 2. Cold launch, 3 samples: stop the app, install it, 30 s idle, Instruments launches it (`launch.<n>.trace`, App Launch template, 25 s). 10 s in, when the launch is over, `TraceScenarios.testLaunchState` reads the app's own time to 40 rows from that same launch.
-3. The suites, 5 iterations per measured test (`bench.xcresult`, `logs/suite.log`): `ChatBenchmarks` and `StressBenchmarks`.
-4. Scenario traces: Instruments launches the app (`xctrace record --launch`, so the trace covers the whole process), the script waits for its pid, a `TraceScenarios` test takes over that app with `activate()` and plays one pass; afterwards the pid must be the same and the recording still running. Light instrument sets: `fling.trace` and `stream.trace` record Hitches + os_signpost, `memory.trace` Allocations. Each has a time limit that fits it (240, 150, 200 s) and a hard cap of limit + 300 s, after which xctrace is killed, so nothing hangs. A recording that fails to start ("Timed out waiting for device to boot", seen right after a UI test) is retried 3 times, the failed attempt kept under `logs/`.
+3. Scenario traces (before the suites: after them, in smoke round 6, the fling swipes did not scroll the app): Instruments launches the app (`xctrace record --launch`, so the trace covers the whole process), the script waits for its pid, a `TraceScenarios` test takes over that app with `activate()` and plays one pass; afterwards the pid must be the same and the recording still running. Light instrument sets: `fling.trace` and `stream.trace` record Hitches + Frame Lifetimes + Display (Hitches alone lists only a sample of the frames). The Allocations heap trace (`memory.trace`, about 2 GB) runs only with `--heap-trace`. Each has a time limit that fits it (240, 150, 200 s) and a hard cap of limit + 300 s, after which xctrace is killed, so nothing hangs. Before every recording a do-nothing UI test wakes the phone (xctrace fails with "Timed out waiting for device to boot" when the screen is dark); a recording that still fails to start is retried 3 times, the failed attempt kept under `logs/`.
+4. The suites, 5 iterations per measured test (`bench.xcresult`, `logs/suite.log`): `ChatBenchmarks` and `StressBenchmarks`.
 5. `summary.json` from `Harness/summarize.py`.
 
-Trace windows: each scenario prints `UVS_MARK start` and `UVS_MARK end` (phone wall clock); `summarize.py` lines them up with the trace's start date. Hitches and the hitch time ratio count over that whole window, so a stall can never cut itself out. Fling fps counts only frames inside UIKit's scroll intervals (os_signpost), per second of scrolling; if a trace has none, fps is missing and the round fails rather than using another window. Stream fps is frames per second from the Start stream tap until "Stream done".
+Trace windows: each scenario prints `UVS_MARK start` and `UVS_MARK end` (phone wall clock); `summarize.py` lines them up with the trace's start date. Hitches and the hitch time ratio count over that whole window, so a stall can never cut itself out. Fling fps is frames per second of drawing time: frames in the window divided by the union of their frame lifetimes, so idle time between swipes does not count. If the list moved less than 20 s in the window (80 fast swipes keep it moving a minute or more), the fling fps is missing and the round fails rather than reporting a number about nothing. Stream fps is frames per second from the Start stream tap until "Stream done".
 
 ## The tests
 
@@ -65,7 +65,9 @@ Same package (`CampfireKit`), launch argument, phone, Xcode and Release configur
 - `ms` is self-reported by each build; it is checked against XCUITest's clock (an upper bound) in the summary.
 - Copy is not checked to really copy (reading the pasteboard from the test runner raises a paste prompt), and text selection is recognised by the system edit menu appearing.
 - Boost burst can't be counted from the label; "room moved" is only a sign that the row grew.
-- The fling fps needs UIKit's scroll signposts in the trace; a build whose scrolling emits none gets no trace fps (the XCUITest scroll metrics depend on the same signposts).
+- The XCUITest scroll metrics need UIKit's scroll signposts; a build whose scrolling emits none gets no XCUITest scroll fps (the trace fps does not depend on them).
+- `XCTHitchMetric` read 0 in every smoke test, while Instruments counted hitches in the stream; trust the trace hitches.
+- Status 18 Oct: smoke round 6 passed (`runs/smoke/6`) but its fling trace, recorded after the suites, scrolled only 1.5 s; alone the same trace gave 4,260 frames, 74 s moving, 57 fps. The traces now run before the suites and the 20 s guard fails a fling that does not scroll; this order has not yet had a full smoke round (round 7 is next).
 - Trace windows line up the phone clock with the trace start date; the offset is a few milliseconds against 30 s and longer windows.
 - "Freshly installed" means installed again over the old copy; the app's data container is kept (the app stores nothing).
 

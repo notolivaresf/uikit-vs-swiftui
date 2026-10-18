@@ -205,6 +205,11 @@ def hitches(trace, log, scroll):
         n = sum(1 for st, _ in frames if any(a <= st < b for a, b in spans))
         out.update({"fps_over": used, "moving_s": round(active_s, 2),
                     "fps": round(n / active_s, 1) if active_s > 0 else None})
+        # 80 fast swipes keep the list moving for a minute or more; a few seconds means the swipes did not
+        # scroll the traced app (or its frames were not recorded), so the numbers would be about nothing.
+        if active_s < 20:
+            out["missing"] = f"the list moved only {active_s:.1f} s in the trace"
+            out["fps"] = None
     else:
         out["fps"] = round(out["frames_in_window"] / window_s, 1) if window_s > 0 else None
     return out
