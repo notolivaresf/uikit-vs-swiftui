@@ -35,9 +35,14 @@ Screenshots:
 - Open on the newest 40 of the 50,000 messages, at the bottom; first content within 1 s.
 - Reaching the top loads 40 older messages; the message you were looking at stays put (within 2 pt).
 - New messages come only from the live stream. If the last row is within 100 pt of the bottom, stay pinned; otherwise stay put and show a jump-to-bottom button.
+- "Jump to 2500" puts message 2,500's top just under the header, within 2 pt.
+- Text size follows Dynamic Type. Changing it re-lays out the room and keeps the row at the top in place (within 2 pt), or keeps the room pinned if it was.
+- Portrait and landscape. Rotating keeps the row at the top in place (within 2 pt), or keeps the room pinned if it was.
+- A row can change after it shows: new boosts make it grow and its pills wrap, and the room stays pinned or in place.
+- Long-press a message: select any range of its text and copy it; also show a context menu with Copy and Reply (Reply does nothing). Scrolling still works around it.
 
 ## Data and debug bar
 
 - All data comes from the Swift package in `CampfireKit/`; add it to the app as is and don't load or parse any file yourself. `FakeData.generate(size:)` builds the 50 people (user 1 is me) and 50,000 messages in memory from a fixed seed. `Windowing` gives pages of 40, `Grouping` says when a row is threaded, `FakeLiveFeed` plays the live stream (20 messages a second for 30 s), `Placeholder` draws the images.
 - Bodies are structured fields, never parsed text: paragraphs, mention (user id), emoji-only flag, code block, image, file (name, size), boosts (booster id, emoji).
-- Launched with `-uvsBenchmark YES`, show a debug bar with buttons "Reset", "Jump to 2500", "Load older", "Start stream", a "Stream done" label when the trace ends, and a state label: first id, last id, loaded count, pinned.
+- Launched with `-uvsBenchmark YES`, show a debug bar with buttons "Reset", "Jump to 2500", "Load older", "Start stream", "Text size +" (one Dynamic Type step larger, back to the default after the largest), "Boost burst" (adds 5 boosts to the newest message, one every 200 ms, from users 2 to 6 with 👍 🎉 🔥 ❤️ 😂), a "Stream done" label when the trace ends, and a state label: first id, last id, loaded count, pinned, top id and the y of its top in points.
