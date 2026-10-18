@@ -1,0 +1,24 @@
+name: CampfireBench
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+targets:
+  CampfireBenchUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
+schemes:
+  CampfireBench:
+    build:
+      targets:
+        CampfireBenchUITests: all
+    test:
+      config: Release
+      targets: [CampfireBenchUITests]

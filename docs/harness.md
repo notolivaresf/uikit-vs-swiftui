@@ -1,43 +1,31 @@
 # Benchmark harness
 
-The harness is a folder of XCTest sources, `Harness/` (`Identifiers.swift`, `ChatBenchmarks.swift`), that either app adds to its own UI test target. It compiles against iOS 17+ XCTest and has no app dependency; it talks to the app only through accessibility identifiers, launch arguments and signposts defined in `docs/spec.md` sections 6 to 8. It cannot run until an app exists. Last check: `swiftc -typecheck` on the iOS simulator SDK, no errors.
+`Harness/` is a small Xcode UI-test project (`project.yml`, generated with xcodegen, project checked in). It has no app target: it launches the app you already installed, by bundle id `campfire.bench`, with `-uvsBenchmark YES`, so neither build carries any harness code. It finds things only by what the user sees: the debug bar in `PROMPT.md` (buttons "Reset", "Jump to 2500", "Load older", "Start stream", the label "Stream done", and the state label: first id, last id, loaded count, pinned).
 
-## Using it
+## Running
 
-1. In the app's Xcode project add a UI Testing Bundle target and add `Harness/*.swift` to it (reference the folder, do not copy).
-2. The app launched by the tests receives `-uvsBenchmark YES -uvsDataset 50k`, shows the debug panel and uses the 50k dataset.
-3. Run release, one simulator (`simcap ensure` first), through the build slot, on the Max, never an Air (timing noise):
-   `buildslot run --label "uvs: <uikit|swiftui> bench" -- xcodebuild test -scheme <Scheme> -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -configuration Release -resultBundlePath <dir>/bench.xcresult`
-4. Shut the simulator down afterwards. Read the numbers from the result bundle: `xcrun xcresulttool get test-results metrics --path <dir>/bench.xcresult` (or `xcresulttool export`), per test: median and spread across the 5 iterations.
+1. Install the finished app on one simulator (Release configuration).
+2. `xcodebuild test -project Harness/CampfireBench.xcodeproj -scheme CampfireBench -destination 'platform=iOS Simulator,name=<device>' -resultBundlePath <dir>/bench.xcresult`
+3. Read the numbers: `xcrun xcresulttool get test-results metrics --path <dir>/bench.xcresult`. Each test has 5 iterations; compare medians and spread.
+
+To only compile the harness: `xcodebuild build-for-testing ... -destination 'generic/platform=iOS Simulator'`.
 
 ## What each test measures
 
 | Test | Scenario | Metrics |
 |---|---|---|
-| `testLaunchToFirstContent` | open | launch, clock, signpost `initialLoad` |
-| `testFlingScrollTopToBottom` | fling scroll | scroll-deceleration and drag hitch metrics, clock, memory, CPU |
-| `testJumpToOldMessage` | jump to old | clock, memory, signpost `jumpToMessage` |
-| `testPrependKeepsPosition` | prepend 500 | clock, memory, signpost `prepend`; fails if the row moves more than 2 pt |
-| `testLiveBurst` | live burst | CPU, memory, clock, drag metric, signpost `burstInsert`; fails if not pinned at the end |
-| `testJumpToBottomButton`, `testComposerSendsMessageAtBottom` | behaviour | not measured; a build that fails these is not comparable |
+| `testLaunch` | cold launch to the debug bar | launch, clock, memory |
+| `testFling` | 40 fast swipes towards older messages, 40 back | scroll deceleration and dragging (hitches), clock, CPU, memory |
+| `testJumpTo2500` | tap "Jump to 2500" until message 2,500 is loaded | clock, CPU, memory |
+| `testLoadOlder` | tap "Load older" until the first id drops | clock, CPU, memory |
+| `testLiveStream` | "Start stream" (20 messages a second for 30 s) until "Stream done"; must end pinned | CPU, memory, clock, dragging hitches |
 
-Every `measure` block uses 5 iterations (`XCTMeasureOptions.iterationCount`), starts with `chat.debug.reset`, and uses `XCTOSSignpostMetric.scrollDecelerationMetric` / `scrollDraggingMetric` for hitches. Hitch numbers on the Simulator are only comparable between our two builds on the same run day, not with a device.
+Every measure block starts with "Reset". Hitch numbers from the Simulator only compare two builds measured the same day, not a device.
 
-## Signposts the apps emit
+## Fairness
 
-Subsystem `dev.amazinghumans.uvs`, category `chat`, use `OSSignposter` (os framework, not a UI one):
+Same package (`CampfireKit`), same launch argument, same simulator model and OS, same Xcode, Release configuration, nothing else running. The tests are never edited per app; if a build needs a harness change, change it for both and re-run both.
 
-- `initialLoad`: process start of the chat view controller / view to first page laid out.
-- `jumpToMessage`: tap on the debug button to target row laid out.
-- `prepend`: data arrival to position restored.
-- `burstInsert`: one interval per applied batch of live messages.
+## Known limits
 
-## Ground rules for fairness
-
-Same dataset code (`CampfireKit`), same launch arguments, same simulator model and OS, same Xcode, release configuration, optimisation budget equal for both stacks, nothing else running (check `buildslot status`), the tests are never edited per app. If a build needs a harness change, the change is made in `Harness/` and both builds re-run.
-
-## Gaps to know
-
-- Hit-testing a 50k list through XCUITest only sees realized rows, so tests find rows by identifier after the app has scrolled them in; do not assert on rows out of the window.
-- `chat.debug.state` is the ground truth for position and range; cells' frames are only used for the prepend position check.
-- Memory is `XCTMemoryMetric(application:)` (physical footprint peak).
+XCUITest only sees rows that are on screen, so the harness reads positions from the state label and does not assert on rows outside the window. Memory is `XCTMemoryMetric` (peak physical footprint).
