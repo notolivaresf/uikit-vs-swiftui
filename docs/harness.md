@@ -77,3 +77,14 @@ Same package (`CampfireKit`), launch argument, phone, Xcode and Release configur
 ## The smoke app
 
 `Harness/SmokeApp/` is a throwaway UIKit app (bundle id `campfire.bench`, CampfireKit, a plain table) that fulfils only the debug-bar contract, to check the harness end to end. It looks nothing like Campfire on purpose and is never a starting point for a run. Build: `xcodebuild build -project Harness/SmokeApp/SmokeApp.xcodeproj -scheme SmokeApp -configuration Release -destination id=<udid> -derivedDataPath build/SmokeDD -allowProvisioningUpdates ...`; then pass its `.app` as `--app-path`. Smoke rounds go under `runs/smoke/` (not committed: the traces are large).
+
+## Launching a build
+
+`Harness/launch-build.sh <opus|sol> <uikit|swiftui> [--dry-run]` sets up and starts one isolated build. `--dry-run` only prints the folders, environment and exact command line; it creates nothing and calls no model. Fernando starts the real builds.
+
+- Folder: `~/uvs-builds/<model>-<side>` (override with `UVS_BUILDS_ROOT`), outside the workspace. A fresh git repo (`git archive` of tag `v0-inputs`, so no history and no harness in reach), branch `build/<model>-<side>`, one commit holding `.gitignore`, `LICENSE`, `PROMPT.md` (line 3, the Stack line, resolved to the chosen side), `Fixtures/`, `CampfireKit/`, `screenshots/`. No README, docs, Harness or runs. It refuses folders that already exist.
+- Opus: `CLAUDE_CONFIG_DIR=<empty dir>`, `claude -p ... --model claude-opus-5-5 --effort high --permission-mode bypassPermissions --disable-slash-commands --output-format stream-json --verbose`. An empty config dir means no memory, CLAUDE.md, hooks or skills, and also no login: export `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) before launching.
+- Sol: `CODEX_HOME=<empty dir>`, `codex exec -m gpt-6.1-sol -c model_reasoning_effort=high --json --dangerously-bypass-approvals-and-sandbox --ignore-rules`. Only `auth.json` is copied into the empty home; no config, memories or rules.
+- Transcript: stdout is saved to `runs/<model>-<side>/transcript.jsonl` (outside the build folder), with the arrival time of each line in `transcript.times`.
+- `runs/<model>-<side>/meta.json` is read from the transcript, never from the model: start, stop, wall seconds, idle gaps over 20 minutes (count, seconds), turns (Opus: assistant messages; Sol: agent messages plus commands, file changes and tool calls), builds total and failed (`xcodebuild`, `swift build`), commits, model version (Opus: reported by the session; Sol: the requested slug) and CLI version. This launch is the L1 session; L2 and L3 sessions are launched by hand from the committed result of the one before.
+- No time limit. This replaces the spec's "equal time limit" stop rule (Fernando, 18 Oct): each build runs until its model says it is done, and the times are recorded and compared.
