@@ -8,6 +8,8 @@
 2. `xcodebuild test -project Harness/CampfireBench.xcodeproj -scheme CampfireBench -destination 'platform=iOS Simulator,name=<device>' -resultBundlePath <dir>/bench.xcresult`
 3. Read the numbers: `xcrun xcresulttool get test-results metrics --path <dir>/bench.xcresult`. Each test has 5 iterations; compare medians and spread.
 
+**Rounds:** run the whole suite 3 times per build, alternating between the builds (A, B, A, B, A, B, each with a fresh simulator state), and report the median across rounds as the headline.
+
 To only compile the harness: `xcodebuild build-for-testing ... -destination 'generic/platform=iOS Simulator'`.
 
 ## What each test measures
@@ -15,12 +17,12 @@ To only compile the harness: `xcodebuild build-for-testing ... -destination 'gen
 | Test | Scenario | Metrics |
 |---|---|---|
 | `testLaunch` | cold launch to the debug bar | launch, clock, memory |
-| `testFling` | 40 fast swipes towards older messages, 40 back | scroll deceleration and dragging (hitches), clock, CPU, memory |
+| `testFling` | 40 fast swipes towards older messages, 40 back | frames per second and hitches (scroll deceleration and dragging metrics), CPU, memory, clock |
 | `testJumpTo2500` | tap "Jump to 2500" until message 2,500 is loaded | clock, CPU, memory |
 | `testLoadOlder` | tap "Load older" until the first id drops | clock, CPU, memory |
-| `testLiveStream` | "Start stream" (20 messages a second for 30 s) until "Stream done"; must end pinned | CPU, memory, clock, dragging hitches |
+| `testLiveStream` | "Start stream" (20 messages a second for 30 s) until "Stream done"; must end pinned | frames per second and hitches (dragging metric), CPU, memory, clock |
 
-Every measure block starts with "Reset". Hitch numbers from the Simulator only compare two builds measured the same day, not a device.
+Frames per second come from the system's scroll metrics ("Frame Rate"), hitches and the "Hitch Time Ratio" from the same metrics. Wall time is reported for launch, jump and load older. Every measure block starts with "Reset". Hitch numbers from the Simulator only compare two builds measured the same day, not a device.
 
 ## Fairness
 

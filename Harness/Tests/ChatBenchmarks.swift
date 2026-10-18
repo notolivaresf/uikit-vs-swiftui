@@ -1,7 +1,7 @@
 import XCTest
 
 /// Benchmarks for the installed app `campfire.bench`, launched with `-uvsBenchmark YES`.
-/// Five iterations per measure block. The tests never differ between the UIKit and SwiftUI builds.
+/// Five iterations per measure block; run the suite in 3 alternating rounds per build. The tests never differ between the UIKit and SwiftUI builds.
 final class ChatBenchmarks: XCTestCase {
     static let iterations = 5
     var app: XCUIApplication!
@@ -74,7 +74,7 @@ final class ChatBenchmarks: XCTestCase {
         }
     }
 
-    // 40 fast swipes towards older messages, then 40 back. Hitches come from the scroll metrics.
+    // 40 fast swipes towards older messages, then 40 back. Frame rate (fps) and hitches come from the scroll metrics.
     func testFling() {
         app.launch(); waitForBar()
         measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric, XCTOSSignpostMetric.scrollDraggingMetric,
