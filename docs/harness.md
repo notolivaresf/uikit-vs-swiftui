@@ -38,7 +38,7 @@ Trace windows: each scenario prints `UVS_MARK start` and `UVS_MARK end` (phone w
 | `testFling` | 10 fast swipes up the history, 10 back (same in the fling trace); measured from first swipe to last; 1 iteration | scroll fps (dragging, deceleration), `XCTHitchMetric`, CPU |
 | `testJumpTo2500` | tap Jump to 2500 | app `ms`; drift = abs(y) of row 2,500 (missing = another row is at the top) |
 | `testLoadOlder` | tap Load older | app `ms`; drift of the top row |
-| `testLiveStream` | Start stream until Stream done | hitches, CPU; must end pinned and add 600 messages |
+| `testLiveStream` | fresh launch (outside the measuring), then Start stream until Stream done; the stream plays once per launch, as PROMPT.md does not require a replay after Reset | hitches, CPU; must end pinned and add 600 messages |
 | `testMemory` | fresh launch, then jump to 2500, 2 older pages, 5 swipes down, reset, the 30 s stream, 5 swipes down (same in the memory trace); 1 iteration | peak physical footprint, growth from start to end |
 | `testTextSizeAtBottom` | 3 x Text size + at the bottom | app `ms` per step (re-layout), still pinned, hitches |
 | `testTextSizeMidScroll` | jump, then 3 x Text size + | app `ms`, drift of the top row per step, hitches |

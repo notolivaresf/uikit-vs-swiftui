@@ -83,10 +83,14 @@ final class ChatBenchmarks: BenchCase {
     }
 
     // 20 messages a second for 30 s; ends with the "Stream done" label and the list still pinned.
+    // Each iteration relaunches the app first, outside the measuring, so the stream plays once per launch:
+    // PROMPT.md does not require the stream to replay after Reset (decision 18 Oct, after opus-uikit r1, whose
+    // build plays it once per launch, counted 0 added on the second play).
     func testLiveStream() {
-        app.launch(); waitForBar()
         measure(metrics: hitchMetric + [XCTCPUMetric(application: app), XCTMemoryMetric(application: app), XCTClockMetric()],
                 options: manualOptions) {
+            app.launch(); waitForBar()
+            XCTAssertTrue(waitUntil(timeout: 30) { self.state().loaded >= 40 }, "fewer than 40 rows")
             reset()
             let before = state()
             startMeasuring()
