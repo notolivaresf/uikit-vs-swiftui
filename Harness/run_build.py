@@ -21,7 +21,7 @@ def now():
 
 
 def parse_claude(path):
-    turns, seen, model_version = 0, set(), None
+    turns, seen, model_version, init = 0, set(), None, {}
     cmds, results = {}, {}
     for line in open(path, errors="replace"):
         try:
@@ -31,6 +31,7 @@ def parse_claude(path):
         t = ev.get("type")
         if t == "system" and ev.get("subtype") == "init":
             model_version = ev.get("model") or model_version
+            init = {k: ev.get(k) for k in ("mcp_servers", "skills", "slash_commands", "agents", "plugins")}
         elif t == "assistant":
             msg = ev.get("message", {})
             mid = msg.get("id") or id(ev)
@@ -51,7 +52,7 @@ def parse_claude(path):
         if BUILD_RE.search(cmd):
             total += 1
             failed += 1 if results.get(tid) else 0
-    return dict(turns=turns, builds_total=total, builds_failed=failed, model_version=model_version)
+    return dict(turns=turns, builds_total=total, builds_failed=failed, model_version=model_version, isolation_check=init)
 
 
 def parse_codex(path):

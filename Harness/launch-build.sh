@@ -42,10 +42,11 @@ fi
 if [ "$MODEL" = opus ]; then
   REQUESTED="claude-opus-5-5"; EFFORT=high
   CLI_VERSION="$(claude --version 2>/dev/null || echo unknown)"
-  ENVLINE="CLAUDE_CONFIG_DIR=$CONFIG"
+  ENVLINE="(none: normal Claude config and login)"
   MODEL_CMD=(claude -p "$PROMPT_TEXT" --model "$REQUESTED" --effort "$EFFORT"
-             --permission-mode bypassPermissions --disable-slash-commands
-             --output-format stream-json --verbose)
+             --setting-sources project --strict-mcp-config --disable-slash-commands
+             --settings '{"autoMemoryEnabled":false}'
+             --permission-mode bypassPermissions --output-format stream-json --verbose)
 else
   REQUESTED="gpt-6.1-sol"; EFFORT=high
   CLI_VERSION="$(codex --version 2>/dev/null || echo unknown)"
@@ -65,10 +66,10 @@ if [ "$DRY" = 1 ]; then
   echo "contents:    ${INPUTS[*]}"
   echo "excluded:    README.md docs/ Harness/ runs/ build/ and all history"
   echo "PROMPT.md:   line 3 becomes: $STACK"
-  echo "config dir:  $CONFIG (empty; no memory, CLAUDE.md, hooks, skills)"
   if [ "$MODEL" = opus ]; then
-    echo "auth:        empty config dir means logged out; export CLAUDE_CODE_OAUTH_TOKEN (claude setup-token) before launching"
+    echo "isolation:   normal login kept; flags only: project settings only, no MCP, no skills, no auto memory"
   else
+    echo "config dir:  $CONFIG (empty; no memory, rules, config)"
     echo "auth:        only auth.json is copied from ~/.codex into the empty CODEX_HOME"
   fi
   echo "run dir:     $RUN (transcript.jsonl, stderr.log, meta.json)"
@@ -82,12 +83,12 @@ if [ "$DRY" = 1 ]; then
 fi
 
 # ---- real launch ----
-for d in "$BUILD" "$CONFIG" "$RUN"; do
+for d in "$BUILD" "$RUN"; do
   [ -e "$d" ] && { echo "refusing: $d already exists (every build starts from nothing)" >&2; exit 1; }
 done
 case "$BUILD" in "$HOME/olivares-burgos"*) echo "build folder must be outside ~/olivares-burgos" >&2; exit 1 ;; esac
 
-mkdir -p "$BUILD" "$CONFIG" "$RUN"
+mkdir -p "$BUILD" "$RUN"
 git -C "$REPO" archive "$TAG" "${INPUTS[@]}" | tar -x -C "$BUILD"
 python3 -I - "$BUILD/PROMPT.md" "$STACK" <<'PY'
 import sys
@@ -103,9 +104,9 @@ git -C "$BUILD" add -A
 git -C "$BUILD" -c user.name=uvs -c user.email=uvs@localhost commit -q -m "Inputs from $TAG ($SRC), stack: $SIDE"
 
 if [ "$MODEL" = sol ]; then
+  [ -e "$CONFIG" ] && { echo "refusing: $CONFIG already exists" >&2; exit 1; }
+  mkdir -p "$CONFIG"
   cp "$HOME/.codex/auth.json" "$CONFIG/auth.json"; chmod 600 "$CONFIG/auth.json"
   export CODEX_HOME="$CONFIG"
-else
-  export CLAUDE_CONFIG_DIR="$CONFIG"
 fi
 exec "${SUPERVISOR[@]}" "${MODEL_CMD[@]}"
