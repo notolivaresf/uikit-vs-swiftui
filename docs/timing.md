@@ -24,3 +24,7 @@ All of it is read from the run's session transcript, never from the run's own su
 | benchmark results | harness results after L3 (see `harness.md`) |
 
 "Done" is decided by a separate checker running the tests and the harness. Results go in `runs/`, one folder per build.
+
+## Where the performance numbers come from
+
+After L3, `Harness/record.sh` records each build on the same iPhone 12 (iOS 26.0) in 3 alternating rounds and writes `runs/<build>/<round>/summary.json` (see `harness.md` for how to run it and what each number means). The headline for a build is the median of the three rounds.
