@@ -1,0 +1,27 @@
+name: SmokeApp
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+packages:
+  CampfireKit:
+    path: ../../CampfireKit
+targets:
+  SmokeApp:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    dependencies:
+      - package: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: SmokeApp
+        DEVELOPMENT_TEAM: H8HSTBN8ZP
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: "1"

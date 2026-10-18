@@ -12,6 +12,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
         GENERATE_INFOPLIST_FILE: YES
+        DEVELOPMENT_TEAM: H8HSTBN8ZP
+        CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: minimal
 schemes:

@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22557F31E21D222580A0DB6F /* BenchCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C8466C48F57DCD793780B0 /* BenchCase.swift */; };
 		6B803182834A7FF09EFEB151 /* ChatBenchmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */; };
 		796CADEFD2C7C4522FFC7929 /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453884A051D31B7ADBED488 /* Identifiers.swift */; };
+		EE8DF645A3A12DD30ADA7207 /* TraceScenarios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3453884A051D31B7ADBED488 /* Identifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
+		43C8466C48F57DCD793780B0 /* BenchCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchCase.swift; sourceTree = "<group>"; };
+		47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceScenarios.swift; sourceTree = "<group>"; };
 		7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBenchmarks.swift; sourceTree = "<group>"; };
 		B1B84A031E6992EF69263781 /* CampfireBenchUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CampfireBenchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -21,8 +25,10 @@
 		60E913D77431766ABDB0E407 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				43C8466C48F57DCD793780B0 /* BenchCase.swift */,
 				7C19984CDC3B595F7C513474 /* ChatBenchmarks.swift */,
 				3453884A051D31B7ADBED488 /* Identifiers.swift */,
+				47C069DC8CC5E01ACBDF31D5 /* TraceScenarios.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -72,6 +78,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					A9B4B7AF30A98C79DAFE3C64 = {
+						DevelopmentTeam = H8HSTBN8ZP;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 38DC265B6E2071799170E061 /* Build configuration list for PBXProject "CampfireBench" */;
@@ -98,8 +108,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22557F31E21D222580A0DB6F /* BenchCase.swift in Sources */,
 				6B803182834A7FF09EFEB151 /* ChatBenchmarks.swift in Sources */,
 				796CADEFD2C7C4522FFC7929 /* Identifiers.swift in Sources */,
+				EE8DF645A3A12DD30ADA7207 /* TraceScenarios.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +241,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H8HSTBN8ZP;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -247,6 +261,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H8HSTBN8ZP;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
