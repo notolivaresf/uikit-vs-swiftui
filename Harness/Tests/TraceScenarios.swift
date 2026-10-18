@@ -41,8 +41,8 @@ final class TraceScenarios: BenchCase {
     // Window: from the first swipe to the last; fps counts only while the app is drawing (summarize.py).
     func testTraceFling() {
         takeOver()
-        for _ in 0..<40 { list.swipeDown(velocity: .fast) }
-        for _ in 0..<40 { list.swipeUp(velocity: .fast) }
+        for _ in 0..<10 { list.swipeDown(velocity: .fast) }
+        for _ in 0..<10 { list.swipeUp(velocity: .fast) }
         _ = settled()
         done()
     }
@@ -57,15 +57,18 @@ final class TraceScenarios: BenchCase {
         XCTAssertGreaterThanOrEqual(state().last - before.last, 600, "the stream should add 600 messages")
     }
 
-    /// Memory: load a lot of rows (jump, older pages, a fling, the stream) so the heap has something to show.
+    /// Memory: the same pass as ChatBenchmarks.testMemory (jump, 2 older pages, 5 swipes, reset, the stream,
+    /// 5 swipes), so the heap has something to show.
     func testTraceMemory() {
         takeOver()
         tap(Bar.jump)
-        for _ in 0..<10 { tap(Bar.older) }
-        for _ in 0..<20 { list.swipeDown(velocity: .fast) }
+        for _ in 0..<2 { tap(Bar.older) }
+        for _ in 0..<5 { list.swipeDown(velocity: .fast) }
         reset()
         button(Bar.start).tap()
         XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
+        for _ in 0..<5 { list.swipeDown(velocity: .fast) }
+        _ = settled()
         done()
     }
 }

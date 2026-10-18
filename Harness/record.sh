@@ -1,6 +1,6 @@
 #!/bin/bash
-# Records one benchmark round on a real iPhone: the XCUITest suites (ChatBenchmarks and StressBenchmarks, 5
-# iterations per test, numbers from the xcresult and the UVS_RESULT lines in the log) plus one Instruments
+# Records one benchmark round on a real iPhone: the XCUITest suites (ChatBenchmarks and StressBenchmarks, 3
+# iterations per test, fling and memory 1; numbers from the xcresult and the UVS_RESULT lines in the log) plus one Instruments
 # trace per scenario, then writes summary.json.
 #
 #   Harness/record.sh --build <name> --round <n> [--app-path <Release .app>] [--device <devicectl id>]
@@ -190,7 +190,7 @@ trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
 [ $heap_trace -eq 1 ] && trace_scenario testTraceMemory memory 200 Allocations
 
 # 3. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
-#    rotation, boost burst, text selection and context menu (5 iterations each where measured).
+#    rotation, boost burst, text selection and context menu (3 iterations each where measured; fling and memory 1).
 "${xct[@]}" -only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks \
   -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
 echo "suites finished"

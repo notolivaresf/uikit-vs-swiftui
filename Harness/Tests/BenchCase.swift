@@ -32,7 +32,7 @@ struct AppState: Equatable {
 
 /// Shared helpers: finds things only by what the user sees (the debug bar in PROMPT.md).
 class BenchCase: XCTestCase {
-    static let iterations = 5
+    static let iterations = 3
     var app: XCUIApplication!
 
     override func setUp() {
@@ -47,9 +47,10 @@ class BenchCase: XCTestCase {
         super.tearDown()
     }
 
-    /// testFling and testMemory run 1 iteration (plus XCTest's warm-up), the rest 5 (Fernando, 18 Oct: in smoke
-    /// round 8 testMemory took 19 min and testFling 12 min at 5; the fling and stream traces already give the
-    /// frames and hitches). Same for every build.
+    /// testFling and testMemory run 1 iteration (plus XCTest's warm-up), every other measured test 3 (Fernando,
+    /// 18 Oct: a round of about 1 h was too long; in smoke round 8, at 5 iterations and 40 + 40 swipes,
+    /// testMemory took 19 min and testFling 12 min; the fling and stream traces already give the frames and
+    /// hitches). Same for every build.
     static let singleIterationTests: Set<String> = ["testFling", "testMemory"]
 
     var iterationCount: Int {

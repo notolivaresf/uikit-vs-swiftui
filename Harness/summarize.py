@@ -205,9 +205,10 @@ def hitches(trace, log, scroll):
         n = sum(1 for st, _ in frames if any(a <= st < b for a, b in spans))
         out.update({"fps_over": used, "moving_s": round(active_s, 2),
                     "fps": round(n / active_s, 1) if active_s > 0 else None})
-        # 80 fast swipes keep the list moving for a minute or more; a few seconds means the swipes did not
-        # scroll the traced app (or its frames were not recorded), so the numbers would be about nothing.
-        if active_s < 20:
+        # 20 fast swipes keep the list moving about 19 s (smoke rounds 7 and 8: 80 swipes, 74.5 s moving,
+        # about 0.93 s a swipe); under 5 s means the swipes did not scroll the traced app (or its frames were
+        # not recorded), so the numbers would be about nothing. Was 20 s for 80 swipes (Fernando, 18 Oct).
+        if active_s < MIN_MOVING_S:
             out["missing"] = f"the list moved only {active_s:.1f} s in the trace"
             out["fps"] = None
     else:
@@ -273,7 +274,8 @@ def to_ms(metrics, test, *needles):
     return None
 
 
-ITERATIONS = 5
+ITERATIONS = 3
+MIN_MOVING_S = 5  # fling trace guard for 10 + 10 swipes
 ITERATIONS_BY_TEST = {"testFling": 1, "testMemory": 1}  # Fernando 18 Oct: 1 iteration for these two
 
 

@@ -1,8 +1,9 @@
 import XCTest
 
 /// Benchmarks for the installed app `campfire.bench`, launched with `-uvsBenchmark YES`.
-/// Five iterations per measure block, except testFling and testMemory, which run one (Fernando, 18 Oct: they took
-/// 12 and 19 min in smoke round 8; the fling and stream traces already measure frames and hitches); run the suite in 3 alternating rounds per build. The tests never differ
+/// Three iterations per measure block, except testFling and testMemory, which run one pass of a representative
+/// heavy session (Fernando, 18 Oct: at 5 iterations they took 12 and 19 min in smoke round 8; the fling and
+/// stream traces already measure frames and hitches); run the suite in 3 alternating rounds per build. The tests never differ
 /// between the UIKit and SwiftUI builds.
 ///
 /// Times that count come from the app's own state label (`ms`: from the tap until its result is laid out, or
@@ -32,7 +33,7 @@ final class ChatBenchmarks: BenchCase {
         }
     }
 
-    // 40 fast swipes towards older messages, then 40 back. Frame rate (fps) and hitches come from the scroll
+    // 10 fast swipes towards older messages, then 10 back (40 + 40 before Fernando's 18 Oct change). Frame rate (fps) and hitches come from the scroll
     // metrics, which only count while a scroll is moving.
     func testFling() {
         app.launch(); waitForBar()
@@ -41,8 +42,8 @@ final class ChatBenchmarks: BenchCase {
                 options: manualOptions) {
             reset()
             startMeasuring()
-            for _ in 0..<40 { list.swipeDown(velocity: .fast) }
-            for _ in 0..<40 { list.swipeUp(velocity: .fast) }
+            for _ in 0..<10 { list.swipeDown(velocity: .fast) }
+            for _ in 0..<10 { list.swipeUp(velocity: .fast) }
             stopMeasuring()
         }
     }
@@ -108,14 +109,14 @@ final class ChatBenchmarks: BenchCase {
             _ = settled()
             startMeasuring()
             tap(Bar.jump)
-            for _ in 0..<10 { tap(Bar.older) }
-            for _ in 0..<20 { list.swipeDown(velocity: .fast) }
+            for _ in 0..<2 { tap(Bar.older) }
+            for _ in 0..<5 { list.swipeDown(velocity: .fast) }
             reset()
             let before = state()
             button(Bar.start).tap()
             XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
             XCTAssertGreaterThanOrEqual(state().last - before.last, 600, "the stream should add 600 messages")
-            for _ in 0..<20 { list.swipeDown(velocity: .fast) }
+            for _ in 0..<5 { list.swipeDown(velocity: .fast) }
             _ = settled()
             stopMeasuring()
             app.terminate()
