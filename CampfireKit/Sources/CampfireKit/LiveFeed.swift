@@ -38,8 +38,8 @@ public struct FakeLiveFeed: Sendable {
         var typing: Set<UserID> = []
         for i in 0..<total {
             let at = Double(i) / messagesPerSecond
-            if rng.chance(0.3) { author = rng.pick(others) }
-            if rng.chance(0.05), !typing.contains(author) {
+            if rng.chance(0.3) { author = rng.chance(0.1) ? dataset.currentUserID : rng.pick(others) }
+            if rng.chance(0.05), author != dataset.currentUserID, !typing.contains(author) {
                 typing.insert(author)
                 events.append(.init(at: max(0, at - 0.3), event: .typingStarted(author)))
             }
@@ -50,7 +50,7 @@ public struct FakeLiveFeed: Sendable {
             if rng.chance(0.1), nextID > 1 {
                 let target = rng.int(max(1, nextID - 40)...nextID)
                 events.append(.init(at: at + 0.01, event: .boost(messageID: target,
-                    Boost(id: boostID, boosterID: rng.pick(others), content: rng.pick(Corpus.reactions)))))
+                    Boost(id: boostID, boosterID: rng.pick(others), content: FakeData.boostContent(&rng)))))
                 boostID += 1
             }
             nextID += 1

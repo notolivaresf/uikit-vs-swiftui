@@ -1,5 +1,5 @@
 import Testing
-let goldenSum = 323580392
+let goldenSum = 897765117
 import Foundation
 @testable import CampfireKit
 
@@ -13,10 +13,12 @@ import Foundation
     }
 
     @Test func prefixStable() {
-        // A bigger dataset starts with the smaller one, so 1k results are comparable to 50k results.
+        // A bigger dataset starts with the smaller one (except the scripted newest page), so 1k results are
+        // comparable to 50k results.
         let small = FakeData.generate(count: 1_000).messages
         let big = FakeData.generate(count: 3_000).messages
-        #expect(Array(big.prefix(1_000)) == small)
+        let keep = 1_000 - FakeData.showcaseCount
+        #expect(Array(big.prefix(keep)) == Array(small.prefix(keep)))
     }
 
     @Test func goldenFingerprint() {
@@ -81,7 +83,9 @@ import Foundation
         #expect(msgs.count == 600)
         #expect(msgs.first?.id == 101)
         #expect(msgs.last?.id == 700)
-        #expect(msgs.allSatisfy { $0.creatorID != d.currentUserID })
+        let mine = msgs.filter { $0.creatorID == d.currentUserID }.count
+        #expect(mine > 0 && mine < 150)
+        #expect(msgs.contains { $0.mentionedUserIDs.contains(d.currentUserID) })
         #expect(a.script.last!.at <= 30.1)
         #expect(zip(a.script, a.script.dropFirst()).allSatisfy { $0.at <= $1.at })
     }
@@ -92,6 +96,45 @@ import Foundation
         var n = 0
         for await e in feed.play() { if case .message = e { n += 1 } }
         #expect(n == 20)
+    }
+}
+
+@Suite struct ShowcaseTests {
+    @Test func lastPageHoldsEveryKind() {
+        for count in [1_000, 10_000] {
+            let d = FakeData.generate(count: count)
+            let page = Array(Windowing.lastPage(d.messages))
+            #expect(page.count == 40)
+            let p = Grouping.presentations(of: d.messages, currentUserID: 1).suffix(40)
+            let pres = Array(p)
+            func ids(_ f: (Message, MessagePresentation) -> Bool) -> [Int] {
+                zip(page, pres).filter { f($0, $1) }.map { $0.0.id }
+            }
+            func isCode(_ m: Message) -> Bool { m.blocks.contains { if case .code = $0 { true } else { false } } }
+            let kinds: [(String, [Int])] = [
+                ("plain short", ids { m, _ in m.attachment == nil && m.blocks.count == 1 && !m.isEmojiOnly && m.plainText.utf8.count < 60 }),
+                ("long two paragraphs", ids { m, _ in m.plainText.contains("\n\n") && m.plainText.utf8.count > 200 }),
+                ("threaded", ids { _, x in x.isThreaded }),
+                ("mine", ids { _, x in x.isMine }),
+                ("mention of me", ids { _, x in x.mentionsMe }),
+                ("mention of other", ids { m, _ in m.mentionedUserIDs.contains { $0 != 1 } }),
+                ("image with boosts", ids { m, _ in if case .image? = m.attachment { !m.boosts.isEmpty } else { false } }),
+                ("code", ids { m, _ in isCode(m) }),
+                ("file", ids { m, _ in if case .file? = m.attachment { true } else { false } }),
+                ("emoji only", ids { m, _ in m.isEmojiOnly }),
+                ("text boost", ids { m, _ in m.boosts.contains { $0.content.contains { $0.isLetter || $0 == "+" } } }),
+                ("day separator", Array(zip(page, pres).dropFirst().filter { $1.isFirstOfDay }.map { $0.0.id })),
+                ("many boosts", ids { m, _ in m.boosts.count >= 8 }),
+            ]
+            for (name, found) in kinds { if count == 1_000 { print("kind \(name): \(found)") }; #expect(!found.isEmpty, "missing \(name) at \(count)") }
+            #expect(zip(page, page.dropFirst()).allSatisfy { $0.id + 1 == $1.id && $0.createdAt <= $1.createdAt })
+            #expect(page.last?.id == count)
+        }
+    }
+
+    @Test func boostsAreShort() {
+        let d = FakeData.generate(count: 10_000)
+        #expect(d.messages.allSatisfy { $0.boosts.allSatisfy { $0.content.count <= 16 } })
     }
 }
 
@@ -110,8 +153,14 @@ import Foundation
         let boosts = pct { !$0.boosts.isEmpty }
         print("mix %: long \(long) image \(image) code \(code) mention \(mention) boosts \(boosts)")
         #expect(d.messages.count == 50_000 && d.users.count == 50)
+        let mine = pct { $0.creatorID == FakeData.currentUserID }
+        let mentionMe = Double(d.messages.filter { $0.mentionedUserIDs.contains(1) }.count) / Double(d.messages.filter { !$0.mentionedUserIDs.isEmpty }.count) * 100
+        let textBoosts = Double(d.messages.flatMap(\.boosts).filter { $0.content.contains { $0.isLetter || $0 == "+" } }.count) / Double(d.messages.flatMap(\.boosts).count) * 100
+        print("mine \(mine) mentionsOfMe/mentions \(mentionMe) textBoosts \(textBoosts)")
         #expect(abs(image - 6) < 1 && abs(code - 3) < 1 && abs(mention - 5) < 1 && abs(boosts - 8) < 1)
-        #expect(long > 4 && long < 12)
+        #expect(abs(long - 8) < 1)
+        #expect(abs(mine - 10) < 1)
+        #expect(abs(mentionMe - 40) < 5 && abs(textBoosts - 20) < 3)
         #expect(d.messages[0].createdAt >= FakeData.epoch)
         #expect(Windowing.pageSize == 40)
         #expect(Grouping.threadWindow == 300)
