@@ -3,9 +3,14 @@
 # iterations per test, numbers from the xcresult and the UVS_RESULT lines in the log) plus one Instruments
 # trace per scenario, then writes summary.json.
 #
-#   Harness/record.sh --build <name> --round <n> [--device <devicectl id>] [--udid <xcodebuild id>] [--app campfire.bench]
+#   Harness/record.sh --build <name> --round <n> [--app-path <Release .app>] [--device <devicectl id>]
+#                     [--udid <xcodebuild id>] [--app campfire.bench] [--heap-trace]
 #
-# Output: runs/<build>/<round>/{bench.xcresult, launch.trace, fling.trace, stream.trace, memory.trace, summary.json, logs/}
+# --app-path: the build's Release .app; it is installed again before each cold launch sample, so every launch
+# is the first after an install (the spec's "freshly installed"). Without it the launches still run cold after
+# 30 s idle, but on the copy already installed, and the summary says so.
+#
+# Output: runs/<build>/<round>/{launch.<n>.trace, bench.xcresult, fling.trace, stream.trace, memory.trace, summary.json, logs/}
 # Refuses a round folder that already exists (every run is kept). Exits non-zero when any step fails: a test
 # failure, a trace that did not record, or a trace that had to be killed. logs/failures.txt says which.
 #
@@ -17,7 +22,8 @@
 # Run it through the build queue: buildslot run --label "uvs: record" -- Harness/record.sh ...
 set -u
 
-build=""; round=""; app="campfire.bench"
+build=""; round=""; app="campfire.bench"; app_path=""
+LAUNCH_SAMPLES=3; heap_trace=0
 device_core="73FC3857-7993-59CC-8A8E-34FB2E08AE71"   # devicectl id (iPhone 12, iOS 26.0)
 device_udid="00008101-00062D410CE9003A"              # xctrace / xcodebuild id of the same phone
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
@@ -28,10 +34,13 @@ while [ $# -gt 0 ]; do
     --device) device_core="$2"; shift 2;;
     --udid) device_udid="$2"; shift 2;;
     --app) app="$2"; shift 2;;
+    --app-path) app_path="$2"; shift 2;;
+    --heap-trace) heap_trace=1; shift;;
     *) echo "unknown option $1" >&2; exit 2;;
   esac
 done
 if [ -z "$build" ] || [ -z "$round" ]; then echo "usage: record.sh --build <name> --round <n>" >&2; exit 2; fi
+if [ -n "$app_path" ] && [ ! -d "$app_path" ]; then echo "no app at $app_path" >&2; exit 2; fi
 
 here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$here/.." && pwd)"
@@ -79,6 +88,13 @@ check_trace() {
   if [ ! -d "$out/$name.trace" ]; then fail "$name trace: no trace file"; fi
 }
 
+# Wakes the phone: a UI test run turns the screen on. xctrace on a dark phone waits for it to "boot" and
+# gives up, so every recording starts right after this (TraceScenarios.testWake, a test that does nothing).
+wake() {
+  "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testWake >>"$out/logs/wake.log" 2>&1 \
+    || echo "wake test failed (logs/wake.log)" >&2
+}
+
 # Starts a recording in the background and waits until it runs: name $1, time limit $2 seconds, then the
 # xctrace options. Right after a UI test the phone sometimes answers "Timed out waiting for device to boot", so
 # it tries 3 times; a failed attempt's partial trace is moved aside, never deleted. Sets trace_pid; returns 1
@@ -87,6 +103,7 @@ start_recording() {
   local name="$1" limit="$2"; shift 2
   local xlog="$out/logs/$name.xctrace.log" attempt
   for attempt in 1 2 3; do
+    wake
     capped_xctrace $((limit + FINALISE_S)) record --device "$device_udid" "$@" \
       --time-limit "${limit}s" --no-prompt --output "$out/$name.trace" \
       --launch -- "$app" -uvsBenchmark YES >"$xlog" 2>&1 &
@@ -112,41 +129,66 @@ trace_scenario() {
   fi
   # The test must take over the app Instruments launched, not start its own: wait until it is running
   # (each devicectl call takes a couple of seconds, so 30 tries is about a minute).
-  local tries=0
-  until [ -n "$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")" ] || [ $tries -ge 30 ]; do
+  local tries=0 pid_before="" pid_after=""
+  until [ -n "$pid_before" ] || [ $tries -ge 30 ]; do
+    pid_before="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
     tries=$((tries + 1))
   done
+  if [ -z "$pid_before" ]; then
+    fail "$name trace: the app Instruments launched never showed up"
+    kill -INT "$trace_pid" 2>/dev/null; wait "$trace_pid"; return
+  fi
   "${xct[@]}" -only-testing:"CampfireBenchUITests/TraceScenarios/$test" \
     -resultBundlePath "$out/logs/$name.xcresult" >"$out/logs/$name.test.log" 2>&1 \
     || fail "$name scenario test $test (logs/$name.test.log)"
+  # The scenario must have run in the traced process, start to end: same pid after the test, recording alive.
+  pid_after="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
+  [ "$pid_after" = "$pid_before" ] || fail "$name trace: the traced app (pid $pid_before) is gone or replaced (now '$pid_after')"
+  kill -0 "$trace_pid" 2>/dev/null || fail "$name trace: the recording ended before the scenario did"
   grep -q "Reached specified time limit" "$xlog" && fail "$name trace: time limit hit before the scenario ended"
   kill -INT "$trace_pid" 2>/dev/null
   wait "$trace_pid"
   check_trace "$name" $?
 }
 
-# 1. The suites: launch, time to 40 rows, fling, jump, load older, stream, memory; text size, rotation,
-#    boost burst, text selection and context menu (5 iterations each where measured).
+# 1. Cold launches, first: for each sample the app is stopped, installed again (--app-path), the phone is left
+#    idle 30 s, and Instruments launches it (App Launch template). 10 s in, when the launch is over, a UI test
+#    reads the app's own time to the first 40 rows from that same launch (TraceScenarios.testLaunchState).
+for n in $(seq 1 $LAUNCH_SAMPLES); do
+  pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
+  [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
+  if [ -n "$app_path" ]; then
+    xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.$n.log" 2>&1 \
+      || fail "install before launch $n (logs/install.$n.log)"
+  fi
+  sleep 30
+  if start_recording "launch.$n" 25 --template "App Launch"; then
+    sleep 10
+    "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
+      -resultBundlePath "$out/logs/launch.$n.xcresult" >"$out/logs/launch.$n.test.log" 2>&1 \
+      || fail "launch $n: time to 40 rows (logs/launch.$n.test.log)"
+    wait "$trace_pid"; status=$?
+    # The App Launch recording ends at its time limit; that is expected here, not a failure.
+    check_trace "launch.$n" $status
+  else
+    fail "launch $n trace: recording never started"
+  fi
+done
+[ -n "$app_path" ] || echo "launch samples ran on the installed copy (no --app-path), not freshly installed" | tee "$out/logs/launch-not-fresh.txt"
+echo "launch traces done"
+
+# 2. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
+#    rotation, boost burst, text selection and context menu (5 iterations each where measured).
 "${xct[@]}" -only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks \
   -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
 echo "suites finished"
 
-# 2. Cold launch trace, after the phone has been idle 30 s (spec): Instruments starts the app itself.
-xcrun devicectl device process terminate --device "$device_core" --pid "$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")" >/dev/null 2>&1
-sleep 30
-if start_recording launch 15 --template "App Launch"; then
-  wait "$trace_pid"
-else
-  fail "launch trace: recording never started"; false
-fi
-check_trace launch $?
-echo "launch trace done"
-
-# 3. Scenario traces, light instrument sets. Hitches gives frames and hitches; os_signpost gives UIKit's scroll
-#    intervals (fps counts only while a scroll moves); Allocations runs from process start for the heap.
-trace_scenario testTraceFling fling 240 Hitches os_signpost
-trace_scenario testTraceStream stream 150 Hitches os_signpost
-trace_scenario testTraceMemory memory 200 Allocations
+# 3. Scenario traces, light instrument sets: Hitches for the hitches, Frame Lifetimes and Display so every
+#    frame is listed (Hitches alone lists only a sample of them). The Allocations heap trace (2 GB) only with
+#    --heap-trace; memory numbers come from testMemory.
+trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
+trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
+[ $heap_trace -eq 1 ] && trace_scenario testTraceMemory memory 200 Allocations
 
 # 4. Numbers.
 python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" || fail "summarize"

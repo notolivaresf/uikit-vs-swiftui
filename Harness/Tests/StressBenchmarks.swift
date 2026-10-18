@@ -14,7 +14,7 @@ final class StressBenchmarks: BenchCase {
             var steps: [[String: Any]] = []
             for _ in 0..<3 {
                 let s = tap(Bar.textSize)
-                steps.append(["app_ms": s.ms as Any, "pinned": s.pinned])
+                steps.append(["app_ms": s.ms as Any, "pinned": s.pinned, "label_changed": lastTapChanged])
             }
             stopMeasuring()
             record("testTextSizeAtBottom", ["steps": steps])
@@ -31,7 +31,8 @@ final class StressBenchmarks: BenchCase {
             var steps: [[String: Any]] = []
             for _ in 0..<3 {
                 let s = tap(Bar.textSize)
-                steps.append(["app_ms": s.ms as Any, "top_before": before.top, "top_after": s.top,
+                steps.append(["app_ms": s.ms as Any, "label_changed": lastTapChanged,
+                              "top_before": before.top, "top_after": s.top,
                               "drift_pt": drift(before, s) as Any])
                 before = s
             }
@@ -75,12 +76,15 @@ final class StressBenchmarks: BenchCase {
         app.launch(); waitForBar()
         measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
+            let before = state()
             startMeasuring()
             button(Bar.boostBurst).tap()
             RunLoop.current.run(until: Date().addingTimeInterval(1.5))
             let s = settled()
             stopMeasuring()
-            record("testBoostBurst", ["pinned": s.pinned])
+            // The label can't count boosts; the only sign they landed is the newest row growing, which moves
+            // the row at the top (a different top row, or a different y) while the room stays pinned.
+            record("testBoostBurst", ["pinned": s.pinned, "room_moved": s.top != before.top || s.y != before.y])
         }
     }
 
@@ -105,8 +109,10 @@ final class StressBenchmarks: BenchCase {
         RunLoop.current.run(until: Date().addingTimeInterval(1.0))
     }
 
-    // Capability, not speed. context_menu: a long press on a message shows Copy and Reply. text_selection: a
-    // double tap on its text selects part of it and shows the edit menu (Copy without Reply).
+    // Capability, not speed. context_menu: a long press on a message shows Copy and Reply. text_selection: the
+    // system edit menu of a selected range (Look Up, Translate, Select All...) shows after the long press or,
+    // failing that, a double tap on the text. Whether Copy really copies is not checked (reading the
+    // pasteboard from the test runner raises a paste prompt).
     func testTextSelectionAndContextMenu() {
         app.launch(); waitForBar()
         reset()
@@ -117,14 +123,20 @@ final class StressBenchmarks: BenchCase {
         }
         text.press(forDuration: 1.2)
         let menu = menuItem("Reply").waitForExistence(timeout: 3) && menuItem("Copy").exists
+        // The system text-edit menu (a selected range) shows items a context menu with Copy and Reply doesn't.
+        let editItems = ["Look Up", "Translate", "Select All", "Search Web", "Share…", "Select"]
+        let selectedOnPress = editItems.contains { menuItem($0).exists }
         dismissMenu()
 
         _ = settled()
         guard let again = messageText() else { XCTFail("message text gone"); return }
         again.doubleTap()
-        let copy = menuItem("Copy").waitForExistence(timeout: 3)
-        let selection = copy && !menuItem("Reply").exists
+        _ = menuItem("Copy").waitForExistence(timeout: 3)
+        let selectedOnDoubleTap = editItems.contains { menuItem($0).exists }
         dismissMenu()
-        record("testTextSelectionAndContextMenu", ["context_menu": menu, "text_selection": selection])
+        record("testTextSelectionAndContextMenu", ["context_menu": menu,
+                                                   "text_selection": selectedOnPress || selectedOnDoubleTap,
+                                                   "selection_on_long_press": selectedOnPress,
+                                                   "selection_on_double_tap": selectedOnDoubleTap])
     }
 }

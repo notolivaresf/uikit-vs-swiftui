@@ -1,73 +1,74 @@
 # Benchmark harness
 
-`Harness/` is a small Xcode UI-test project (`project.yml`, generated with xcodegen, project checked in). It has no app target: it launches the app you already installed, by bundle id `campfire.bench`, with `-uvsBenchmark YES`, so neither build carries any harness code. It finds things only by what the user sees: the debug bar in `PROMPT.md` (buttons "Reset", "Jump to 2500", "Load older", "Start stream", the label "Stream done", and the state label: first id, last id, loaded count, pinned).
+`Harness/` is a small Xcode UI-test project (`project.yml`, generated with xcodegen, project checked in). It has no app target: it drives the installed app, bundle id `campfire.bench`, launched with `-uvsBenchmark YES`, so neither build carries harness code. It finds things only by what the user sees, the debug bar in `PROMPT.md`: the buttons "Reset", "Jump to 2500", "Load older", "Start stream", "Text size +", "Boost burst", the label "Stream done", and the state label, read by key in exactly this form:
+
+`first 49961 last 50000 loaded 40 pinned yes top 49990 y -12.5 ms 8`
+
+`top` and `y` are the topmost row on screen and its top in points under the header; `ms` is the app's own time from the last debug-bar tap (touch up) until its result is laid out, and at launch from the app's first line of code until 40 rows are on screen. Times that count come from `ms`, not from XCUITest's clock (which adds its own overhead and is kept only as an upper bound). Drift comes from `top` and `y`.
 
 ## The device we measure on
 
-Numbers that count are recorded on Fernando's iPhone 12 (iPhone13,2), iOS 26.0, plugged into the Max, Release build, nothing else running. The Simulator is only for checking that the tests work; its frame times mean nothing. iOS 26 is why `XCTHitchMetric` is back next to the scroll metrics (guarded with `#available(iOS 26, *)`).
+Fernando's iPhone 12 (iPhone13,2), iOS 26.0, plugged into the Max, Release build, nothing else running. The Simulator only checks that the tests compile and run; its frame times mean nothing.
 
-Setup on the phone, once: Developer Mode on, and Settings > Developer > Enable UI Automation on (without it the test runner stops with "Timed out while enabling automation mode"). Keep the phone unlocked and awake while a round runs. Signing is automatic with team H8HSTBN8ZP (Amazing Humans); the phone's UDID is registered in the developer account and xcodebuild gets its profile through the App Store Connect key in `~/.appstoreconnect/private_keys`.
+Once on the phone: Developer Mode on, Settings > Developer > Enable UI Automation on. Keep it unlocked and awake during a round. Signing is automatic with team H8HSTBN8ZP; xcodebuild gets its profile through the App Store Connect key in `~/.appstoreconnect/private_keys`.
 
-## Recording a round on the device
+## Recording a round
 
-`buildslot run --label "uvs: record" -- Harness/record.sh --build <name> --round <n>` (the phone is on the Max, so no `remote-build`). The app must already be installed on the phone (Release, bundle id `campfire.bench`). It fills `runs/<build>/<round>/`:
+`buildslot run --label "uvs: record" -- Harness/record.sh --build <name> --round <n> --app-path <Release .app>`
 
-- `bench.xcresult`: the whole XCUITest suite, 5 iterations per test.
-- `launch.trace`: Instruments "App Launch", started by Instruments itself.
-- `fling.trace`, `stream.trace`: Instruments "Animation Hitches" while one pass of the fling or the live stream plays (test class `TraceScenarios`: launch, 25 s to attach, scenario).
-- `memory.trace`: Instruments "Allocations" while rows are loaded (jump, ten older pages, a fling).
-- `summary.json`: the numbers below, from `Harness/summarize.py`; `logs/` holds the raw logs.
+- It refuses a round folder that already exists (every round keeps its own number) and exits non-zero if anything failed: a test, a trace that did not record or was killed, a scenario that ran outside the traced process, or a number missing from the summary. `logs/failures.txt` says which.
+- `--app-path` is the build's Release `.app`; it is installed again before each cold launch. Without it the launches run on the installed copy and `summary.json` says `freshly_installed: false`.
 
-Why attach instead of launching under Instruments: the taps come from XCUITest, which starts the app itself, so the script finds the app's process id with `devicectl` during the 25 s wait and attaches `xctrace` to that id. Cold launch needs no taps, so Instruments starts the app (`--launch`).
+Steps, all in `runs/<build>/<round>/`:
 
-### What is in summary.json
+1. Build the tests once (`build-for-testing`); every later step runs `test-without-building`.
+2. Cold launch, 3 samples: stop the app, install it, 30 s idle, Instruments launches it (`launch.<n>.trace`, App Launch template, 25 s). 10 s in, when the launch is over, `TraceScenarios.testLaunchState` reads the app's own time to 40 rows from that same launch.
+3. The suites, 5 iterations per measured test (`bench.xcresult`, `logs/suite.log`): `ChatBenchmarks` and `StressBenchmarks`.
+4. Scenario traces: Instruments launches the app (`xctrace record --launch`, so the trace covers the whole process), the script waits for its pid, a `TraceScenarios` test takes over that app with `activate()` and plays one pass; afterwards the pid must be the same and the recording still running. Light instrument sets: `fling.trace` and `stream.trace` record Hitches + os_signpost, `memory.trace` Allocations. Each has a time limit that fits it (240, 150, 200 s) and a hard cap of limit + 300 s, after which xctrace is killed, so nothing hangs. A recording that fails to start ("Timed out waiting for device to boot", seen right after a UI test) is retried 3 times, the failed attempt kept under `logs/`.
+5. `summary.json` from `Harness/summarize.py`.
 
-| Field | Meaning |
-|---|---|
-| `launch_ms` | Instruments: from process creation until the first frame is drawn (start of "Foreground - Active"). Also the XCUITest launch metric. |
-| `time_to_40_rows_ms` | Cold launch until the state label says 40 or more rows are loaded. |
-| `fling` / `stream` | frames per second, number of hitches, total hitch time and hitch time ratio (milliseconds of hitching per second of animation; lower is better). From Instruments, and the XCUITest scroll and hitch metrics next to them. |
-| `jump_ms` | Tap "Jump to 2500" until message 2,500 is loaded. |
-| `load_older_ms` | Tap "Load older" until the first id drops. |
-| `peak_memory_mb` | Peak physical footprint from XCUITest, per test; and from Allocations the live heap at the end of the trace. |
+Trace windows: each scenario prints `UVS_MARK start` and `UVS_MARK end` (phone wall clock); `summarize.py` lines them up with the trace's start date. Hitches and the hitch time ratio count over that whole window, so a stall can never cut itself out. Fling fps counts only frames inside UIKit's scroll intervals (os_signpost), per second of scrolling; if a trace has none, fps is missing and the round fails rather than using another window. Stream fps is frames per second from the Start stream tap until "Stream done".
 
-## The smoke app
+## The tests
 
-`Harness/SmokeApp/` is a throwaway UIKit app (bundle id `campfire.bench`, uses CampfireKit, a plain table with default cells) that fulfils only the debug-bar contract in `PROMPT.md`. It exists only to check that the harness works end to end. It looks nothing like Campfire on purpose, so no build gets a head start from it, and it is never a starting point for a run.
-
-Install it for a check: build with `xcodebuild build -project Harness/SmokeApp/SmokeApp.xcodeproj -scheme SmokeApp -configuration Release -destination id=<udid> -allowProvisioningUpdates ...`, then `xcrun devicectl device install app --device <id> <SmokeApp.app>`.
-
-1. Install the finished app on one simulator (Release configuration).
-2. `xcodebuild test -project Harness/CampfireBench.xcodeproj -scheme CampfireBench -destination 'platform=iOS Simulator,name=<device>' -resultBundlePath <dir>/bench.xcresult`
-3. Read the numbers: `xcrun xcresulttool get test-results metrics --path <dir>/bench.xcresult`. Each test has 5 iterations; compare medians and spread.
-
-**Rounds:** run the whole suite 3 times per build, alternating between the builds (A, B, A, B, A, B, each with a fresh simulator state), and report the median across rounds as the headline.
-
-To only compile the harness: `xcodebuild build-for-testing ... -destination 'generic/platform=iOS Simulator'`.
-
-## What each test measures
-
-| Test | Scenario | Metrics |
+| Test | Scenario | What it gives |
 |---|---|---|
-| `testLaunch` | cold launch to the debug bar | launch, clock, memory |
-| `testTimeTo40Rows` | cold launch until 40 rows are loaded | clock |
-| `testFling` | 40 fast swipes towards older messages, 40 back | frames per second and hitches (scroll deceleration and dragging metrics, plus `XCTHitchMetric` on iOS 26), CPU, memory, clock |
-| `testJumpTo2500` | tap "Jump to 2500" until message 2,500 is loaded | clock, CPU, memory |
-| `testLoadOlder` | tap "Load older" until the first id drops | clock, CPU, memory |
-| `testLiveStream` | "Start stream" (20 messages a second for 30 s) until "Stream done"; must end pinned | frames per second and hitches (dragging metric and `XCTHitchMetric`), CPU, memory, clock |
+| `testLaunch` | repeated launch to the debug bar (not fresh, not idle) | XCUITest launch metric, a second opinion |
+| `testTimeTo40Rows` | repeated launch until 40 rows | app `ms` |
+| `testFling` | 40 fast swipes up the history, 40 back; measured from first swipe to last | scroll fps (dragging, deceleration), `XCTHitchMetric`, CPU |
+| `testJumpTo2500` | tap Jump to 2500 | app `ms`; drift = abs(y) of row 2,500 (missing = another row is at the top) |
+| `testLoadOlder` | tap Load older | app `ms`; drift of the top row |
+| `testLiveStream` | Start stream until Stream done | hitches, CPU; must end pinned and add 600 messages |
+| `testMemory` | fresh launch, then jump, 10 older pages, 20 swipes, reset, the stream, 20 swipes | peak physical footprint, growth from start to end |
+| `testTextSizeAtBottom` | 3 x Text size + at the bottom | app `ms` per step (re-layout), still pinned, hitches |
+| `testTextSizeMidScroll` | jump, then 3 x Text size + | app `ms`, drift of the top row per step, hitches |
+| `testRotationAtBottom` | landscape and back at the bottom | still pinned, hitches; fails if the app did not turn |
+| `testRotationAt2500` | landscape and back at 2,500 | drift per turn and round trip, hitches |
+| `testBoostBurst` | Boost burst while pinned | still pinned, hitches, and whether the room moved (the newest row grew) |
+| `testTextSelectionAndContextMenu` | long press, then double tap, on the newest message text | context menu (Copy and Reply), text selection (the system edit menu: Look Up, Translate, Select All...) |
+| `TraceScenarios.*` | one pass each for Instruments | the trace numbers above |
 
-Frames per second come from the system's scroll metrics ("Frame Rate"), hitches and the "Hitch Time Ratio" from the same metrics. Wall time is reported for launch, jump and load older. Every measure block starts with "Reset". Hitch numbers from the Simulator are not used; only the device counts.
+Every measured block starts with Reset, and set-up stays outside `startMeasuring()`/`stopMeasuring()`. A tap waits until the label changes (the tap's own result) and then until it holds still 0.6 s; a label that never settles fails the test. A step whose label did not change in 10 s is recorded with `label_changed: false`.
+
+## summary.json
+
+`launch_ms` (cold Instruments launch, median of 3, and whether freshly installed), `time_to_40_rows_ms` (cold from the traced launches, repeated from XCUITest), `fling`, `jump`, `load_older`, `stream`, `text_size`, `rotation`, `boost_burst`, `text_selection_and_context_menu`, `memory_mb` (peak footprint, growth over the scenario, footprint at the end, Allocations heap from launch), plus `all_xctest_metrics`, `all_results` and `missing` (any spec number that came out empty; the round then fails).
+
+Rounds: 3 per build, alternating A, B, A, B, A, B; the headline is the median across rounds.
 
 ## Fairness
 
-Same package (`CampfireKit`), same launch argument, same simulator model and OS, same Xcode, Release configuration, nothing else running. The tests are never edited per app; if a build needs a harness change, change it for both and re-run both.
+Same package (`CampfireKit`), launch argument, phone, Xcode and Release configuration. The tests are never edited per build and look for elements by label and by any list type (table, collection or scroll view), so a SwiftUI list is found the same way as a UIKit one. If a build needs a harness change, change it for both and re-run both.
 
 ## Known limits
 
-XCUITest only sees rows that are on screen, so the harness reads positions from the state label and does not assert on rows outside the window. Memory is `XCTMemoryMetric` (peak physical footprint).
+- `ms` is self-reported by each build; it is checked against XCUITest's clock (an upper bound) in the summary.
+- Copy is not checked to really copy (reading the pasteboard from the test runner raises a paste prompt), and text selection is recognised by the system edit menu appearing.
+- Boost burst can't be counted from the label; "room moved" is only a sign that the row grew.
+- The fling fps needs UIKit's scroll signposts in the trace; a build whose scrolling emits none gets no trace fps (the XCUITest scroll metrics depend on the same signposts).
+- Trace windows line up the phone clock with the trace start date; the offset is a few milliseconds against 30 s and longer windows.
+- "Freshly installed" means installed again over the old copy; the app's data container is kept (the app stores nothing).
 
-## Status on the device (17 Oct)
+## The smoke app
 
-Done and checked on the iPhone 12: signing and install of the smoke app, `xctrace` attach by process id, the App Launch trace (`launch_ms` reads about 600 ms for the smoke app), the Animation Hitches and Allocations recordings, and the exports in `summarize.py`. The whole XCUITest suite passed on an iPhone 17 simulator (6 tests, 0 failures), which also proved the state-label parsing and the `xcresult` reading. Not yet run on the phone: anything that taps. The test runner stops with "Timed out while enabling automation mode" until **Settings > Developer > Enable UI Automation** is switched on on the phone (and the phone is unlocked). Until then fling/stream hitches, fps and the hitch metric names in `summary.json` are untested on real frames.
-
-Rough edges: `time_to_40_rows_ms` includes XCUITest's launch and lookup overhead (about 3 s on top of the app's own launch), so compare builds, not absolute values. The Simulator reports no hitch or frame-rate metrics at all; on the phone, `xctest_hitch_metrics` lists whatever `XCTHitchMetric` returns. Peak memory from XCUITest is the peak physical footprint ("Memory Peak Physical"); Allocations gives the live heap at the end of its trace, not a peak.
+`Harness/SmokeApp/` is a throwaway UIKit app (bundle id `campfire.bench`, CampfireKit, a plain table) that fulfils only the debug-bar contract, to check the harness end to end. It looks nothing like Campfire on purpose and is never a starting point for a run. Build: `xcodebuild build -project Harness/SmokeApp/SmokeApp.xcodeproj -scheme SmokeApp -configuration Release -destination id=<udid> -derivedDataPath build/SmokeDD -allowProvisioningUpdates ...`; then pass its `.app` as `--app-path`. Smoke rounds go under `runs/smoke/` (not committed: the traces are large).

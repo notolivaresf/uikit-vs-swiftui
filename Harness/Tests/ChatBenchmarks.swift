@@ -8,7 +8,8 @@ import XCTest
 /// at launch from the app's first line of code until 40 rows are on screen); the XCTest clock next to them
 /// includes XCUITest's own overhead and is only a sanity bound. Positions (drift in pt) come from `top` and `y`.
 final class ChatBenchmarks: BenchCase {
-    // Cold launch to the debug bar on screen.
+    // Repeated launch to the debug bar on screen (already installed, not idle: the cold, freshly installed
+    // launch is record.sh's launch traces; this is a second opinion).
     func testLaunch() {
         measure(metrics: [XCTApplicationLaunchMetric(), XCTClockMetric()], options: options) {
             app.launch()
@@ -17,7 +18,8 @@ final class ChatBenchmarks: BenchCase {
         }
     }
 
-    // Cold launch until the first 40 rows are on screen, timed by the app (`ms` at launch).
+    // Repeated launch until the first 40 rows are on screen, timed by the app (`ms` at launch). The cold one
+    // comes from record.sh's launch traces (TraceScenarios.testLaunchState).
     func testTimeTo40Rows() {
         measure(metrics: [XCTClockMetric()], options: options) {
             app.launch()
@@ -84,12 +86,14 @@ final class ChatBenchmarks: BenchCase {
         measure(metrics: hitchMetric + [XCTCPUMetric(application: app), XCTMemoryMetric(application: app), XCTClockMetric()],
                 options: manualOptions) {
             reset()
+            let before = state()
             startMeasuring()
             button(Bar.start).tap()
             XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
             stopMeasuring()
             let s = settled()
-            record("testLiveStream", ["pinned": s.pinned, "loaded": s.loaded])
+            record("testLiveStream", ["pinned": s.pinned, "loaded": s.loaded, "added": s.last - before.last])
+            XCTAssertGreaterThanOrEqual(s.last - before.last, 600, "the stream should add 600 messages")
             XCTAssertTrue(s.pinned, "list should stay pinned to the bottom")
         }
     }
@@ -106,8 +110,10 @@ final class ChatBenchmarks: BenchCase {
             for _ in 0..<10 { tap(Bar.older) }
             for _ in 0..<20 { list.swipeDown(velocity: .fast) }
             reset()
+            let before = state()
             button(Bar.start).tap()
             XCTAssertTrue(app.staticTexts[Bar.streamDone].waitForExistence(timeout: 60), "stream never finished")
+            XCTAssertGreaterThanOrEqual(state().last - before.last, 600, "the stream should add 600 messages")
             for _ in 0..<20 { list.swipeDown(velocity: .fast) }
             _ = settled()
             stopMeasuring()

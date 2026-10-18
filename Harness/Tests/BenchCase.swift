@@ -89,15 +89,24 @@ class BenchCase: XCTestCase {
         _ = settled()
     }
 
-    /// Taps a debug-bar button and returns the state once the label has settled after the tap.
+    /// Whether the label changed after the last tap() (false: it still read the same after `changeWait`, so the
+    /// reading may be the previous tap's; tests record it next to the value).
+    var lastTapChanged = true
+
+    /// Taps a debug-bar button, waits until the label changes (the app shows this tap's result: a new `ms` at
+    /// least), then until it has settled, and returns it. A slow result can't be mistaken for the old one unless
+    /// the label stays identical for `changeWait` seconds.
     @discardableResult
-    func tap(_ title: String) -> AppState {
+    func tap(_ title: String, changeWait: TimeInterval = 10) -> AppState {
+        let before = stateLabel.label
         button(title).tap()
+        lastTapChanged = waitUntil(timeout: changeWait) { self.stateLabel.label != before }
         return settled()
     }
 
-    /// Waits until the state label has not changed for `quiet` seconds (at most `timeout`), and returns it.
-    func settled(quiet: TimeInterval = 0.6, timeout: TimeInterval = 15) -> AppState {
+    /// Waits until the state label has not changed for `quiet` seconds and returns it. Fails the test if it
+    /// never settles within `timeout`.
+    func settled(quiet: TimeInterval = 0.6, timeout: TimeInterval = 20) -> AppState {
         let end = Date().addingTimeInterval(timeout)
         var last = state()
         var since = Date()
@@ -106,8 +115,12 @@ class BenchCase: XCTestCase {
             let now = state()
             if now != last { last = now; since = Date() } else if Date().timeIntervalSince(since) >= quiet { return now }
         }
+        XCTFail("state label never settled in \(Int(timeout)) s: \(last.raw)")
         return last
     }
+
+    /// True when the app's window is wider than tall (it really turned to landscape).
+    var isLandscape: Bool { let f = app.windows.firstMatch.frame; return f.width > f.height }
 
     /// Scroll metrics, plus hitches on iOS 26 and later (the device runs iOS 26; older systems only get fps).
     func scrollMetrics(deceleration: Bool) -> [XCTMetric] {
@@ -137,8 +150,17 @@ class BenchCase: XCTestCase {
     @discardableResult
     func rotate(_ o: UIDeviceOrientation) -> AppState {
         XCUIDevice.shared.orientation = o
-        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        let wantLandscape = o.isLandscape
+        XCTAssertTrue(waitUntil(timeout: 5) { self.isLandscape == wantLandscape },
+                      "the app did not turn to \(wantLandscape ? "landscape" : "portrait")")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.5))
         return settled(quiet: 0.8)
+    }
+
+    /// Prints a wall-clock mark (seconds since 1970, phone clock) that summarize.py lines up with the trace's
+    /// start date, so a trace's measured window is the scenario itself, not inferred from drawing.
+    func mark(_ name: String) {
+        print("UVS_MARK \(name) \(String(format: "%.3f", Date().timeIntervalSince1970))")
     }
 
     /// One result line per value the harness reads from the app (not from XCTest metrics). summarize.py
@@ -146,6 +168,8 @@ class BenchCase: XCTestCase {
     func record(_ test: String, _ values: [String: Any]) {
         var v = values
         v["test"] = test
+        v["rid"] = UUID().uuidString      // one id per reading, so summarize.py drops only echoed lines
+        v["wall"] = Date().timeIntervalSince1970
         if let data = try? JSONSerialization.data(withJSONObject: v, options: [.sortedKeys]),
            let line = String(data: data, encoding: .utf8) {
             print("UVS_RESULT \(line)")
