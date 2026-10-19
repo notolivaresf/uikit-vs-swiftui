@@ -3,6 +3,43 @@
 <p align="center">One Campfire chat room, built twice, in UIKit and in SwiftUI, by AI models.<br>
 Started after 37signals moved <a href="https://once.com">ONCE</a> off Rails.</p>
 
+## Results
+
+**Four builds of the same chat screen, one phone, real numbers: only one passes everything.**
+
+- Only **sol-uikit** passes every behaviour. The other three each fail at least one.
+- Text selection fails in 3 of 4 builds; the two SwiftUI builds also fail the stack rule (both use UIKit's UIPasteboard).
+- sol-swiftui could not keep up with the live stream: about 450 of 600 messages shown after 60 s. The other three finished it, at 22.6 to 27.8 fps.
+
+Level 1, iPhone 12, one round per build. Green = pass, red = fail, yellow = not measurable or not measured; the best number in a row is bold with a dark outline.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-dark.png">
+  <img src="docs/images/results.png" alt="Results table: four builds (opus-uikit, opus-swiftui, sol-uikit, sol-swiftui) across behaviour and performance checks. Only sol-uikit passes everything.">
+</picture>
+
+<details><summary>Table as text</summary>
+
+| | opus-uikit | opus-swiftui | sol-uikit | sol-swiftui |
+|---|---|---|---|---|
+| **Passes everything** | Fail (1 fail) | Fail (2 fails, 1 not measurable) | Pass | Fail (3 fails) |
+| **First 40 rows (cold)** | Pass, 172 ms (best) | Pass, 174 ms | Pass, 201 ms | Pass, 354 ms |
+| **Fling** | Pass, 58.5 fps, 2 hitches (best) | Pass, 57.9 fps, 24 hitches | Pass, 58.3 fps, 2 hitches | Pass, 58.3 fps, 2 hitches |
+| **Live stream, 600 messages** | Pass, 25.7 fps, 1 hitch | Pass, 22.6 fps, 25 hitches | Pass, 27.8 fps, 2 hitches (best) | Fail, about 450 of 600 shown |
+| **Jump to message 2,500** | Pass, 52 ms (best) | Pass, 85 ms | Pass, 73 ms | Pass, 210 ms |
+| **Load older** | Pass, 77 ms, drift 0.3 pt | Not measurable, 25 ms, drift unreadable | Pass, 61 ms, drift 0.0 pt (best) | Pass, 133 ms, drift 0.0 pt |
+| **Peak memory** | 43.9 MB | 69.7 MB | 39.7 MB (best) | Not measured |
+| **Text selection** | Fail | Fail | Pass | Fail |
+| **Stack rule** | Pass | Fail (UIPasteboard) | Pass | Fail (UIPasteboard) |
+
+</details>
+
+Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds). These results describe this app and these models, not UIKit vs SwiftUI in general. One round per build, so there is no spread between rounds.
+
+<p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
+
+*Every column shows the same Campfire data; sol-swiftui can't reach the top, because it keeps 300 messages loaded and Load older stops at message 2,220.*
+
 <table align="center"><tr>
 <td><img src="screenshots/room-bottom.png" width="300" alt="Room, light"></td>
 <td><img src="screenshots/room-bottom-dark.png" width="300" alt="Room, dark"></td>
@@ -22,34 +59,6 @@ Started after 37signals moved <a href="https://once.com">ONCE</a> off Rails.</p>
 - **Fairness:** same prompt, same budget, both models at high reasoning effort, results only for builds that pass.
 
 Models: Opus 5.5 and GPT-6.1 Sol, each in UIKit and SwiftUI. Branches: `build/opus-uikit`, `build/opus-swiftui`, `build/sol-uikit`, `build/sol-swiftui`. Per-build results land in [`runs/`](runs).
-
-## Results
-
-**Four builds of the same chat screen, one phone, real numbers: only one passes everything.**
-
-- 🥇 Only **sol-uikit** passes every behaviour. The other three each fail at least one.
-- 📜 Text selection fails in 3 of 4 builds; the two SwiftUI builds also fail the stack rule (both use UIKit's UIPasteboard).
-- 🔥 sol-swiftui could not keep up with the live stream: about 450 of 600 messages shown after 60 s. The other three finished it, at 22.6 to 27.8 fps.
-
-Level 1, iPhone 12, one round per build (🏆 = best number in the row, ✅ pass, ❌ fail, ⚠️ not measurable):
-
-| | opus-uikit | opus-swiftui | sol-uikit | sol-swiftui |
-|---|---|---|---|---|
-| 🎯 **Passes everything** | ❌ 1 fail | ❌ 2 fails, 1 ⚠️ | ✅ 🏆 | ❌ 3 fails |
-| ⚡ First 40 rows (cold) | ✅ 🏆 172 ms | ✅ 174 ms | ✅ 201 ms | ✅ 354 ms |
-| 🛹 Fling | ✅ 🏆 58.5 fps · 2 hitches | ✅ 57.9 fps · 24 hitches | ✅ 58.3 fps · 2 hitches | ✅ 58.3 fps · 2 hitches |
-| 🔴 Live stream, 600 messages | ✅ 25.7 fps · 1 hitch | ✅ 22.6 fps · 25 hitches | ✅ 🏆 27.8 fps · 2 hitches | ❌ about 450 of 600 shown |
-| 🚀 Jump to message 2,500 | ✅ 🏆 52 ms | ✅ 85 ms | ✅ 73 ms | ✅ 210 ms |
-| ⏪ Load older | ✅ 77 ms · drift 0.3 pt | ⚠️ 25 ms, drift unreadable | ✅ 🏆 61 ms · drift 0.0 pt | ✅ 133 ms · drift 0.0 pt |
-| 🧠 Peak memory | 43.9 MB | 69.7 MB | 🏆 39.7 MB | ⚠️ not measured |
-| ✍️ Text selection | ❌ | ❌ | ✅ | ❌ |
-| 🧱 Stack rule | ✅ | ❌ UIPasteboard | ✅ | ❌ UIPasteboard |
-
-Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds). These results describe this app and these models, not UIKit vs SwiftUI in general. One round per build, so there is no spread between rounds.
-
-<p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
-
-*Every column shows the same Campfire data; sol-swiftui can't reach the top, because it keeps 300 messages loaded and Load older stops at message 2,220.*
 
 ## Credit
 
