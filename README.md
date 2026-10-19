@@ -25,7 +25,26 @@ Models: Opus 5.5 and GPT-6.1 Sol, each in UIKit and SwiftUI. Branches: `build/op
 
 ## Results
 
-Results table: coming
+Level 1, iPhone 12, one round per build. Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds).
+
+| Behaviour | opus-uikit | opus-swiftui | sol-uikit | sol-swiftui |
+|---|---|---|---|---|
+| Builds and installs | pass | pass | pass | pass |
+| Stack rule (no other UI framework) | pass | fail (UIPasteboard) | pass | fail (UIPasteboard) |
+| First content under 1 s | pass | pass | pass | pass |
+| Fling | pass | pass (24 hitches) | pass | pass |
+| Jump to message 2,500 | pass | pass | pass | pass |
+| Load older keeps place | pass | not measurable | pass | pass |
+| Live stream, 600 messages, pinned | pass | pass | pass | fail (about 450 shown) |
+| Text size change | pass | pass | pass | pass |
+| Rotation | pass | pass | pass | pass |
+| Boost burst | pass | pass | pass | pass |
+| Context menu | pass | pass | pass | pass |
+| Text selection | fail | fail | pass | fail |
+
+<p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
+
+*Every column shows the same Campfire data; sol-swiftui can't reach the top, because it keeps 300 messages loaded and Load older stops at message 2,220.*
 
 ## Credit
 
