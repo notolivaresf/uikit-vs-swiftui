@@ -174,18 +174,47 @@ final class ScreensV2: BenchCase {
     }
 
     /// The on-screen frame of the row holding `words`: its cell when one holds it, else the text element.
-    private func rowRect(_ words: String) -> CGRect? {
+    /// `words` may be several terms joined by `&` (e.g. author, time, a boost), all of which must be in the row.
+    private func rowRect(_ words: String) -> CGRect? { rowFrames(words)?.frame }
+
+    /// (frame, text frame, source) of the row holding every `&`-term of `words`.
+    private func rowFrames(_ words: String) -> (frame: CGRect, text: CGRect, textType: UInt, source: String)? {
         let window = app.windows.firstMatch.frame
-        let match = NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words)
-        let texts = app.descendants(matching: .any).matching(match).allElementsBoundByIndex
-            .filter { $0.exists && !$0.frame.isEmpty && window.intersects($0.frame) }
-        guard let text = texts.min(by: { $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height }) else { return nil }
-        let cellMatch = NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words)
-        let cell = app.cells.containing(cellMatch).allElementsBoundByIndex
-            .filter { $0.exists && window.intersects($0.frame) }
+        let terms = words.components(separatedBy: "&").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        guard !terms.isEmpty else { return nil }
+        func found(_ t: String) -> [XCUIElement] {
+            let m = NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", t, t)
+            return app.descendants(matching: .any).matching(m).allElementsBoundByIndex
+                .filter { $0.exists && !$0.frame.isEmpty && window.intersects($0.frame) && $0.frame.height < window.height * 0.5 }
+        }
+        let sets = terms.map(found)
+        if terms.count > 1 && sets.contains(where: { !$0.isEmpty }) {
+            let seen = zip(terms, sets).map { t, els in "\(t): " + els.map { box($0.frame).map { String($0) }.joined(separator: ",") }.joined(separator: " / ") }
+            print("UVS_DEBUG terms " + seen.joined(separator: " | "))
+        }
+        if sets.contains(where: { $0.isEmpty }) { return nil }
+        // The tightest group: one element per term, each later term at or below the first one and nearest to it.
+        var best: (CGRect, XCUIElement, CGFloat)?
+        for a in sets[0] {
+            var u = a.frame
+            var ok = true
+            for later in sets.dropFirst() {
+                let near = later.filter { $0.frame.midY >= a.frame.minY - 12 }
+                    .min(by: { abs($0.frame.midY - a.frame.midY) < abs($1.frame.midY - a.frame.midY) })
+                guard let near else { ok = false; break }
+                u = u.union(near.frame)
+            }
+            if ok && u.height < 600 && (best == nil || u.height < best!.2) { best = (u, a, u.height) }
+        }
+        guard let (union, first, _) = best else { return nil }
+        var query: XCUIElementQuery = app.cells
+        for t in terms { query = query.containing(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", t, t)) }
+        let cell = query.allElementsBoundByIndex
+            .filter { $0.exists && window.intersects($0.frame) && $0.frame.height < window.height * 0.9 && $0.frame.intersects(union) }
             .min(by: { $0.frame.height < $1.frame.height })
-        if let cell, cell.frame.height < window.height * 0.9 { return cell.frame }
-        return text.frame
+        if let cell { return (cell.frame, first.frame, first.elementType.rawValue, "cell") }
+        let src = terms.count > 1 ? "union of text elements" : "text element"
+        return (union, first.frame, first.elementType.rawValue, src)
     }
 
     /// testRows by one sweep: from the bottom, drag up the room a bit at a time; each target row is shot (light
@@ -227,37 +256,73 @@ final class ScreensV2: BenchCase {
         }
     }
 
+    /// testRowsSweep with one older page loaded first (so the targets are not at the loaded window's top edge,
+    /// where some builds load more and jump), smaller drags, and a step back when it passes the lowest target.
+    func testRowsSweep2() {
+        let spec = ProcessInfo.processInfo.environment["UVS_ROWS"] ?? ""
+        var pending: [(kind: String, id: Int, words: String)] = spec.split(separator: ";").compactMap { part in
+            let bits = part.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
+            guard bits.count == 3, let id = Int(bits[1]), !bits[2].isEmpty else { return nil }
+            return (String(bits[0]), id, String(bits[2]))
+        }
+        XCTAssertFalse(pending.isEmpty, "UVS_ROWS empty")
+        let lowest = pending.map(\.id).min() ?? 0
+        XCUIDevice.shared.appearance = .light
+        app.terminate()
+        app.launch(); waitForBar()
+        reset()
+        reportBar()
+        _ = tap(Bar.older)
+        for _ in 0..<15 {
+            if settled().pinned { break }
+            list.swipeUp(velocity: .fast)
+        }
+        print("UVS_INFO sweep2 start: \(settled().raw)")
+        let bottomLimit = min(list.frame.maxY, button(Bar.reset).frame.minY - 60)
+        var passedLowest = 0
+        for step in 0..<80 {
+            if pending.isEmpty { break }
+            var done: [Int] = []
+            for row in pending {
+                guard let r = rowRect(row.words), r.minY >= 100, r.maxY <= bottomLimit + 1 else { continue }
+                let name = "row-\(row.kind)-\(row.id)"
+                print("UVS_INFO \(name): wholly on screen at sweep step \(step), frame \(box(r))")
+                pair(name) { shotName in self.reportFrame(shotName, id: row.id, words: row.words) }
+                done.append(row.id)
+            }
+            pending.removeAll { done.contains($0.id) }
+            if pending.isEmpty { break }
+            let s = settled()
+            if s.top < lowest - 3 {
+                passedLowest += 1
+                if passedLowest >= 4 { break }
+                drag(-120)
+            } else {
+                drag(160)
+            }
+        }
+        for row in pending {
+            print("UVS_MISS row-\(row.kind)-\(row.id): never wholly on screen in the sweep (\(state().raw))")
+        }
+    }
+
     /// Prints `UVS_FRAME <shot> {json}`: the frame in points of the cell holding the row's first words, or of
     /// the element itself when no cell holds it (lazy stacks); the export writes it to <shot>.json.
     private func reportFrame(_ shotName: String, id: Int, words: String) {
         var info: [String: Any] = ["id": id, "words": words,
                                    "scale": XCUIScreen.main.screenshot().image.scale]
         guard !words.isEmpty else { info["frame"] = NSNull(); info["source"] = "no words"; emit(shotName, info); return }
-        let match = NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words)
-        let window = app.windows.firstMatch.frame
-        let elements = app.descendants(matching: .any).matching(match).allElementsBoundByIndex
-            .filter { $0.exists && !$0.frame.isEmpty && window.intersects($0.frame) }
-        // The smallest element holding the words is the text itself; cells and containers are larger.
-        guard let text = elements.min(by: { $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height }) else {
+        guard let r = rowFrames(words) else {
             info["frame"] = NSNull(); info["source"] = "words not found"; emit(shotName, info)
             print("UVS_MISS \(shotName): no frame, words not found (\(words))"); return
         }
-        info["text_frame"] = box(text.frame)
-        info["text_type"] = text.elementType.rawValue
-        let cellMatch = NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words)
-        let cell = app.cells.containing(cellMatch).allElementsBoundByIndex
-            .filter { $0.exists && window.intersects($0.frame) }
-            .min(by: { $0.frame.height < $1.frame.height })
-        if let cell, cell.frame.height < window.height * 0.9 {
-            info["frame"] = box(cell.frame); info["source"] = "cell"
-        } else {
-            info["frame"] = box(text.frame); info["source"] = "text element"
-        }
+        info["text_frame"] = box(r.text)
+        info["text_type"] = r.textType
+        info["frame"] = box(r.frame); info["source"] = r.source
         // Whole row on screen: below the floating header (about 110 pt) and above the list's bottom edge.
-        let chosen = (cell != nil && cell!.frame.height < window.height * 0.9) ? cell!.frame : text.frame
-        let whole = chosen.minY >= 100 && chosen.maxY <= list.frame.maxY + 1
+        let whole = r.frame.minY >= 100 && r.frame.maxY <= list.frame.maxY + 1
         info["whole_on_screen"] = whole
-        if !whole { print("UVS_MISS \(shotName): row not wholly on screen, frame \(box(chosen))") }
+        if !whole { print("UVS_MISS \(shotName): row not wholly on screen, frame \(box(r.frame))") }
         emit(shotName, info)
     }
 

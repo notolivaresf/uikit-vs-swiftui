@@ -9,7 +9,7 @@ import json, re, sys
 WORDS = {
     49962: "Quick summary", 49963: "can you look at the flaky test", 49964: "Deploying now.",
     49966: "It was the cache key.", 49968: "Thanks, I will review it", 49969: "the demo is moved",
-    49970: "Nice!", 49971: "This is the query I used.", 49972: "budget.xlsx", 49973: "🎉🎉",
+    49970: "Iris Rivera&11:20&Nice!", 49971: "This is the query I used.", 49972: "budget.xlsx", 49973: "🎉🎉",
     49974: "Shipped! Thank you everybody", 49979: "Review thanks plan.",
 }
 
@@ -31,6 +31,6 @@ else:
 out = []
 for k, v, words in pairs:
     k = re.sub(r"[^a-z0-9-]+", "-", str(k).lower()).strip("-")
-    words = (words or WORDS.get(v, "")).replace(";", " ").replace(":", " ")
+    words = (words or WORDS.get(v, "")).replace(";", " ")
     out.append(f"{k}:{v}:{words}")
 print(";".join(out))
