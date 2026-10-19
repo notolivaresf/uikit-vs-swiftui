@@ -1,47 +1,21 @@
-<h1 align="center">UIKit vs SwiftUI</h1>
-
 <p align="center">One Campfire chat room, built twice, in UIKit and in SwiftUI, by AI models.<br>
 Started after 37signals moved <a href="https://once.com">ONCE</a> off Rails.</p>
 
-## Results
-
-**Four builds of the same chat screen, one phone, real numbers: only one passes everything.**
-
-- Only **sol-uikit** passes every behaviour. The other three each fail at least one.
-- Text selection fails in 3 of 4 builds; the two SwiftUI builds also fail the stack rule (both use UIKit's UIPasteboard).
-- sol-swiftui could not keep up with the live stream: about 450 of 600 messages shown after 60 s. The other three finished it, at 22.6 to 27.8 fps.
-
-Level 1, iPhone 12, one round per build. Green = pass, red = fail, yellow = not measurable or not measured; the best number in a row is bold with a dark outline.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-best-dark.png">
+  <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. Colour shows the winner of each row; two rows are near ties.">
+</picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-dark.png">
   <img src="docs/images/results.png" alt="Results table: four builds (opus-uikit, opus-swiftui, sol-uikit, sol-swiftui) across behaviour and performance checks. Only sol-uikit passes everything.">
 </picture>
 
-<details><summary>Table as text</summary>
+Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds). These results describe this app and these models, not UIKit vs SwiftUI in general. One round per build, so there is no spread between rounds.
 
-| | opus-uikit | opus-swiftui | sol-uikit | sol-swiftui |
-|---|---|---|---|---|
-| **Passes everything** | Fail (1 fail) | Fail (2 fails, 1 not measurable) | Pass | Fail (3 fails) |
-| **First 40 rows (cold)** | Pass, 172 ms (best) | Pass, 174 ms | Pass, 201 ms | Pass, 354 ms |
-| **Fling** | Pass, 58.5 fps, 2 hitches (best) | Pass, 57.9 fps, 24 hitches | Pass, 58.3 fps, 2 hitches | Pass, 58.3 fps, 2 hitches |
-| **Live stream, 600 messages** | Pass, 25.7 fps, 1 hitch | Pass, 22.6 fps, 25 hitches | Pass, 27.8 fps, 2 hitches (best) | Fail, about 450 of 600 shown |
-| **Jump to message 2,500** | Pass, 52 ms (best) | Pass, 85 ms | Pass, 73 ms | Pass, 210 ms |
-| **Load older** | Pass, 77 ms, drift 0.3 pt | Not measurable, 25 ms, drift unreadable | Pass, 61 ms, drift 0.0 pt (best) | Pass, 133 ms, drift 0.0 pt |
-| **Peak memory** | 43.9 MB | 69.7 MB | 39.7 MB (best) | Not measured |
-| **Text selection** | Fail | Fail | Pass | Fail |
-| **Stack rule** | Pass | Fail (UIPasteboard) | Pass | Fail (UIPasteboard) |
+<p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
 
-</details>
-
-### Best of UIKit vs best of SwiftUI
-
-Each stack's best build per row (the build it came from is the grey line), so no single app does all of it. Green wins the row, red loses it, yellow means the two are within 5% of each other (a near tie). For pass/fail rows, a pass is green and a fail is red; if both stacks match, both are yellow. Lower is better for times and memory, higher for fps. The trailing cell of a numeric row also says how far behind it is, as a raw difference and a percentage of the leader (grey for near ties, bold red for losses).
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-best-dark.png">
-  <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. Colour shows the winner of each row; two rows are near ties.">
-</picture>
+*Every column shows the same Campfire data; sol-swiftui can't reach the top, because it keeps 300 messages loaded and Load older stops at message 2,220.*
 
 <details><summary>Table as text</summary>
 
@@ -58,12 +32,6 @@ Each stack's best build per row (the build it came from is the grey line), so no
 | **Stack rule** | Wins: Pass (both builds) | Loses: Fail (both builds) |
 
 </details>
-
-Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds). These results describe this app and these models, not UIKit vs SwiftUI in general. One round per build, so there is no spread between rounds.
-
-<p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
-
-*Every column shows the same Campfire data; sol-swiftui can't reach the top, because it keeps 300 messages loaded and Load older stops at message 2,220.*
 
 <table align="center"><tr>
 <td><img src="screenshots/room-bottom.png" width="300" alt="Room, light"></td>
