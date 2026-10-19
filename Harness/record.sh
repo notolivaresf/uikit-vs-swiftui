@@ -23,7 +23,7 @@
 set -u
 
 build=""; round=""; app="campfire.bench"; app_path=""
-LAUNCH_SAMPLES=3; heap_trace=0
+LAUNCH_SAMPLES=3; heap_trace=0; stream_only=0
 device_core="73FC3857-7993-59CC-8A8E-34FB2E08AE71"   # devicectl id (iPhone 12, iOS 26.0)
 device_udid="00008101-00062D410CE9003A"              # xctrace / xcodebuild id of the same phone
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
@@ -36,6 +36,10 @@ while [ $# -gt 0 ]; do
     --app) app="$2"; shift 2;;
     --app-path) app_path="$2"; shift 2;;
     --heap-trace) heap_trace=1; shift;;
+    # --stream-only: only the stream trace and ChatBenchmarks/testLiveStream (no launches, fling or other
+    # tests). Used for the L1 stream reruns of opus-uikit and opus-swiftui, whose round 1 ran the stream test
+    # before the relaunch fix (98b2d48); Fernando cut rounds 2 and 3, 18 Oct.
+    --stream-only) stream_only=1; shift;;
     *) echo "unknown option $1" >&2; exit 2;;
   esac
 done
@@ -158,7 +162,8 @@ trace_scenario() {
 # 1. Cold launches, first: for each sample the app is stopped, installed again (--app-path), the phone is left
 #    idle 30 s, and Instruments launches it (App Launch template). 10 s in, when the launch is over, a UI test
 #    reads the app's own time to the first 40 rows from that same launch (TraceScenarios.testLaunchState).
-for n in $(seq 1 $LAUNCH_SAMPLES); do
+[ $stream_only -eq 1 ] && LAUNCH_SAMPLES=0
+for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
   pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
   [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
   if [ -n "$app_path" ]; then
@@ -178,25 +183,33 @@ for n in $(seq 1 $LAUNCH_SAMPLES); do
     fail "launch $n trace: recording never started"
   fi
 done
-[ -n "$app_path" ] || echo "launch samples ran on the installed copy (no --app-path), not freshly installed" | tee "$out/logs/launch-not-fresh.txt"
+[ $stream_only -eq 1 ] && [ -n "$app_path" ] && { xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.log" 2>&1 || fail "install (logs/install.log)"; }
+[ $stream_only -eq 1 ] || [ -n "$app_path" ] || echo "launch samples ran on the installed copy (no --app-path), not freshly installed" | tee "$out/logs/launch-not-fresh.txt"
 echo "launch traces done"
 
 # 2. Scenario traces, before the suites (after the suites, in smoke round 6, the fling trace's swipes
 #    did not scroll the app: 84 frames instead of about 4,300; run alone they scroll). Light instrument sets:
 #    Hitches for the hitches, Frame Lifetimes and Display so every frame is listed (Hitches alone lists only a sample of them). The Allocations heap trace (2 GB) only with
 #    --heap-trace; memory numbers come from testMemory.
-trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
+[ $stream_only -eq 1 ] || trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
 trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
 [ $heap_trace -eq 1 ] && trace_scenario testTraceMemory memory 200 Allocations
 
 # 3. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
 #    rotation, boost burst, text selection and context menu (3 iterations each where measured; fling and memory 1).
-"${xct[@]}" -only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks \
+suites=(-only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks)
+[ $stream_only -eq 1 ] && suites=(-only-testing:CampfireBenchUITests/ChatBenchmarks/testLiveStream)
+"${xct[@]}" "${suites[@]}" \
   -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
 echo "suites finished"
 
 # 4. Numbers.
-python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" || fail "summarize"
+if [ $stream_only -eq 1 ]; then
+  # Most numbers are missing by design in a stream-only round; summary.json is still written.
+  python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" 2>"$out/logs/summarize.log"
+else
+  python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" || fail "summarize"
+fi
 cat "$out/summary.json"
 if [ $failed -ne 0 ]; then echo "round finished with failures:" >&2; cat "$out/logs/failures.txt" >&2; exit 1; fi
 echo "round finished, no failures"

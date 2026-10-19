@@ -18,6 +18,7 @@ Once on the phone: Developer Mode on, Settings > Developer > Enable UI Automatio
 
 - It refuses a round folder that already exists (every round keeps its own number) and exits non-zero if anything failed: a test, a trace that did not record or was killed, a scenario that ran outside the traced process, or a number missing from the summary. `logs/failures.txt` says which.
 - `--app-path` is the build's Release `.app`; it is installed again before each cold launch. Without it the launches run on the installed copy and `summary.json` says `freshly_installed: false`.
+- `--stream-only` installs the app once and runs only the stream trace and `ChatBenchmarks/testLiveStream` (no launches, fling trace or other tests); most of `summary.json` is then missing on purpose. It exists for the L1 stream reruns of opus-uikit and opus-swiftui, whose round 1 ran the stream test before the relaunch fix (Fernando cut rounds 2 and 3, 18 Oct).
 
 Steps, all in `runs/<build>/<round>/`:
 
