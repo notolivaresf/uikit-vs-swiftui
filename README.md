@@ -36,26 +36,26 @@ Level 1, iPhone 12, one round per build. Green = pass, red = fail, yellow = not 
 
 ### Best of UIKit vs best of SwiftUI
 
-Each stack's best build per row (the build it came from is the grey line), so no single app does all of it. The winner of a row is bold and outlined; a tie marks neither.
+Each stack's best build per row (the build it came from is the grey line), so no single app does all of it. Green wins the row, red loses it, yellow means the two are within 5% of each other (a near tie). For pass/fail rows, a pass is green and a fail is red; if both stacks match, both are yellow. Lower is better for times and memory, higher for fps.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-best-dark.png">
-  <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. UIKit wins every row; SwiftUI never passes everything.">
+  <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. Colour shows the winner of each row; two rows are near ties.">
 </picture>
 
 <details><summary>Table as text</summary>
 
 | | UIKit (best build) | SwiftUI (best build) |
 |---|---|---|
-| **Passes everything** | Pass (sol-uikit) (winner) | None passes (closest: opus-swiftui, 2 fails) |
-| **First 40 rows (cold)** | 172 ms (opus-uikit) (winner) | 174 ms (opus-swiftui) |
-| **Fling** | 58.5 fps, 2 hitches (opus-uikit) (winner) | 58.3 fps, 2 hitches (sol-swiftui) |
-| **Live stream, 600 messages** | 27.8 fps (sol-uikit) (winner) | 22.6 fps (opus-swiftui) |
-| **Jump to message 2,500** | 52 ms (opus-uikit) (winner) | 85 ms (opus-swiftui) |
-| **Load older** | 61 ms (sol-uikit) (winner) | 133 ms (sol-swiftui) |
-| **Peak memory** | 39.7 MB (sol-uikit) (winner) | 69.7 MB (opus-swiftui) |
-| **Text selection** | Pass (sol-uikit) (winner) | Fail (both builds) |
-| **Stack rule** | Pass (both builds) (winner) | Fail (both builds) |
+| **Passes everything** | Wins: Pass (sol-uikit) | Loses: None passes (closest: opus-swiftui, 2 fails) |
+| **First 40 rows (cold)** | Within 5%: 172 ms (opus-uikit) | Within 5%: 174 ms (opus-swiftui) |
+| **Fling** | Within 5%: 58.5 fps, 2 hitches (opus-uikit) | Within 5%: 58.3 fps, 2 hitches (sol-swiftui) |
+| **Live stream, 600 messages** | Wins: 27.8 fps (sol-uikit) | Loses: 22.6 fps (opus-swiftui) |
+| **Jump to message 2,500** | Wins: 52 ms (opus-uikit) | Loses: 85 ms (opus-swiftui) |
+| **Load older** | Wins: 61 ms (sol-uikit) | Loses: 133 ms (sol-swiftui) |
+| **Peak memory** | Wins: 39.7 MB (sol-uikit) | Loses: 69.7 MB (opus-swiftui) |
+| **Text selection** | Wins: Pass (sol-uikit) | Loses: Fail (both builds) |
+| **Stack rule** | Wins: Pass (both builds) | Loses: Fail (both builds) |
 
 </details>
 

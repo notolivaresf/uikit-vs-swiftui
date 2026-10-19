@@ -46,7 +46,8 @@ THEMES = {
 
 FULL = dict(title="UIKit vs SwiftUI", subtitle="Same Campfire chat room, built four times. Level 1 results.",
             builds=BUILDS, rows=ROWS, col_w=220, file="results",
-            groups=[("Opus 5.5", (0, 1)), ("GPT-6.1 Sol", (2, 3))])
+            groups=[("Opus 5.5", (0, 1)), ("GPT-6.1 Sol", (2, 3))],
+            legend=[("ok", "Pass"), ("bad", "Fail"), ("warn", "Not measurable or not measured")], best_legend=True)
 
 # --- Best of each stack, computed from ROWS (nothing retyped) ---
 import re
@@ -87,25 +88,38 @@ def best_rows():
             picks.append((i, sc))
         (iu, su), (iw, sw) = picks
         tie = su == sw
+        passfail = label in ("Passes everything", "Text selection", "Stack rule")
+        if su is None or sw is None:
+            near = False
+        else:
+            near = su == sw or (not passfail and abs(su - sw) / max(abs(su), abs(sw)) <= 0.05)
         out_cells = []
         for k, (i, sc) in enumerate(picks):
             state, main, sub, _ = cells[i]
             idxs = list(STACKS.values())[k]
             same = all(cells[j][1] == main and cells[j][0] == state for j in idxs)
-            if label == "Passes everything" and state != "ok":
-                main = "None passes"
             extra = sub if label == "Fling" else ""
             who = "both builds" if same and label in ("Text selection", "Stack rule") else NAMES[i]
-            out_cells.append((state, main, (extra + " \u00b7 " if extra else "") + who,
-                              not tie and sc is not None and (su is None or sw is None or sc == min(su, sw))
-                              if (su is not None and sw is not None) or sc is not None else False))
+            if label == "Passes everything" and state != "ok":
+                main, who = "None passes", "closest: %s, %s" % (NAMES[i], re.match(r"\d+ fails?", cells[i][1]).group())
+            other = picks[1 - k][1]
+            if near:
+                rank = "warn"
+            elif sc is None:
+                rank = "bad"
+            elif other is None or sc < other:
+                rank = "ok"
+            else:
+                rank = "bad"
+            out_cells.append((rank, main, (extra + " \u00b7 " if extra else "") + who, False))
         out.append((label, out_cells))
     return out
 
 
 BEST = dict(title="Best of UIKit vs best of SwiftUI",
-            subtitle="Each stack's best build per row, so no single app does all of it.",
-            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None)
+            subtitle="Each stack's best build per row, so no single app does all of it. Colour shows who wins the row.",
+            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None,
+            legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("warn", "Within 5%")])
 
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36
@@ -191,13 +205,14 @@ def render(name, spec=None):
     # legend
     y += 18
     lx = x0
-    for state, txt in (("ok", "Pass"), ("bad", "Fail"), ("warn", "Not measurable or not measured")):
+    for state, txt in spec["legend"]:
         bgc, fg = th[state]
         d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, fill=bgc, outline=fg, width=S)
         d.text(((lx + 26) * S, (y + 7) * S), txt, font=font(13), fill=th["muted"], anchor="lm")
         lx += 26 + d.textlength(txt, font=font(13)) / S + 22
-    d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, outline=th["text"], width=2 * S)
-    d.text(((lx + 26) * S, (y + 7) * S), "Best in row (bold, outlined)", font=font(13), fill=th["muted"], anchor="lm")
+    if spec.get("best_legend"):
+        d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, outline=th["text"], width=2 * S)
+        d.text(((lx + 26) * S, (y + 7) * S), "Best in row (bold, outlined)", font=font(13), fill=th["muted"], anchor="lm")
     y += 28
     d.text((x0 * S, (y + 6) * S), "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui",
            font=font(13), fill=th["muted"], anchor="lm")
