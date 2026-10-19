@@ -100,7 +100,7 @@ final class ScreensV2: BenchCase {
         // Scroll to the very top: swipe down until the label stops changing twice in a row.
         var last = settled()
         var still = 0
-        for _ in 0..<200 {   // a fast swipe moves about 6 rows; from top ~312 that is ~50 swipes
+        for _ in 0..<800 {   // a fast swipe moves about 5 rows; builds whose window slides (sol-uikit, 300 rows) swipe from ~2240
             list.swipeDown(velocity: .fast)
             let now = settled()
             if now.top <= 1 && now.top == last.top && abs(now.y - last.y) < 0.5 { still += 1; if still >= 2 { break } } else { still = 0 }
@@ -278,13 +278,17 @@ final class ScreensV2: BenchCase {
             list.swipeUp(velocity: .fast)
         }
         print("UVS_INFO sweep2 start: \(settled().raw)")
-        let bottomLimit = min(list.frame.maxY, button(Bar.reset).frame.minY - 60)
+        // The bar sits under the list in most builds and above it in some (sol-uikit): bound the rows by both.
+        let bar = button(Bar.reset).frame
+        let bottomLimit = bar.minY > list.frame.midY ? min(list.frame.maxY, bar.minY - 60) : list.frame.maxY
+        let topLimit = max(100, list.frame.minY)
+        print("UVS_INFO sweep2 rows counted between y \(topLimit) and \(bottomLimit)")
         var passedLowest = 0
         for step in 0..<80 {
             if pending.isEmpty { break }
             var done: [Int] = []
             for row in pending {
-                guard let r = rowRect(row.words), r.minY >= 100, r.maxY <= bottomLimit + 1 else { continue }
+                guard let r = rowRect(row.words), r.minY >= topLimit, r.maxY <= bottomLimit + 1 else { continue }
                 let name = "row-\(row.kind)-\(row.id)"
                 print("UVS_INFO \(name): wholly on screen at sweep step \(step), frame \(box(r))")
                 pair(name) { shotName in self.reportFrame(shotName, id: row.id, words: row.words) }
@@ -320,7 +324,7 @@ final class ScreensV2: BenchCase {
         info["text_type"] = r.textType
         info["frame"] = box(r.frame); info["source"] = r.source
         // Whole row on screen: below the floating header (about 110 pt) and above the list's bottom edge.
-        let whole = r.frame.minY >= 100 && r.frame.maxY <= list.frame.maxY + 1
+        let whole = r.frame.minY >= max(100, list.frame.minY) && r.frame.maxY <= list.frame.maxY + 1
         info["whole_on_screen"] = whole
         if !whole { print("UVS_MISS \(shotName): row not wholly on screen, frame \(box(r.frame))") }
         emit(shotName, info)
