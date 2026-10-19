@@ -44,6 +44,69 @@ THEMES = {
                  head=(38, 38, 43)),
 }
 
+FULL = dict(title="UIKit vs SwiftUI", subtitle="Same Campfire chat room, built four times. Level 1 results.",
+            builds=BUILDS, rows=ROWS, col_w=220, file="results",
+            groups=[("Opus 5.5", (0, 1)), ("GPT-6.1 Sol", (2, 3))])
+
+# --- Best of each stack, computed from ROWS (nothing retyped) ---
+import re
+
+NAMES = [b for b, _ in BUILDS]
+STACKS = {"UIKit": [0, 2], "SwiftUI": [1, 3]}
+
+
+def num(text):
+    m = re.search(r"\d+(?:\.\d+)?", text.replace(",", ""))
+    return float(m.group()) if m else None
+
+
+# row label -> (score function of a cell, lower is better). None = not comparable.
+def _score(label, cell):
+    state, main, sub, _ = cell
+    if label == "Passes everything":
+        return 0 if state == "ok" else num(main)
+    if label in ("Text selection", "Stack rule"):
+        return 0 if state == "ok" else 1
+    if label == "Fling":
+        return -num(main)
+    if label == "Live stream, 600 messages":
+        return -num(main) if state == "ok" else None
+    if label == "Load older":
+        return num(main) if state == "ok" else None
+    return num(main) if state != "warn" else None  # ms and MB rows
+
+
+def best_rows():
+    out = []
+    for label, cells in ROWS:
+        picks = []
+        for idxs in STACKS.values():
+            cand = [(i, _score(label, cells[i])) for i in idxs]
+            ok = [c for c in cand if c[1] is not None]
+            i, sc = min(ok, key=lambda c: c[1]) if ok else (idxs[0], None)
+            picks.append((i, sc))
+        (iu, su), (iw, sw) = picks
+        tie = su == sw
+        out_cells = []
+        for k, (i, sc) in enumerate(picks):
+            state, main, sub, _ = cells[i]
+            idxs = list(STACKS.values())[k]
+            same = all(cells[j][1] == main and cells[j][0] == state for j in idxs)
+            if label == "Passes everything" and state != "ok":
+                main = "None passes"
+            extra = sub if label == "Fling" else ""
+            who = "both builds" if same and label in ("Text selection", "Stack rule") else NAMES[i]
+            out_cells.append((state, main, (extra + " \u00b7 " if extra else "") + who,
+                              not tie and sc is not None and (su is None or sw is None or sc == min(su, sw))
+                              if (su is not None and sw is not None) or sc is not None else False))
+        out.append((label, out_cells))
+    return out
+
+
+BEST = dict(title="Best of UIKit vs best of SwiftUI",
+            subtitle="Each stack's best build per row, so no single app does all of it.",
+            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None)
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36
 PAD = 28
@@ -69,29 +132,36 @@ def wrap(d, text, f, maxw):
     return lines
 
 
-def render(name):
+def render(name, spec=None):
+    spec = spec or FULL
     th = THEMES[name]
-    W = PAD * 2 + LABEL_W + COL_W * 4
+    BUILDS, ROWS, COL_W = spec["builds"], spec["rows"], spec["col_w"]
+    groups = spec["groups"]
+    group_h = GROUP_H if groups else 0
+    W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
     title_h = 64
-    H = PAD + title_h + GROUP_H + HEAD_H + ROW_H * len(ROWS) + 56 + PAD
+    H = PAD + title_h + group_h + HEAD_H + ROW_H * len(ROWS) + 56 + PAD
     img = Image.new("RGB", (W * S, H * S), th["bg"])
     d = ImageDraw.Draw(img)
     x0 = PAD
     y = PAD
-    d.text((x0 * S, (y + 14) * S), "UIKit vs SwiftUI", font=font(26, True), fill=th["text"], anchor="lm")
-    d.text((x0 * S, (y + 46) * S), "Same Campfire chat room, built four times. Level 1 results.",
+    d.text((x0 * S, (y + 14) * S), spec["title"], font=font(26, True), fill=th["text"], anchor="lm")
+    d.text((x0 * S, (y + 46) * S), spec["subtitle"],
            font=font(15), fill=th["muted"], anchor="lm")
     y += title_h
     # group header
-    for g, (a, b) in (("Opus 5.5", (0, 1)), ("GPT-6.1 Sol", (2, 3))):
+    for g, (a, b) in groups or []:
         gx = x0 + LABEL_W + COL_W * a
         d.rounded_rectangle([(gx + 4) * S, y * S, (gx + COL_W * 2 - 4) * S, (y + GROUP_H - 6) * S], 8 * S, fill=th["head"])
         centered(d, gx + COL_W, y + (GROUP_H - 6) / 2, g, font(16, True), th["text"])
-    y += GROUP_H
+    y += group_h
     for i, (b, kind) in enumerate(BUILDS):
         cx = x0 + LABEL_W + COL_W * i + COL_W / 2
-        centered(d, cx, y + 14, b, font(17, True), th["text"])
-        centered(d, cx, y + 33, kind, font(13), th["muted"])
+        if kind:
+            centered(d, cx, y + 14, b, font(17, True), th["text"])
+            centered(d, cx, y + 33, kind, font(13), th["muted"])
+        else:
+            centered(d, cx, y + HEAD_H / 2, b, font(20, True), th["text"])
     y += HEAD_H
     d.line([(x0 * S, y * S), ((W - PAD) * S, y * S)], fill=th["line"], width=S)
     for label, cells in ROWS:
@@ -132,7 +202,7 @@ def render(name):
     d.text((x0 * S, (y + 6) * S), "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui",
            font=font(13), fill=th["muted"], anchor="lm")
     out = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "images",
-                       "results.png" if name == "light" else "results-dark.png")
+                       spec["file"] + (".png" if name == "light" else "-dark.png"))
     img.save(out)
     print(os.path.normpath(out), img.size)
 
@@ -140,3 +210,4 @@ def render(name):
 if __name__ == "__main__":
     for n in THEMES:
         render(n)
+        render(n, BEST)

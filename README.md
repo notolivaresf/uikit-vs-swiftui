@@ -34,6 +34,31 @@ Level 1, iPhone 12, one round per build. Green = pass, red = fail, yellow = not 
 
 </details>
 
+### Best of UIKit vs best of SwiftUI
+
+Each stack's best build per row (the build it came from is the grey line), so no single app does all of it. The winner of a row is bold and outlined; a tie marks neither.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-best-dark.png">
+  <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. UIKit wins every row; SwiftUI never passes everything.">
+</picture>
+
+<details><summary>Table as text</summary>
+
+| | UIKit (best build) | SwiftUI (best build) |
+|---|---|---|
+| **Passes everything** | Pass (sol-uikit) (winner) | None passes (closest: opus-swiftui, 2 fails) |
+| **First 40 rows (cold)** | 172 ms (opus-uikit) (winner) | 174 ms (opus-swiftui) |
+| **Fling** | 58.5 fps, 2 hitches (opus-uikit) (winner) | 58.3 fps, 2 hitches (sol-swiftui) |
+| **Live stream, 600 messages** | 27.8 fps (sol-uikit) (winner) | 22.6 fps (opus-swiftui) |
+| **Jump to message 2,500** | 52 ms (opus-uikit) (winner) | 85 ms (opus-swiftui) |
+| **Load older** | 61 ms (sol-uikit) (winner) | 133 ms (sol-swiftui) |
+| **Peak memory** | 39.7 MB (sol-uikit) (winner) | 69.7 MB (opus-swiftui) |
+| **Text selection** | Pass (sol-uikit) (winner) | Fail (both builds) |
+| **Stack rule** | Pass (both builds) (winner) | Fail (both builds) |
+
+</details>
+
 Full numbers and notes: [`docs/results-l1.md`](docs/results-l1.md). The builds are in [`builds/`](builds). These results describe this app and these models, not UIKit vs SwiftUI in general. One round per build, so there is no spread between rounds.
 
 <p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
