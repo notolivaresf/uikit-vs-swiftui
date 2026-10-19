@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skill sets for Level 2 builds (called by launch-build.sh, not by hand).
 
-  skillset.py --kind none|ours-slim|ours-full|apple [--dest BUILD_DIR] [--install]
+  skillset.py --kind none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple [--dest BUILD_DIR] [--install]
 
 Prints one JSON record on stdout: the kind, the skills (name, version, source,
 file count, hash of the folder) and the names a model should list. With --install the
@@ -16,6 +16,10 @@ Sources
   ours-slim  git archive of tag UVS_SLIM_TAG (default v0.2-slim) of UVS_SKILL_REPO
              (default ~/olivares-burgos/uikit-skill), folder skills/uikit-specialist-slim
   ours-full  same repo, tag UVS_FULL_TAG (default v0.1), folder skills/uikit-specialist
+  ours-pair  the two Swift skills vendored in this repo, skills/uikit/{uikit-specialist,
+             uikit-whats-new-27} (copied from uikit-skill tag v0.3-pair, see skills/README.md)
+  ours-objc-pair  skills/uikit-objc/{uikit-specialist-objc,uikit-whats-new-27-objc} of this repo
+             (vendored later; the kind fails clearly while the folder is missing)
   apple      a local export of Apple's Xcode skills, UVS_APPLE_SKILLS (default: the newest
              ~/uvs-skills/apple-*), one sub-folder per skill with a SKILL.md; the skills are
              APPLE_SKILLS below. Apple's text is never copied into a repo: only names and
@@ -26,6 +30,11 @@ import argparse, glob, hashlib, io, json, os, re, shutil, subprocess, sys, tarfi
 APPLE_SKILLS = ["swiftui-specialist", "swiftui-whats-new-27"]
 OURS = {"ours-slim": ("uikit-specialist-slim", "UVS_SLIM_TAG", "v0.2-slim"),
         "ours-full": ("uikit-specialist", "UVS_FULL_TAG", "v0.1")}
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# vendored pairs: kind -> (folder under skills/, the names the two SKILL.md files must carry)
+VENDORED = {"ours-pair": ("uikit", ["uikit-specialist", "uikit-whats-new-27"],
+                          ("v0.3-pair", "131b2a90a78a2b9359de728f021ba8db146c8f58")),
+            "ours-objc-pair": ("uikit-objc", ["uikit-specialist-objc", "uikit-whats-new-27-objc"], (None, None))}
 
 
 def fail(msg):
@@ -71,6 +80,28 @@ def ours(kind):
     return [dict(folder=folder, name=skill_name(files, folder), files=files,
                  source="git tag %s of %s" % (tag, repo), tag=tag, commit=commit,
                  version=plugin_version or tag)]
+
+
+def vendored(kind):
+    sub, names, (tag, commit) = VENDORED[kind]
+    base = os.path.join(REPO, "skills", sub)
+    if not os.path.isdir(base):
+        fail("%s needs %s, which does not exist yet (the skills are vendored there later)" % (kind, base))
+    out = []
+    for name in names:
+        d = os.path.join(base, name)
+        if not os.path.isfile(os.path.join(d, "SKILL.md")):
+            fail("%s: %s/SKILL.md is missing" % (kind, d))
+        files = {}
+        for root, _, fns in os.walk(d):
+            for n in fns:
+                p = os.path.join(root, n)
+                files[name + "/" + os.path.relpath(p, d)] = open(p, "rb").read()
+        if skill_name(files, name) != name:
+            fail("%s: %s/SKILL.md names itself %s, expected %s" % (kind, d, skill_name(files, name), name))
+        out.append(dict(folder=name, name=name, files=files, source="vendored in this repo: skills/%s/%s" % (sub, name),
+                        tag=tag, commit=commit, version=tag or "see skills/README.md"))
+    return out
 
 
 def apple():
@@ -135,7 +166,7 @@ def codex_config(out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--codex-config", metavar="OUT", help="write the Codex config.toml to OUT ('-' = only count)")
-    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "apple"])
+    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "ours-pair", "ours-objc-pair", "apple"])
     ap.add_argument("--dest")
     ap.add_argument("--install", action="store_true")
     a = ap.parse_args()
@@ -143,7 +174,14 @@ def main():
         n, text = codex_config(None if a.codex_config == "-" else a.codex_config)
         print(json.dumps(dict(host_skills_disabled=n, config_sha256=hashlib.sha256(text.encode()).hexdigest())))
         return 0
-    skills = [] if a.kind == "none" else (apple() if a.kind == "apple" else ours(a.kind))
+    if a.kind == "none":
+        skills = []
+    elif a.kind == "apple":
+        skills = apple()
+    elif a.kind in VENDORED:
+        skills = vendored(a.kind)
+    else:
+        skills = ours(a.kind)
     for s in skills:
         s["hash"] = folder_hash(s["files"])
         s["file_count"] = len(s["files"])

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Set up and launch ONE isolated build. See docs/harness.md, "Launching a build".
 #
-#   Harness/launch-build.sh <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|apple] [--dry-run]
+#   Harness/launch-build.sh <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple] [--dry-run]
 #
 # Level 1 (no --skills, stack uikit or swiftui): exactly as before. Level 2 is chosen by giving
 # --skills (even "none") or the stack objc: the build is named <model>-<stack>-<skills>, the skill
@@ -12,7 +12,7 @@
 # Without it, the build folder is made and the model starts working. Fernando starts those.
 set -euo pipefail
 
-usage() { echo "usage: $0 <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|apple] [--dry-run]" >&2; exit 2; }
+usage() { echo "usage: $0 <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple] [--dry-run]" >&2; exit 2; }
 
 MODEL="${1:-}"; SIDE="${2:-}"; shift 2 2>/dev/null || usage
 DRY=0; SKILLS=""
@@ -27,12 +27,13 @@ done
 case "$MODEL" in opus|sol) ;; *) usage ;; esac
 case "$SIDE" in uikit|swiftui|objc) ;; *) usage ;; esac
 if [ -n "$SKILLS" ]; then
-  case "$SKILLS" in none|ours-slim|ours-full|apple) ;; *) usage ;; esac
+  case "$SKILLS" in none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple) ;; *) usage ;; esac
 fi
 L2=0
 if [ -n "$SKILLS" ] || [ "$SIDE" = objc ]; then L2=1; [ -n "$SKILLS" ] || SKILLS=none; fi
 case "$SKILLS" in
-  ours-slim|ours-full) [ "$SIDE" = uikit ] || { echo "our UIKit skill goes with the stack uikit only" >&2; exit 2; } ;;
+  ours-slim|ours-full|ours-pair) [ "$SIDE" = uikit ] || { echo "our UIKit skill goes with the stack uikit only" >&2; exit 2; } ;;
+  ours-objc-pair) [ "$SIDE" = objc ] || { echo "our Objective-C skills go with the stack objc only" >&2; exit 2; } ;;
   apple) [ "$SIDE" = swiftui ] || { echo "Apple's skills (swiftui-specialist, swiftui-whats-new-27) go with the stack swiftui only" >&2; exit 2; } ;;
 esac
 

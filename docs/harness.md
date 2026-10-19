@@ -97,19 +97,32 @@ Each build's result gets a "Stack rule" row. A SwiftUI build that uses any UIKit
 
 ## Level 2: skills and Objective-C (19 Oct)
 
-Level 2 builds (Fernando, 19 Oct), each run for Opus and Sol, one at a time, built from a fresh clone as in Level 1:
+Level 2 builds (Fernando, 19 Oct, line-up changed the same day), each run for Opus and Sol, one at a time, built from a fresh clone as in Level 1. Six builds:
 
-| Kind | Stack | Skills installed | Launch |
+| Kind | Stack | Skills installed | Build names |
 |---|---|---|---|
-| Swift UIKit + our UIKit skill | uikit | `uikit-specialist-slim` (tag `v0.2-slim`, default) or `uikit-specialist` (tag `v0.1`, full) | `Harness/launch-build.sh <opus\|sol> uikit --skills ours-slim` (or `ours-full`) |
-| SwiftUI + Apple's Xcode 27 skills | swiftui | `swiftui-specialist`, `swiftui-whats-new-27` | `... swiftui --skills apple` |
-| Objective-C UIKit, no skill | objc | none | `... objc` (same as `--skills none`) |
+| Swift UIKit + our UIKit pair | uikit | `uikit-specialist`, `uikit-whats-new-27` (vendored in `skills/uikit/`, tag `v0.3-pair` of uikit-skill) | `opus-uikit-ours-pair`, `sol-uikit-ours-pair` |
+| SwiftUI + Apple's Xcode 27 pair | swiftui | `swiftui-specialist`, `swiftui-whats-new-27` (not vendored) | `opus-swiftui-apple`, `sol-swiftui-apple` |
+| Objective-C UIKit + our Objective-C pair | objc | `uikit-specialist-objc`, `uikit-whats-new-27-objc` (to be vendored in `skills/uikit-objc/`; refuses to run until then) | `opus-objc-ours-objc-pair`, `sol-objc-ours-objc-pair` |
 
-Level 1's no-skill Swift builds stay as they were. Giving `--skills` (even `none`) or the stack `objc` selects Level 2; without it the launcher behaves exactly as in Level 1 (the dry-run output is byte for byte the same). A Level 2 build is named `<model>-<stack>-<skills>` (`opus-uikit-ours-slim`, `sol-objc-none`) and its run record says `"level": "L2"`.
+Run order, one at a time (Fernando starts them):
+
+```
+Harness/launch-build.sh opus uikit --skills ours-pair
+Harness/launch-build.sh sol uikit --skills ours-pair
+Harness/launch-build.sh opus swiftui --skills apple
+Harness/launch-build.sh sol swiftui --skills apple
+Harness/launch-build.sh opus objc --skills ours-objc-pair
+Harness/launch-build.sh sol objc --skills ours-objc-pair
+```
+
+Add `--dry-run` to any of them to print what it would do. Where the skills come from, with hashes: `skills/README.md`. The older kinds `ours-slim`, `ours-full` (uikit) and `none` (any stack) still work but are not part of the line-up.
+
+Level 1's no-skill Swift builds stay as they were. Giving `--skills` (even `none`) or the stack `objc` selects Level 2; without it the launcher behaves exactly as in Level 1 (the dry-run output is byte for byte the same). A Level 2 build is named `<model>-<stack>-<skills>` (`opus-uikit-ours-pair`, `sol-objc-none`) and its run record says `"level": "L2"`.
 
 ### Setup
 
-- Skills come from `Harness/skillset.py`. Ours: `git archive` of the tag in `~/olivares-burgos/uikit-skill` (override with `UVS_SKILL_REPO`, `UVS_SLIM_TAG`, `UVS_FULL_TAG`). Apple's: a local export in `UVS_APPLE_SKILLS`, by default the newest `~/uvs-skills/apple-*`, one folder per skill.
+- Skills come from `Harness/skillset.py`. Ours, pairs (`ours-pair`, `ours-objc-pair`): the folders `skills/uikit/` and `skills/uikit-objc/` of this repo, with the expected names checked against each `SKILL.md`; `ours-objc-pair` fails with a clear message while `skills/uikit-objc/` is missing. Ours, single (`ours-slim`, `ours-full`): `git archive` of the tag in `~/olivares-burgos/uikit-skill` (override with `UVS_SKILL_REPO`, `UVS_SLIM_TAG`, `UVS_FULL_TAG`). Apple's: a local export in `UVS_APPLE_SKILLS`, by default the newest `~/uvs-skills/apple-*`, one folder per skill.
 - The folders are copied identically into the build clone's `.claude/skills/` and `.agents/skills/` (Claude Code reads the first, Codex the second) and the copy's hash is checked against the source. They are listed in the clone's `.git/info/exclude`, so nothing a build commits can carry them.
 - Folder hash: sha256 of the lines `<sha256 of file>  skills/<folder>/<path>`, files sorted (the formula of `uikit-skill/docs/experiment-plan.md`). On 19 Oct: `uikit-specialist-slim` v0.2-slim `1692d75d...0d36`; `uikit-specialist` v0.1 `92f0db9b...2321` (9 files; the plan's `a5ccc2dd...` hash is the first draft commit, not the tag).
 - Run record (`meta.json`): `skillset` (kind, each skill's name, version, source, tag, commit, file count, hash), `skill_isolation` (expected names, error if any), `stack`, `inputs_tag`, `inputs_commit`, `stack_line`, `skill_sentence`, and for Sol the hash of the generated Codex config.
@@ -144,9 +157,11 @@ Codex 0.162.1 (empty `CODEX_HOME`, `auth.json` copied, our slim skill in the clo
 
 Cost of the probes: five tiny Haiku calls for Claude, four tiny Sol calls for Codex (one hung on stdin and was stopped; Codex needs `< /dev/null` when run by hand).
 
+Our Swift pair (`ours-pair`), probed 19 Oct (no build launched): skills installed with `skillset.py --kind ours-pair --dest <scratch> --install`. Claude Code 2.1.299, `--model claude-haiku-5-5`, the Level 2 flags and settings of `launch-build.sh`, prompt "reply ok", cwd the scratch folder: init `skills` = `uikit-specialist`, `uikit-whats-new-27` (exactly the two, no leak; `mcp_servers` empty). Codex 0.162.1, empty `CODEX_HOME` with `auth.json` and the generated `config.toml` (24 host skills off), `codex exec` "list the names of your skills, nothing else": `uikit-specialist`, `uikit-whats-new-27` (no leak). The Objective-C pair is probed the same way when it is vendored.
+
 ### What is left
 
 - Apple's skills (19 Oct): no Xcode 27 is installed, because Fernando could not install it (19 Oct), so `xcrun agent skills export` was not possible. The two skills come from the community mirror github.com/artemnovichkov/xcode-skills at commit `876d18c9beda08649e927d6c2df573899382601d` (10 Sep 2026, "Update with Xcode 27 RC", Xcode 27.0 RC build 27A266a). It agrees file by file with two other mirrors, apart from later 27.2-beta edits. It is copied outside every repo to `~/uvs-skills/apple-27.0-rc/{swiftui-specialist,swiftui-whats-new-27}`; Apple's text is never committed, here or in a build. `skillset.py --kind apple` hashes: `swiftui-specialist` 10 files `14b2ac3082c01b9970ace22d730d6cf35979e1fade02f52a42ba58c936c7c4f4`; `swiftui-whats-new-27` 8 files `5cfdad876e1a192fbe741694c3b694545a174ae7abe02eeb5806294f160e604f`.
 - Apple arm isolation, probed 19 Oct (no build launched): skills installed with `skillset.py --kind apple --dest <scratch> --install`. Claude Code 2.1.299, `--model claude-haiku-5-5`, the Level 2 flags and settings of `launch-build.sh`, prompt "reply ok": init `skills` = `swiftui-specialist`, `swiftui-whats-new-27` (exactly the two, no leak). Codex 0.162.1, empty `CODEX_HOME` with `auth.json` and the generated `config.toml` (24 host skills off), `codex exec` "list the names of your skills, nothing else": `swiftui-specialist`, `swiftui-whats-new-27` (no leak).
-- A `v2-inputs` tag (bridge in, decided by Fernando).
+- The Objective-C pair (`skills/uikit-objc/`), then its isolation probe and a re-tag of the inputs (`v2-inputs`, decided by Fernando).
 - If a Claude Code upgrade adds survivors of the bundled switch, extend the `skillOverrides` list in `launch-build.sh`; the init check catches it before a build is wasted.
