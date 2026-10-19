@@ -1,0 +1,70 @@
+# L2 results: hand-off (19 Oct, 16:50)
+
+The six Level 2 builds are built for the phone, but no benchmark round could run yet: the phone would not start UI automation. Nothing about any build was changed.
+
+## Done
+
+- **Release device builds**: all six build (`** BUILD SUCCEEDED **`) into `~/uvs-builds/dd/<build>`, app at `~/uvs-builds/dd/<build>/Build/Products/Release-iphoneos/Campfire.app`, bundle id `campfire.bench`, signed with team H8HSTBN8ZP (checked with `codesign -dvv`). Xcode 26.4.1, iOS SDK 26.4, the same as Level 1. No source changed, nothing committed in the build folders. The command, run through `buildslot run --label "uvs-l2: release build <build>"` in each build folder:
+
+  `xcodebuild build -project Campfire.xcodeproj -scheme Campfire -configuration Release -destination id=00008101-00062D410CE9003A -derivedDataPath ~/uvs-builds/dd/<build> -allowProvisioningUpdates DEVELOPMENT_TEAM=H8HSTBN8ZP CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES "CODE_SIGN_IDENTITY=Apple Development" -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_MYT9KLPSWK.p8 -authenticationKeyID MYT9KLPSWK -authenticationKeyIssuerID 69a6de85-b768-47e3-e053-5b8c7c11a4d1`
+
+  The signing settings are given on the command line because three Sol builds set `CODE_SIGNING_ALLOWED: NO` in their `project.yml` (their `.app` came out unsigned and can't be installed), and opus-objc-ours-objc-pair sets `CODE_SIGN_IDENTITY: "-"`, which fails with "has entitlements that require signing with a development certificate". These are signing settings only, the same for all six; they don't touch any code. opus-uikit-ours-pair and opus-swiftui-apple were built once without the last three settings and came out signed the same way.
+- **Stack rule** (`Harness/check-stack.sh <stack> <build folder>`):
+
+  | Build | Stack rule |
+  |---|---|
+  | opus-uikit-ours-pair | pass |
+  | sol-uikit-ours-pair | pass |
+  | opus-swiftui-apple | **fail**: `Campfire/RowParts.swift:2: import UIKit  // UIPasteboard only; no UIKit views` |
+  | sol-swiftui-apple | **fail**: `Campfire/MessageRow.swift:3: import class UIKit.UIPasteboard` |
+  | opus-objc-ours-objc-pair | pass (no .swift file, no SwiftUI, CampfireKit unchanged) |
+  | sol-objc-ours-objc-pair | pass |
+
+  Both SwiftUI builds still reach for UIPasteboard for Copy, the same as in Level 1, even with Apple's skills installed.
+- **App size** (method in `docs/results-l1.md`, "App size"; `du -sk` of the signed Release `.app` ÷ 1024; Level 1 sizes are also in `docs/results-l1.md`):
+
+  | Build | App size | Executable (bytes) | Notes |
+  |---|---|---|---|
+  | opus-uikit (L1) | 0.68 MB | 676,304 | |
+  | sol-uikit (L1) | 0.62 MB | 617,104 | |
+  | opus-swiftui (L1) | 1.48 MB | 1,518,848 | |
+  | sol-swiftui (L1) | 1.57 MB | 1,612,352 | |
+  | opus-uikit-ours-pair | 0.71 MB | 705,936 | |
+  | sol-uikit-ours-pair | 0.64 MB | 636,832 | |
+  | opus-swiftui-apple | 1.50 MB | 1,540,800 | |
+  | sol-swiftui-apple | 1.20 MB | 1,226,080 | |
+  | opus-objc-ours-objc-pair | 0.66 MB | 655,472 | |
+  | sol-objc-ours-objc-pair | 2.70 MB | 535,696 | the only bundle with an asset catalog: `Assets.car` 2,184,440 bytes (icons, with an `Assets-LICENSE.txt` from 37signals), plus two app icon PNGs |
+
+- **Build-agent cost** (from `runs/<build>/meta.json`; Level 1 reported no tokens, so neither does this):
+
+  | Build | Wall time | Turns | Xcode builds (failed) | Commits |
+  |---|---|---|---|---|
+  | opus-uikit-ours-pair | 2231 s | 95 | 12 (0) | 0 |
+  | sol-uikit-ours-pair | 1233 s | 90 | 14 (7) | 0 |
+  | opus-swiftui-apple | 4301 s | 197 | 24 (0) | 2 |
+  | sol-swiftui-apple | 1209 s | 113 | 15 (8) | 0 |
+  | opus-objc-ours-objc-pair | 2884 s | 106 | 12 (0) | 2 |
+  | sol-objc-ours-objc-pair | 1297 s | 118 | 24 (8) | 0 |
+
+  opus-uikit-ours-pair was cloned from the first `v2-inputs` cut (`8f7340b`, before the Objective-C pair was vendored); the other five from `80cda43`. For a Swift UIKit build the difference is only the files it never reads (the objc skills, not installed in its arm).
+- `Harness/tools/results_table.py`: group headers can now span any number of columns, and the footer line is a spec field (default the Level 1 text). The Level 1 images re-render byte for byte the same.
+
+## Blocked: the phone
+
+The first round (opus-uikit-ours-pair, 16:39) stopped at once: the wake test and both cold-launch tests failed with "The test runner failed to initialize for UI testing (Timed out while enabling automation mode)", the same as in Level 1 on 18 Oct. devicectl shows the iPhone 12 connected, `passcodeRequired: false`. The queue was stopped after launch 2 so the other five rounds wouldn't fail the same way. The attempt is in `runs/opus-uikit-ours-pair/aborted-r1-automation-mode-timeout/` (moved, not deleted, so round 1 is free).
+
+Someone has to be at the phone: unlock it and keep it awake, check Settings > Developer > Enable UI Automation is on, accept any prompt on the screen (if none shows, unplug and replug the cable or restart the phone).
+
+## What is left
+
+1. Round 1 of each build, one at a time, in this order (about 32 min each, 3 h 15 min in all). Every Level 2 Opus build ran on the fixed stream test, so no stream-only reruns are needed:
+
+   ```
+   buildslot run --label "uvs-l2: record <build> r1" -- Harness/record.sh --build <build> --round 1 --app-path /Users/amazinghumans/uvs-builds/dd/<build>/Build/Products/Release-iphoneos/Campfire.app
+   ```
+
+   for `opus-uikit-ours-pair sol-uikit-ours-pair opus-swiftui-apple sol-swiftui-apple opus-objc-ours-objc-pair sol-objc-ours-objc-pair`, from the repo root. Watch `logs/failures.txt` in the round folder: if the first launch fails with the automation-mode time-out again, stop at once.
+2. Write `docs/results-l2.md` shaped like `docs/results-l1.md`: one table per build (or one table with six columns) with the same rows, the stack rule, app size and agent cost from above, judged against the spec numbers in `summary.json` (drift within 2 pt, still pinned, 600 added, first content under 1 s, selection and menu both "yes"; the harness tests pass even when a spec number misses). Then a Level 1 vs Level 2 comparison: opus-uikit vs opus-uikit-ours-pair, sol-uikit vs sol-uikit-ours-pair, opus-swiftui vs opus-swiftui-apple, sol-swiftui vs sol-swiftui-apple (the objc builds have no Level 1 twin; compare them with the Swift UIKit builds of the same model).
+3. Images: add an `L2` spec to `Harness/tools/results_table.py` (six columns, `file="results-l2"`, groups Opus (0, 2) and Sol (3, 5), `footer` naming Level 2) and a `--l2` switch that renders only it, so the Level 1 images stay as they are.
+4. Commit by name (`runs/` is never committed) and push.

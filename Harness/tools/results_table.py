@@ -186,8 +186,9 @@ def render(name, spec=None):
     # group header
     for g, (a, b) in groups or []:
         gx = x0 + LABEL_W + COL_W * a
-        d.rounded_rectangle([(gx + 4) * S, y * S, (gx + COL_W * 2 - 4) * S, (y + GROUP_H - 6) * S], 8 * S, fill=th["head"])
-        centered(d, gx + COL_W, y + (GROUP_H - 6) / 2, g, font(16, True), th["text"])
+        span = b - a + 1
+        d.rounded_rectangle([(gx + 4) * S, y * S, (gx + COL_W * span - 4) * S, (y + GROUP_H - 6) * S], 8 * S, fill=th["head"])
+        centered(d, gx + COL_W * span / 2, y + (GROUP_H - 6) / 2, g, font(16, True), th["text"])
     y += group_h
     for i, (b, kind) in enumerate(BUILDS):
         cx = x0 + LABEL_W + COL_W * i + COL_W / 2
@@ -242,7 +243,7 @@ def render(name, spec=None):
         d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, outline=th["text"], width=2 * S)
         d.text(((lx + 26) * S, (y + 7) * S), "Best in row (bold, outlined)", font=font(13), fill=th["muted"], anchor="lm")
     y += 28
-    d.text((x0 * S, (y + 6) * S), "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui",
+    d.text((x0 * S, (y + 6) * S), spec.get("footer", "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui"),
            font=font(13), fill=th["muted"], anchor="lm")
     out = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "images",
                        spec["file"] + (".png" if name == "light" else "-dark.png"))

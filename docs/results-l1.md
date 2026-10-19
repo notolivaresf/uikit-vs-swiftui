@@ -23,6 +23,7 @@ A behaviour passes when it meets PROMPT.md's numbers: position kept within 2 pt,
 | Context menu | pass |
 | Text selection | **fail**: no selection, not even on long press |
 | Peak memory (heavy session) | 43.9 MB |
+| App size (Release .app, added 19 Oct) | 0.68 MB |
 | Agent: wall time / turns / builds (failed) | 2633 s / 75 / 22 (2) |
 
 ## opus-swiftui (Opus, SwiftUI)
@@ -42,6 +43,7 @@ A behaviour passes when it meets PROMPT.md's numbers: position kept within 2 pt,
 | Context menu | pass |
 | Text selection | **fail** |
 | Peak memory (heavy session) | 69.7 MB |
+| App size (Release .app, added 19 Oct) | 1.48 MB |
 | Agent: wall time / turns / builds (failed) | 8070 s / 204 / 41 (1) |
 
 ## sol-uikit (Sol, UIKit)
@@ -61,6 +63,7 @@ A behaviour passes when it meets PROMPT.md's numbers: position kept within 2 pt,
 | Context menu | pass |
 | Text selection | pass (also on long press) |
 | Peak memory (heavy session) | 39.7 MB |
+| App size (Release .app, added 19 Oct) | 0.62 MB |
 | Agent: wall time / turns / builds (failed) | 1200 s / 102 / 15 (3) |
 
 ## sol-swiftui (Sol, SwiftUI)
@@ -80,6 +83,7 @@ A behaviour passes when it meets PROMPT.md's numbers: position kept within 2 pt,
 | Context menu | pass |
 | Text selection | **fail** |
 | Peak memory (heavy session) | not measured: the heavy session includes the stream, which didn't finish |
+| App size (Release .app, added 19 Oct) | 1.57 MB |
 | Agent: wall time / turns / builds (failed) | 1972 s / 106 / 28 (9) |
 
 ## What failed and why
@@ -91,6 +95,17 @@ A behaviour passes when it meets PROMPT.md's numbers: position kept within 2 pt,
 - sol-swiftui, Stack rule: uses UIKit's UIPasteboard for Copy.
 - sol-swiftui, live stream: every message re-anchors the scroll and rebuilds the 300-row window on the main thread; the phone falls behind (about 7 messages a second instead of 20). The same failure took down the stream trace and the memory test, which plays the stream.
 - sol-swiftui, text selection: message text can't be selected.
+
+## App size (added 19 Oct)
+
+Fernando asked on 19 Oct for the app's total size. It is the size on disk of the Release iPhone `.app` bundle the rounds installed (`~/uvs-builds/dd/<build>/Build/Products/Release-iphoneos/Campfire.app`, built on 18 Oct with Xcode 26.4.1, iOS SDK 26.4, `-configuration Release -destination id=<the iPhone 12>`, signed with team H8HSTBN8ZP), measured with `du -sk` and divided by 1024, so 1 MB here is 1,048,576 bytes. It covers everything in the bundle: the executable (CampfireKit is linked into it statically), Info.plist, the signature and the provisioning profile (about 36 KB together). It is not the App Store download size (no App Thinning, no compression). The four Level 1 bundles hold nothing else (no asset catalog, no frameworks); the executable is 97% of each. Level 2 sizes, measured the same way, are in `docs/results-l2.md`.
+
+| Build | App size | Executable |
+|---|---|---|
+| opus-uikit | 0.68 MB | 676,304 bytes |
+| opus-swiftui | 1.48 MB | 1,518,848 bytes |
+| sol-uikit | 0.62 MB | 617,104 bytes |
+| sol-swiftui | 1.57 MB | 1,612,352 bytes |
 
 ## Known limits
 
