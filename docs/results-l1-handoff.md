@@ -1,5 +1,7 @@
 # L1 results: hand-off (18 Oct, 16:05)
 
+**Superseded:** L1 is finished; results are in `docs/results-l1.md`. Nothing is left to run (rounds 2 and 3 cut by Fernando, 18 Oct).
+
 ## Done
 
 - Release device builds: all four build (`** BUILD SUCCEEDED **`), each into `~/uvs-builds/dd/<build>`; app at `~/uvs-builds/dd/<build>/Build/Products/Release-iphoneos/Campfire.app`, bundle id `campfire.bench`. Signed with team H8HSTBN8ZP, automatic, the App Store Connect key. No app code changed.
