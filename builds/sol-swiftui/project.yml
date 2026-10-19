@@ -1,0 +1,75 @@
+name: Campfire
+options:
+  defaultConfig: Release
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: '18.0'
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: '6.0'
+    SWIFT_STRICT_CONCURRENCY: complete
+    IPHONEOS_DEPLOYMENT_TARGET: '18.0'
+    TARGETED_DEVICE_FAMILY: '1'
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_OPTIMIZATION_LEVEL: '-O'
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources: [Campfire]
+    dependencies:
+      - package: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: 'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+  CampfireUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [CampfireUITests]
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+  CampfireLayoutTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [CampfireLayoutTests]
+    dependencies:
+      - target: Campfire
+      - package: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.layouttests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  CampfireLayout:
+    build:
+      targets:
+        Campfire: all
+        CampfireLayoutTests: [test]
+    test:
+      config: Debug
+      targets: [CampfireLayoutTests]
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+        CampfireUITests: [test]
+    run:
+      config: Release
+    test:
+      config: Release
+      targets: [CampfireUITests]

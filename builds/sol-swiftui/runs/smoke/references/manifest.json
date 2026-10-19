@@ -1,0 +1,188 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "796FF464-81CE-4C66-B3B8-8F426C95C46F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "long-boosts-dark_0_86AE6D63-4DF8-4E54-B7F4-18822EFB43A9.png",
+        "timestamp" : 1792359656.752
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "03F2FCF3-A761-4767-A277-1DF595A8124A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "emoji-only-dark_0_B17E2DFE-18EA-4987-85CB-ACE8A1369CB8.png",
+        "timestamp" : 1792359656.738
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "D3C8F1D3-0E80-4ACD-9F0B-D9A68E35F582.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "file-dark_0_24753A06-9FA3-49FF-A8D1-39D38C00CB6F.png",
+        "timestamp" : 1792359656.728
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "A62B4722-D60C-4D3C-9C12-7D364E0A9C26.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "code-dark_0_90205E9F-2BB4-429B-9FF4-82B065080CC7.png",
+        "timestamp" : 1792359656.716
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "346DD89E-1D34-442C-9CE6-AB0019FBEEB1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "image-boosts-dark_0_2F84D5C4-E677-4900-BAF5-F65B9172587D.png",
+        "timestamp" : 1792359656.705
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "C5DB301B-7B54-43CC-800C-17F2F62AACBD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "mention-dark_0_D116664F-A605-49A0-8780-1052B74106BB.png",
+        "timestamp" : 1792359656.683
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "847A5944-69C5-4122-897C-9224E3EDC6FA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "mine-dark_0_93A3F76B-05BC-42A4-934A-2B05E82A29F7.png",
+        "timestamp" : 1792359656.672
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "0792A2EF-118D-438D-88D8-878649C7AFBC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "long-text-dark_0_7FCE3E94-0C3C-4EB7-83BF-241F5A778A46.png",
+        "timestamp" : 1792359656.663
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "F6A04911-C612-4F26-B1F1-4CF9060DFD61.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "threaded-dark_0_460F1C64-BEB1-4344-9F54-906BDEDE4F34.png",
+        "timestamp" : 1792359656.649
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "EC06CF15-C3D3-4D11-ACDE-8BFC46B28CEA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "day-separator-dark_0_AE9656FE-12DE-4B13-BFA8-BCC77B4B75A6.png",
+        "timestamp" : 1792359656.64
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "4BC9D953-996A-4676-AF70-6BA09C4B3F61.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "long-boosts-light_0_B272527B-F345-412A-A53F-BC28ECACAB8B.png",
+        "timestamp" : 1792359656.627
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "17B4EB22-24ED-41CE-AA9F-71C91AF5C0D3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "emoji-only-light_0_43453B2F-4BAF-48F5-936B-B7A2415A551F.png",
+        "timestamp" : 1792359656.614
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "FF3283EE-141D-44D4-B6D9-614791329014.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "file-light_0_425DB7D0-AFF6-400B-8A2E-D0986EAD80EC.png",
+        "timestamp" : 1792359656.604
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "4461DE7F-243E-47AB-A7F4-DEEF1BCEB0FA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "code-light_0_B43CE42F-22F7-454A-82E0-48CE82821690.png",
+        "timestamp" : 1792359656.591
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "216ED5DA-23DB-4006-8322-8D08166621DF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "image-boosts-light_0_1C41B8B3-312B-48DD-9297-90EF6290F730.png",
+        "timestamp" : 1792359656.58
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "7DAF589D-2F4C-4E17-ACD7-9ADCC9E182EE.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "mention-light_0_D538E24B-64F2-436E-BFA6-8DBC8455979B.png",
+        "timestamp" : 1792359656.556
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "61701B94-48FA-4C52-B7FD-EAC15B8B7C8C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "mine-light_0_59129D4C-1FC8-4F47-9C7F-3820AD4DC239.png",
+        "timestamp" : 1792359656.545
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "E6C1A78C-9A2F-4961-9635-AFFE903C9655.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "long-text-light_0_2ABF9FB5-F5AD-46F3-B182-F51B3498C9C1.png",
+        "timestamp" : 1792359656.535
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "260BE063-0AA8-4607-901C-EAD87EB21AF6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "threaded-light_0_77A123C9-163B-44B8-B1C2-1ADA303B229A.png",
+        "timestamp" : 1792359656.52
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "10BFD5DE-ABF3-4567-959B-943229E8289A",
+        "deviceName" : "cf-opus-swiftui",
+        "exportedFileName" : "518A1C38-33BE-48BB-AD44-10B5E56098F1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "day-separator-light_0_2EA951E3-0AFC-451D-85EF-9DABCC330CC8.png",
+        "timestamp" : 1792359656.51
+      }
+    ],
+    "testIdentifier" : "ReferenceLayoutTests/testReferenceRowHeightsInBothAppearances()",
+    "testIdentifierURL" : "test://com.apple.xcode/Campfire/CampfireLayoutTests/ReferenceLayoutTests/testReferenceRowHeightsInBothAppearances"
+  }
+]

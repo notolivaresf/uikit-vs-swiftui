@@ -1,0 +1,71 @@
+Building for production...
+[0/7] /Users/amazinghumans/uvs-builds/sol-swiftui/CampfireKit/.build/arm64-apple-macosx/release/CampfireKitPackageTests.derived/runner.swift
+[1/7] Write sources
+[4/7] Write swift-version--32010AED7ABC631F.txt
+[6/8] Compiling CampfireKit Generator.swift
+[7/9] Compiling CampfireKitTests CampfireKitTests.swift
+[8/10] Compiling CampfireKitPackageTests runner.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking CampfireKitPackageTests
+Build complete! (9.45s)
+Test Suite 'All tests' started at 2026-10-18 15:19:04.993.
+Test Suite 'All tests' passed at 2026-10-18 15:19:04.995.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1743
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite ShowcaseTests started.
+◇ Suite GroupingTests started.
+◇ Suite LiveFeedTests started.
+◇ Suite DeterminismTests started.
+◇ Suite ScaleTests started.
+◇ Test lastPageHoldsEveryKind() started.
+◇ Test threadingAndDays() started.
+◇ Test pages() started.
+◇ Test playYieldsEvents() started.
+◇ Test scriptDeterministicAndRated() started.
+◇ Test placeholderPNG() started.
+◇ Test shape() started.
+◇ Test boostsAreShort() started.
+◇ Test differentSeedDiffers() started.
+◇ Test fiftyKTimingAndMix() started.
+◇ Test goldenFingerprint() started.
+◇ Test sameSeedSameData() started.
+◇ Test prefixStable() started.
+◇ Test fiftyKSize() started.
+✔ Test placeholderPNG() passed after 0.004 seconds.
+✔ Test pages() passed after 0.007 seconds.
+✔ Test differentSeedDiffers() passed after 0.006 seconds.
+✔ Test scriptDeterministicAndRated() passed after 0.007 seconds.
+✔ Test sameSeedSameData() passed after 0.007 seconds.
+kind plain short: [961, 964, 965, 966, 967, 968, 979, 981, 983, 985, 986, 987, 989, 991, 993, 994, 999]
+kind long two paragraphs: [962, 980, 1000]
+✔ Test goldenFingerprint() passed after 0.007 seconds.
+kind threaded: [966, 967, 977, 978, 980, 981, 982, 983, 984, 985, 991, 992, 994, 995, 996, 998, 999, 1000]
+kind mine: [968, 987]
+kind mention of me: [969, 992]
+kind mention of other: [963, 984]
+kind image with boosts: [970]
+kind code: [971]
+kind file: [972]
+kind emoji only: [973, 978]
+kind text boost: [964, 970, 974, 981, 993]
+kind day separator: [979]
+kind many boosts: [974]
+✔ Test threadingAndDays() passed after 0.010 seconds.
+✔ Suite GroupingTests passed after 0.010 seconds.
+✔ Test prefixStable() passed after 0.011 seconds.
+✔ Test boostsAreShort() passed after 0.019 seconds.
+✔ Test shape() passed after 0.020 seconds.
+✔ Test lastPageHoldsEveryKind() passed after 0.033 seconds.
+✔ Suite ShowcaseTests passed after 0.033 seconds.
+CampfireKit: generated 50000 messages in 0.067589708 seconds
+✔ Test fiftyKSize() passed after 0.074 seconds.
+✔ Suite DeterminismTests passed after 0.074 seconds.
+mix %: long 7.9479999999999995 image 5.970000000000001 code 3.044 mention 4.9079999999999995 boosts 8.08
+mine 9.962 mentionsOfMe/mentions 40.34229828850856 textBoosts 19.23218899963086
+✔ Test fiftyKTimingAndMix() passed after 0.092 seconds.
+✔ Suite ScaleTests passed after 0.092 seconds.
+✔ Test playYieldsEvents() passed after 0.200 seconds.
+✔ Suite LiveFeedTests passed after 0.200 seconds.
+✔ Test run with 14 tests in 5 suites passed after 0.200 seconds.

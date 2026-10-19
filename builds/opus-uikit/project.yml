@@ -1,0 +1,56 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: CampfireKit
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources:
+      - path: Campfire
+    dependencies:
+      - package: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: Campfire
+        INFOPLIST_FILE: Campfire/Info.plist
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: NO
+  CampfireUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CampfireUITests
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_TARGET_NAME: Campfire
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+        CampfireUITests: [test]
+    test:
+      config: Release
+      targets:
+        - CampfireUITests
+    run:
+      config: Release
+      commandLineArguments:
+        "-uvsBenchmark YES": false
