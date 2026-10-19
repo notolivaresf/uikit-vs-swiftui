@@ -15,9 +15,18 @@ Folder hash: sha256 of the text made of one line `<sha256 of file>  skills/<fold
 
 Used by: Swift UIKit builds, `--skills ours-pair`.
 
-## Ours, Objective-C (to come)
+## Ours, Objective-C (vendored here)
 
-`skills/uikit-objc/{uikit-specialist-objc,uikit-whats-new-27-objc}` will be vendored here later. Until then `--skills ours-objc-pair` refuses to run. Origin, tag, commit and hashes will be listed here when it lands.
+`skills/uikit-objc/` holds a copy of two skills from the private repo `notolivaresf/uikit-skill` (local clone `~/olivares-burgos/uikit-skill`), tag `v0.4-objc-pair`, commit `4f62bfd7a8b8b51fa0ea30bedc697dd7ad8173d1`. Taken with `git archive v0.4-objc-pair skills/uikit-specialist-objc skills/uikit-whats-new-27-objc`.
+
+| Skill | Files | sha256 of the folder |
+|---|---|---|
+| `uikit-specialist-objc` | 16 | `30d8d4dbf32885e220b03383b18189274f7eab4ae1a2c335299906d15dde992c` |
+| `uikit-whats-new-27-objc` | 11 | `3dad207663da3f5265277a57162f5cb97bc5949e1081a3cbcdedb7d1dc223631` |
+
+Same folder-hash formula as above (`python3 Harness/skillset.py --kind ours-objc-pair`).
+
+Used by: Objective-C builds, `--skills ours-objc-pair`.
 
 ## Apple's (not vendored)
 
