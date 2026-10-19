@@ -37,4 +37,4 @@ One page of 40 messages, median of 1,000 runs, release build on the Mac (`swift 
 - wrapping 40 `Message` values into `CFKMessage`: about 0.017 ms
 - the full `pageBeforeMessageID:` call (id lookup, slice, grouping, wrapping): about 0.066 ms
 
-So the bridge adds under a tenth of a millisecond per page; it is not a meaningful cost next to layout. In a debug build everything is about 50 times slower.
+So the bridge adds under a tenth of a millisecond per page; it is not a meaningful cost next to layout.
