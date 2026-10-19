@@ -5,10 +5,12 @@ Usage: screens_compare_v2.py <reference screens-fixture dir> <runs/screens-v2 di
 Output: <runs/screens-v2>/compare/room-bottom-<theme>.png, room-top-<theme>.png, rows-<group>-<theme>.png
 
 Every shot is 3 px per point (Chrome at deviceScaleFactor 3, iPhone 12 at @3x), so tiles are placed point for point.
-Phone shots lose the status bar (top 47 pt) on every shot; the reference is a browser viewport with no status bar.
+Phone shots lose the status bar (top 47 pt); the reference is a browser viewport with no status bar. A build that
+hides the status bar (its top 30 px are not one colour) keeps its whole shot.
 Rows: the reference crop is Campfire's own .message element. A build's row is cropped from its full-screen
 row-<kind>-<id> shot by the frame in row-<kind>-<id>.json (the cell holding the row; for builds without cells the
-text element, widened to the row: from 34 pt above the text to the reference row's height)."""
+text element, widened to the row: from 34 pt above the text, 70 more for the day separator's date band, to the
+reference row's height)."""
 import json, sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
@@ -20,7 +22,9 @@ GROUPS = {
     "text": ["long-text", "threaded", "mine", "mention", "mention-me", "text-boosts"],
     "media": ["image-boosts", "code", "file", "emoji-only", "long-boosts", "day-separator"],
 }
-PX, STATUS = 3, 47                   # px per point; iPhone 12 status bar in points
+# states a build cannot reach, marked on its grey tile
+UNREACHED = {("sol-swiftui", "room-top"): "can't reach the top (stalls at message 2,220)"}
+PX, STATUS = 3, 47                  # px per point; iPhone 12 status bar in points
 OUT_SCALE = 0.5                      # sheet pixels per screenshot pixel
 GAP, LABEL = 24, 70
 font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 44)
@@ -39,6 +43,9 @@ def grey(w, h, text):
 
 def phone_room(path):
     img = Image.open(path).convert("RGB")
+    lo, hi = img.convert("L").crop((0, 0, img.width, 30)).getextrema()
+    if hi - lo > 40:                 # app hides the status bar (sol-uikit): its header starts at y 0, keep it
+        return img
     return img.crop((0, STATUS * PX, img.width, img.height))
 
 def build_row(build, kind, rid, theme, ref_h):
@@ -56,7 +63,8 @@ def build_row(build, kind, rid, theme, ref_h):
         return None, "no frame"
     x, y, w, h = f
     if info.get("source") != "cell":
-        y, h = y - 34, ref_h / PX
+        # the day-separator reference row carries the date band (about 70 pt) above the message header
+        y, h = y - 34 - (70 if kind == "day-separator" else 0), ref_h / PX
     top = max(round(y * PX), STATUS * PX)
     return img.crop((0, top, img.width, min(img.height, round((y + h) * PX)))), info.get("source", "")
 
@@ -89,7 +97,8 @@ for theme in ["light", "dark"]:
         cols = [("Campfire reference", [Image.open(ref_dir / theme_name(state, theme, True)).convert("RGB")])]
         for b in builds:
             p = runs / b / theme_name(state, theme, False)
-            cols.append((b, [phone_room(p) if p.exists() else grey(390 * PX, 800 * PX, "no shot")]))
+            why = UNREACHED.get((b, state), "no shot")
+            cols.append((b, [phone_room(p) if p.exists() else grey(390 * PX, 800 * PX, why)]))
         sheet(cols, out / f"{state}-{theme}.png", f"{state}, {theme}: same data (CampfireKit seed), status bar cropped on the phone shots")
     for group, kinds in GROUPS.items():
         ref_tiles, notes = [], []
