@@ -112,17 +112,36 @@ def best_rows():
             else:
                 rank = "bad"
             out_cells.append((rank, main, (extra + " \u00b7 " if extra else "") + who, False))
+        unit = {"fps": ("Fling", "Live stream, 600 messages"), "ms": ("First 40 rows (cold)", "Jump to message 2,500", "Load older"),
+                "MB": ("Peak memory",)}
+        u = next((k for k, v in unit.items() if label in v), None)
+        if u and su is not None and sw is not None and su != sw:
+            worse = 0 if su > sw else 1
+            vals = [num(out_cells[0][1]), num(out_cells[1][1])]
+            win, lose = vals[1 - worse], vals[worse]
+            diff = abs(lose - win)
+            pct = diff / win * 100
+            ptxt = ("%.0f" if pct >= 1 else "%.1f") % pct
+            red = out_cells[worse][0] == "bad"
+            if u == "fps":
+                txt = "%.1f fps fewer (\u2212%s%%)" % (diff, ptxt)
+            elif u == "ms":
+                txt = "+%.0f ms (+%s%%%s)" % (diff, ptxt, " slower" if red else "")
+            else:
+                txt = "+%.1f MB (+%s%%%s)" % (diff, ptxt, " more" if red else "")
+            c = out_cells[worse]
+            out_cells[worse] = (c[0], c[1], c[2], (txt, c[0]))
         out.append((label, out_cells))
     return out
 
 
 BEST = dict(title="Best of UIKit vs best of SwiftUI",
-            subtitle="Each stack's best build per row, so no single app does all of it. Colour shows who wins the row.",
-            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None,
+            subtitle="Each stack's best build per row. Colour shows who wins; the last line shows how far behind.",
+            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None, row_h=76,
             legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("warn", "Within 5%")])
 
 S = 2  # scale
-LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36
+LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
 
 
@@ -150,6 +169,7 @@ def render(name, spec=None):
     spec = spec or FULL
     th = THEMES[name]
     BUILDS, ROWS, COL_W = spec["builds"], spec["rows"], spec["col_w"]
+    ROW_H = spec.get("row_h", 62)
     groups = spec["groups"]
     group_h = GROUP_H if groups else 0
     W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
@@ -181,6 +201,8 @@ def render(name, spec=None):
     for label, cells in ROWS:
         d.text(((x0 + 4) * S, (y + ROW_H / 2) * S), label, font=font(16, True), fill=th["text"], anchor="lm")
         for i, (state, main, sub, best) in enumerate(cells):
+            delta = best if isinstance(best, tuple) else None
+            best = best is True
             bgc, fg = th[state]
             cx0 = x0 + LABEL_W + COL_W * i + 4
             r = [cx0 * S, (y + 4) * S, (cx0 + COL_W - 8) * S, (y + ROW_H - 4) * S]
@@ -193,13 +215,19 @@ def render(name, spec=None):
             cx = cx0 + (COL_W - 8) / 2
             mf = font(17, best)
             lines = wrap(d, main, mf, COL_W - 28)
-            n = len(lines) + (1 if sub else 0)
+            n = len(lines) + (1 if sub else 0) + (1 if delta else 0)
             lh = 21
             ty = y + ROW_H / 2 - (n - 1) * lh / 2
             for ln in lines:
                 centered(d, cx, ty, ln, mf, th["text"]); ty += lh
             if sub:
                 centered(d, cx, ty - 1, sub, font(13), th["muted"])
+                ty += lh - 3
+            if delta:
+                if delta[1] == "bad":
+                    centered(d, cx, ty, delta[0], font(14, True), th["bad"][1])
+                else:
+                    centered(d, cx, ty, delta[0], font(14), th["muted"])
         y += ROW_H
         d.line([(x0 * S, y * S), ((W - PAD) * S, y * S)], fill=th["line"], width=S)
     # legend
