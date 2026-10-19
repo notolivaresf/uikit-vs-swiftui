@@ -109,6 +109,10 @@ def main():
     ap.add_argument("--requested-model", required=True)
     ap.add_argument("--effort", required=True)
     ap.add_argument("--cli-version", default="")
+    ap.add_argument("--skillset-json", help="Level 2: skillset.py record, stored in meta.json")
+    ap.add_argument("--expect-skills", help="Level 2, Claude: comma-separated skill names the init event must list "
+                    "exactly (empty string = none); on a mismatch the build is stopped before it starts")
+    ap.add_argument("--extra-json", help="Level 2: extra fields for meta.json (stack, inputs tag, config hashes)")
     ap.add_argument("--parse-only", help="skip running; parse this transcript (self-test)")
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     a = ap.parse_args()
@@ -118,6 +122,7 @@ def main():
     transcript = a.parse_only or os.path.join(a.run_dir, "transcript.jsonl")
     start, t0 = now(), time.time()
     exit_code = None
+    isolation_error = None
     if not a.parse_only:
         with open(transcript, "wb") as out, open(os.path.join(a.run_dir, "transcript.times"), "w") as tm, \
                 open(os.path.join(a.run_dir, "stderr.log"), "wb") as err:
@@ -125,6 +130,18 @@ def main():
             for line in p.stdout:
                 out.write(line); out.flush()
                 tm.write("%.3f\n" % time.time()); tm.flush()
+                if a.expect_skills is not None and a.model == "opus" and isolation_error is None and b'"init"' in line:
+                    try:
+                        ev = json.loads(line)
+                    except ValueError:
+                        continue
+                    if ev.get("type") == "system" and ev.get("subtype") == "init":
+                        want = sorted(x for x in a.expect_skills.split(",") if x)
+                        got = sorted(ev.get("skills") or [])
+                        isolation_error = "" if want == got else "init lists skills %s, expected %s" % (got, want)
+                        if isolation_error:
+                            print("STOPPING: " + isolation_error, file=sys.stderr)
+                            p.terminate()
             exit_code = p.wait()
     stop, t1 = now(), time.time()
     idle = idle_gaps(os.path.join(os.path.dirname(transcript), "transcript.times"))
@@ -135,6 +152,15 @@ def main():
                 start=start, stop=stop, wall_seconds=round(t1 - t0), idle_gaps_over_20min=idle,
                 exit_code=exit_code, commits=commits(a.build_dir), transcript=os.path.basename(transcript),
                 **parsed)
+    if a.expect_skills is not None:
+        meta["skill_isolation"] = dict(expected=sorted(x for x in a.expect_skills.split(",") if x),
+                                       error=(isolation_error or None) if isolation_error is not None else ("no init event seen" if a.model == "opus" else None),
+                                       checked=("claude init event" if a.model == "opus" else
+                                                "none in the transcript: Codex prints no skill list; isolation is the generated config.toml (see skillset)"))
+    if a.skillset_json:
+        meta["skillset"] = json.load(open(a.skillset_json))
+    if a.extra_json:
+        meta.update(json.load(open(a.extra_json)))
     dest = os.path.join(a.run_dir, "meta.json")
     if a.parse_only:
         print(json.dumps(meta, indent=2))

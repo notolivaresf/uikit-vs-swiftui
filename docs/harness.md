@@ -94,3 +94,58 @@ Same package (`CampfireKit`), launch argument, phone, Xcode and Release configur
 ## Stack rule check (Fernando, 18 Oct)
 
 Each build's result gets a "Stack rule" row. A SwiftUI build that uses any UIKit API, including small ones such as `UIPasteboard` for Copy, fails that row, and the failure is listed as missing functionality: the build could not do that feature in SwiftUI alone. It doesn't have to redo the work, and the rest of its tests and benchmarks still run and are reported. Check with `git grep -nE 'UIKit|UIViewRepresentable|UIViewControllerRepresentable|UIHostingController' -- '*.swift'`, outside `CampfireKit/`. Status at the end of L1: opus-swiftui (`Campfire/Pasteboard.swift`) and sol-swiftui (`Campfire/MessageRow.swift`, `Campfire/SelectableMessageText.swift`) both fail it, because they import `UIKit.UIPasteboard` for Copy.
+
+## Level 2: skills and Objective-C (19 Oct)
+
+Level 2 builds (Fernando, 19 Oct), each run for Opus and Sol, one at a time, built from a fresh clone as in Level 1:
+
+| Kind | Stack | Skills installed | Launch |
+|---|---|---|---|
+| Swift UIKit + our UIKit skill | uikit | `uikit-specialist-slim` (tag `v0.2-slim`, default) or `uikit-specialist` (tag `v0.1`, full) | `Harness/launch-build.sh <opus\|sol> uikit --skills ours-slim` (or `ours-full`) |
+| SwiftUI + Apple's Xcode 27 skills | swiftui | `swiftui-specialist`, `swiftui-whats-new-27` | `... swiftui --skills apple` |
+| Objective-C UIKit, no skill | objc | none | `... objc` (same as `--skills none`) |
+
+Level 1's no-skill Swift builds stay as they were. Giving `--skills` (even `none`) or the stack `objc` selects Level 2; without it the launcher behaves exactly as in Level 1 (the dry-run output is byte for byte the same). A Level 2 build is named `<model>-<stack>-<skills>` (`opus-uikit-ours-slim`, `sol-objc-none`) and its run record says `"level": "L2"`.
+
+### Setup
+
+- Skills come from `Harness/skillset.py`. Ours: `git archive` of the tag in `~/olivares-burgos/uikit-skill` (override with `UVS_SKILL_REPO`, `UVS_SLIM_TAG`, `UVS_FULL_TAG`). Apple's: a local export in `UVS_APPLE_SKILLS`, by default the newest `~/uvs-skills/apple-*`, one folder per skill.
+- The folders are copied identically into the build clone's `.claude/skills/` and `.agents/skills/` (Claude Code reads the first, Codex the second) and the copy's hash is checked against the source. They are listed in the clone's `.git/info/exclude`, so nothing a build commits can carry them.
+- Folder hash: sha256 of the lines `<sha256 of file>  skills/<folder>/<path>`, files sorted (the formula of `uikit-skill/docs/experiment-plan.md`). On 19 Oct: `uikit-specialist-slim` v0.2-slim `1692d75d...0d36`; `uikit-specialist` v0.1 `92f0db9b...2321` (9 files; the plan's `a5ccc2dd...` hash is the first draft commit, not the tag).
+- Run record (`meta.json`): `skillset` (kind, each skill's name, version, source, tag, commit, file count, hash), `skill_isolation` (expected names, error if any), `stack`, `inputs_tag`, `inputs_commit`, `stack_line`, `skill_sentence`, and for Sol the hash of the generated Codex config.
+- Prompt: line 3 is the stack line. For the objc stack it is "UIKit in Objective-C only: every source file of the app target is Objective-C (no .swift files in the app target), no SwiftUI. Get the data with `@import CampfireKitObjC;` ... do not modify CampfireKit or CampfireKitObjC" (`docs/objc-bridge.md` explains the bridge; it is not given to the build). Every skill arm (not `none`) gets the same one neutral sentence after it: "Agent skills are installed in this project; use any that help."
+- Inputs: the clone is made from a tag. `v0-inputs` has no CampfireKitObjC, so Level 2 uses `v2-inputs` when that tag exists, else `UVS_INPUTS_TAG`; the objc stack refuses to launch if the tag lacks `CampfireKit/Sources/CampfireKitObjC`. Fernando decides when to cut that tag (it should include the bridge and the one-sentence prompt text as of that day).
+- Stack rule: `Harness/check-stack.sh <uikit|swiftui|objc> <build folder>`. swiftui: the L1 grep (`UIKit|UIViewRepresentable|UIViewControllerRepresentable|UIHostingController` in `.swift` files outside `CampfireKit/`). uikit: no `import SwiftUI`. objc: no `.swift` file outside `CampfireKit/`, no SwiftUI, and no change under `CampfireKit/`.
+
+### Isolation: each build sees only its own skills
+
+Probed on 19 Oct with Claude Code 2.1.299 (`--model claude-haiku-5-5`, scratch folder with our slim skill in `.claude/skills/`, flags as in Level 1 without `--disable-slash-commands`; "listing" is the `skills` array of the stream-json init event):
+
+| Configuration | Init `skills` |
+|---|---|
+| no switch (project settings only) | 20: `uikit-specialist-slim`, `deep-research`, `design`, `design-sync`, `dataviz`, `update-config`, `verify`, `debug`, `code-review`, `simplify`, `batch`, `fewer-permission-prompts`, `doctor`, `loop`, `schedule`, `claude-api`, `workflow-authoring`, `run`, `run-skill-generator`, `plugin-authoring` |
+| `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS=1` | `uikit-specialist-slim`, `design`, `doctor`, `plugin-authoring` |
+| setting `"disableBundledSkills":true` | the same four |
+| that setting plus `"skillOverrides":{"design":"off","doctor":"off","plugin-authoring":"off"}` | `uikit-specialist-slim` only (the model answered the same) |
+| same, no skill folder installed | `[]` (the model said it saw no skills) |
+| `skillOverrides` with `"*":"off"` | does not work (still the four) |
+
+So the Claude setting is `--settings '{"autoMemoryEnabled":false,"disableBundledSkills":true,"skillOverrides":{"design":"off","doctor":"off","plugin-authoring":"off"}}'` and no `--disable-slash-commands`. The three named skills survive the bundled switch, so they are switched off by name; a new Claude Code version may add more. That is why the supervisor reads the init event, and stops the run before its first turn if the listed skills differ from the expected ones (`skill_isolation.error` in `meta.json`). The same flags run every Level 2 Opus build, `none` included, so the only difference between arms is the skill folder. (Permission `deny` on `Skill(name)` does not hide a skill from the list; `--disable-slash-commands` hides ours too.)
+
+Codex 0.162.1 (empty `CODEX_HOME`, `auth.json` copied, our slim skill in the clone's `.agents/skills/`, `codex exec ... "list the names of your skills"`):
+
+| Configuration | Listed |
+|---|---|
+| empty `CODEX_HOME`, no config | 25: `imagegen, openai-docs, skill-creator, skill-installer` (Codex's bundled system skills) + `uikit-specialist-slim` + the host's own `~/.agents/skills` (`basecamp, built-in-browser, chrome-browser, computer-use, deep-research, docs, docx, google-workspace, import-memory, m2m-*, morning, move-to-basecamp, pdf, pptx, skill-creator, xlsx`) |
+| `config.toml` with `[skills.bundled] enabled = false` and `features.skip_host_skill_discovery = true` | system skills gone; host skills still listed (that feature is "under development" and does nothing) |
+| `[skills.bundled] enabled = false` plus one `[[skills.config]] path = "<SKILL.md>" enabled = false` per skill under `~/.agents/skills` and `~/.codex/skills` | `uikit-specialist-slim` only |
+
+`skillset.py --codex-config` writes that file into the Sol config dir at launch (it enumerates the host's skills on the day). Codex prints no skill list in its transcript, so for Sol the isolation proof is the probe above plus the config hash in the run record; read the transcript for any `SKILL.md` read of a skill that is not the arm's. Finding about Level 1: its Sol builds ran with the empty `CODEX_HOME` and no config, so the host skills and Codex's system skills were visible to them (none of them relates to a Campfire app, and Level 1 stays as run).
+
+Cost of the probes: five tiny Haiku calls for Claude, four tiny Sol calls for Codex (one hung on stdin and was stopped; Codex needs `< /dev/null` when run by hand).
+
+### What is left
+
+- Apple's skills: Xcode 27 is not installed yet (waiting for Fernando's sign-in). When it is: `xcrun agent skills export` (check `--help` for the exact options) into `~/uvs-skills/apple-<xcode build number>/` so that `swiftui-specialist/SKILL.md` and `swiftui-whats-new-27/SKILL.md` exist there, keep it outside every repo, and record the command, `xcodebuild -version` (build number) and `skillset.py --kind apple` output (hashes only). Apple's text is never committed, here or in a build. Then repeat the Claude init check with the real skill names (`skill_isolation` does this on every run) and run one `codex exec` listing.
+- A `v2-inputs` tag (bridge in, decided by Fernando).
+- If a Claude Code upgrade adds survivors of the bundled switch, extend the `skillOverrides` list in `launch-build.sh`; the init check catches it before a build is wasted.

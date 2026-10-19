@@ -1,6 +1,6 @@
 # Build a Campfire chat room
 
-Stack: {UIKit only, no SwiftUI | SwiftUI only: no UIKit views, no UIViewRepresentable or UIViewControllerRepresentable, no UIHostingController, no reaching into UIKit views underneath}
+Stack: {UIKit only, no SwiftUI | SwiftUI only: no UIKit views, no UIViewRepresentable or UIViewControllerRepresentable, no UIHostingController, no reaching into UIKit views underneath | UIKit in Objective-C only: every source file of the app target is Objective-C (no .swift files in the app target), no SwiftUI. Get the data with `@import CampfireKitObjC;` (the Objective-C wrapper in the CampfireKit package; link its CampfireKitObjC product) and do not modify CampfireKit or CampfireKitObjC}
 
 Build one iPhone app, from this empty folder, that shows a single chat room copied 1:1 from 37signals' ONCE Campfire. It's a UI test, not a product: buttons, the composer and add-boost are drawn but do nothing. Xcode project, iOS 18, app id `campfire.bench`.
 
