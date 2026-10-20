@@ -4,6 +4,7 @@
 Data is in ROWS below. Cell state: ok (green), bad (red), warn (yellow), none (plain).
 best=True marks the best number in a row: bold text and a thin darker border.
 Usage: python3 Harness/tools/results_table.py
+       python3 Harness/tools/results_table.py --l2   (Level 2 only: docs/images/results-l2.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -140,6 +141,40 @@ BEST = dict(title="Best of UIKit vs best of SwiftUI",
             builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None, row_h=76,
             legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("warn", "Within 5%")])
 
+# --- Level 2 (docs/results-l2.md): six builds, rendered only with --l2 ---
+L2_BUILDS = [("uikit-ours-pair", "UIKit, Swift, our pair"), ("swiftui-apple", "SwiftUI, Apple's skills"),
+             ("objc-ours-objc-pair", "UIKit, Objective-C, our pair")] * 2
+L2_ROWS = [
+    ("Passes everything", [("ok", "Pass", "", True), ("bad", "2 fails", "", False), ("bad", "1 fail", "", False),
+                           ("bad", "1 fail", "", False), ("bad", "2 fails", "", False), ("bad", "1 fail", "", False)]),
+    ("First 40 rows (cold)", [("ok", "252 ms", "", False), ("ok", "326 ms", "", False), ("ok", "158 ms", "", True),
+                              ("ok", "196 ms", "", False), ("ok", "314 ms", "", False), ("ok", "198 ms", "", False)]),
+    ("Fling", [("ok", "58.0 fps", "2 hitches", False), ("ok", "57.9 fps", "5 hitches", False),
+               ("ok", "58.7 fps", "2 hitches", True), ("ok", "58.2 fps", "0 hitches", False),
+               ("ok", "58.0 fps", "0 hitches", False), ("ok", "58.3 fps", "1 hitch", False)]),
+    ("Live stream, 600 messages", [("ok", "15.2 fps", "1 hitch", False), ("ok", "22.0 fps", "425 hitches", False),
+                                   ("ok", "27.3 fps", "3 hitches", False), ("ok", "22.4 fps", "6 hitches", False),
+                                   ("ok", "33.2 fps", "242 hitches", False), ("ok", "37.3 fps", "9 hitches", True)]),
+    ("Jump to message 2,500", [("ok", "90 ms", "", False), ("ok", "154 ms", "", False), ("ok", "67 ms", "", True),
+                               ("ok", "77 ms", "", False), ("ok", "191 ms", "", False), ("ok", "109 ms", "", False)]),
+    ("Load older", [("ok", "93 ms", "drift 0.0 pt", False), ("ok", "86 ms", "drift 0.2 pt", False),
+                    ("ok", "34 ms", "drift 0.1 pt", True), ("ok", "75 ms", "drift 0.0 pt", False),
+                    ("ok", "143 ms", "drift 0.1 pt", False), ("ok", "106 ms", "drift 0.0 pt", False)]),
+    ("Peak memory", [("none", "107.9 MB", "", False), ("none", "215.4 MB", "", False), ("none", "52.0 MB", "", False),
+                     ("none", "44.5 MB", "", False), ("none", "103.4 MB", "", False), ("none", "35.0 MB", "", True)]),
+    ("Text selection", [("ok", "Pass", "", False), ("bad", "Fail", "", False), ("bad", "Fail", "", False),
+                        ("bad", "Fail", "", False), ("bad", "Fail", "", False), ("bad", "Fail", "", False)]),
+    ("Stack rule", [("ok", "Pass", "", False), ("bad", "Fail", "uses UIPasteboard", False), ("ok", "Pass", "", False),
+                    ("ok", "Pass", "", False), ("bad", "Fail", "uses UIPasteboard", False), ("ok", "Pass", "", False)]),
+    ("App size", [("none", "0.71 MB", "", False), ("none", "1.50 MB", "", False), ("none", "0.66 MB", "", False),
+                  ("none", "0.64 MB", "", True), ("none", "1.20 MB", "", False), ("none", "2.70 MB", "icon assets", False)]),
+]
+L2 = dict(title="UIKit vs SwiftUI, Level 2", subtitle="Same Campfire chat room, built six times with skills installed. Level 2 results.",
+          builds=L2_BUILDS, rows=L2_ROWS, col_w=210, file="results-l2",
+          groups=[("Opus 5.5", (0, 2)), ("GPT-6.1 Sol", (3, 5))],
+          legend=[("ok", "Pass"), ("bad", "Fail")], best_legend=True,
+          footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -252,6 +287,10 @@ def render(name, spec=None):
 
 
 if __name__ == "__main__":
+    import sys
     for n in THEMES:
-        render(n)
-        render(n, BEST)
+        if "--l2" in sys.argv:
+            render(n, L2)
+        else:
+            render(n)
+            render(n, BEST)

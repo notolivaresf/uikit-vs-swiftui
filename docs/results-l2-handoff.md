@@ -77,7 +77,11 @@ Someone has to be at the phone: unlock it and keep it awake, check Settings > De
 - The round was stopped after launch 1, since every later test would fail the same way. No other build was started. The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-automation-mode-timeout-2/`, so round 1 is free again.
 - Before the next try, someone has to be at the phone: unlocked and awake, Settings > Developer > Enable UI Automation on, and any prompt on the screen accepted (it may show only after a restart). Run the wake probe from the 18:30 section first, then watch the first round until `logs/suite.log` shows tests running.
 
-## What is left
+### 20 Oct, 02:30 CST: all six rounds done
+
+Fernando accepted the prompt on the phone at about 22:30 and the wake probe passed. Round 1 of all six builds then ran in order (22:35 to 02:30); every suite test passed in each. In 13 of 18 launch traces Instruments did not finish saving within the cap, so cold launch (Instruments) is missing or partial; cold time to 40 rows is complete. Results: `docs/results-l2.md`, rows as sent: `docs/results-l2-rows.md`, images: `docs/images/results-l2*.png`. Steps 1 to 4 below are done.
+
+## What is left (done 20 Oct)
 
 1. Round 1 of each build, one at a time, in this order (about 32 min each, 3 h 15 min in all). Every Level 2 Opus build ran on the fixed stream test, so no stream-only reruns are needed:
 
