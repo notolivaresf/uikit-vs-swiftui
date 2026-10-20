@@ -70,6 +70,13 @@ Someone has to be at the phone: unlock it and keep it awake, check Settings > De
 - The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-phone-storage-full-2/`, so round 1 is free again. Nothing else was queued.
 - Before the next try, someone has to look at Settings > General > iPhone Storage and free several GB. Space from removed apps can take a few minutes to show as free, and a restart of the phone often frees "System Data". Then watch the first round until `logs/suite.log` shows tests running.
 
+### 19 Oct, 21:52 CST: room on the phone now, but automation times out again
+
+- Before this try the iPhone 12 was restarted and unlocked, and a direct `devicectl device install app` of `CampfireBenchUITests-Runner.app` succeeded, so there is room for the runner now.
+- Round 1 of opus-uikit-ours-pair started at 21:52. The wake test (21:54:13) and launch 1 (21:55:30) both failed with "The test runner failed to initialize for UI testing. (Underlying Error: Timed out while enabling automation mode.)" devicectl lists the iPhone 12 as connected.
+- The round was stopped after launch 1, since every later test would fail the same way. No other build was started. The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-automation-mode-timeout-2/`, so round 1 is free again.
+- Before the next try, someone has to be at the phone: unlocked and awake, Settings > Developer > Enable UI Automation on, and any prompt on the screen accepted (it may show only after a restart). Run the wake probe from the 18:30 section first, then watch the first round until `logs/suite.log` shows tests running.
+
 ## What is left
 
 1. Round 1 of each build, one at a time, in this order (about 32 min each, 3 h 15 min in all). Every Level 2 Opus build ran on the fixed stream test, so no stream-only reruns are needed:
