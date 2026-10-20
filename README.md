@@ -1,6 +1,24 @@
 <p align="center">One Campfire chat room, built twice, in UIKit and in SwiftUI, by AI models.<br>
 Started after 37signals moved <a href="https://once.com">ONCE</a> off Rails.</p>
 
+## Level 2: with skills
+
+The same Campfire chat room, built six times with a skill installed: Apple's Xcode 27 skills for SwiftUI, and [our UIKit skills](https://github.com/notolivaresf/uikit-skill) for Swift and for Objective-C, each by Opus and by Sol. Best build of each stack, head to head:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-l2-best-dark.png">
+  <img src="docs/images/results-l2-best.png" alt="Level 2: best Swift UIKit build, best Objective-C UIKit build and best SwiftUI build compared row by row. Colour shows the winner of each row; only the Swift UIKit build passes everything.">
+</picture>
+
+Details: [`docs/results-l2-best.md`](docs/results-l2-best.md) (the picks and takeaways) and [`docs/results-l2.md`](docs/results-l2.md) (all six builds). All six builds:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-l2-dark.png">
+  <img src="docs/images/results-l2.png" alt="Level 2 results table: six builds (Opus and Sol, each in Swift UIKit, SwiftUI and Objective-C UIKit) across behaviour and performance checks. Only opus-uikit-ours-pair passes everything.">
+</picture>
+
+## Level 1: no skills
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-best-dark.png">
   <img src="docs/images/results-best.png" alt="Best UIKit build against best SwiftUI build per row. Colour shows the winner of each row; two rows are near ties.">
