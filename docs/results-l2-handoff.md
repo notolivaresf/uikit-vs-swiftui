@@ -1,4 +1,4 @@
-# L2 results: hand-off (19 Oct, 16:50)
+# L2 results: hand-off (19 Oct, 16:50; updated 18:55)
 
 The six Level 2 builds are built for the phone, but no benchmark round could run yet: the phone would not start UI automation. Nothing about any build was changed.
 
@@ -55,6 +55,13 @@ The six Level 2 builds are built for the phone, but no benchmark round could run
 The first round (opus-uikit-ours-pair, 16:39) stopped at once: the wake test and both cold-launch tests failed with "The test runner failed to initialize for UI testing (Timed out while enabling automation mode)", the same as in Level 1 on 18 Oct. devicectl shows the iPhone 12 connected, `passcodeRequired: false`. The queue was stopped after launch 2 so the other five rounds wouldn't fail the same way. The attempt is in `runs/opus-uikit-ours-pair/aborted-r1-automation-mode-timeout/` (moved, not deleted, so round 1 is free).
 
 Someone has to be at the phone: unlock it and keep it awake, check Settings > Developer > Enable UI Automation is on, accept any prompt on the screen (if none shows, unplug and replug the cable or restart the phone).
+
+### 19 Oct, 18:30: automation works now, but the phone is full
+
+- Probe (18:32): `TraceScenarios/testWake` alone, through `buildslot run`, passed (`** TEST EXECUTE SUCCEEDED **`). UI automation on the iPhone 12 works again.
+- Round 1 of opus-uikit-ours-pair (18:32 to 18:51) got partway. The 3 cold launches ran (cold launch median 741 ms, time to 40 rows cold 265 ms; partial, not to be reported). The fling scenario test passed, but its trace stopped with "Failed to stop recording session: Data Providers emitted errors: Logging". The stream trace then failed to start ("Failed starting ktrace session"), and the suites could not install the test runner: **"This app can't be installed because there isn't enough storage ... mkdir ... failed: No space left on device"**. The iPhone 12 has 64 GB and it is full. The two trace errors are most likely the same full disk.
+- The queue was stopped there, so the other five rounds would not fail the same way. The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-phone-storage-full/`, so round 1 is free again.
+- Someone has to free space on the phone (Settings > General > iPhone Storage). Only Campfire and CampfireBenchUITests-Runner are ours, and both are small; the space is taken by other apps, photos or system data. Then run the probe again before the queue: `buildslot run --label "uvs-l2: automation probe" -- xcodebuild test-without-building -xctestrun build/DDH/Build/Products/CampfireBench_iphoneos26.4-arm64.xctestrun -destination id=00008101-00062D410CE9003A -only-testing:CampfireBenchUITests/TraceScenarios/testWake`. The suites install the runner again, so the probe alone does not prove there is room. Watch the first round until `logs/suite.log` shows tests running.
 
 ## What is left
 
