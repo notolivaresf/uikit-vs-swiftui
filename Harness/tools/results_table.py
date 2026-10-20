@@ -177,54 +177,45 @@ L2 = dict(title="UIKit vs SwiftUI, Level 2", subtitle="Same Campfire chat room, 
           footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
 
 # --- Level 2 best of each stack (docs/results-l2-best.md), rendered only with --l2-best ---
-# Columns: UIKit Swift = opus-uikit-ours-pair (index 0 of L2_ROWS), UIKit Objective-C = opus-objc-ours-objc-pair (2),
-# SwiftUI = sol-swiftui-apple (4). Cell text comes from L2_ROWS; the result per row (W win, L lose, T tie,
-# N not measured) is the best of the three, ties allowed.
-_IDX = (0, 2, 4)
+# Per row, each column (UIKit Swift, UIKit Objective-C, SwiftUI) shows the best value among that stack's two Level 2
+# builds (Opus or Sol; mix and match); the small text names the build. All numbers are from docs/results-l2.md.
+# Result per cell: W win (best of the three, ties allowed), L lose, T tie, N not measured.
 _ST = {"W": "ok", "L": "bad", "T": "none", "N": "warn"}
 
 
-def _row(label, res, subs=None, mains=None):
-    cells = dict(L2_ROWS)[label]
-    out = []
-    for k, i in enumerate(_IDX):
-        _, main, sub, _b = cells[i]
-        if mains:
-            main = mains[k]
-        if subs:
-            sub = subs[k]
-        out.append((_ST[res[k]], main, sub, res[k] == "W"))
-    return (label, out)
+def _r(res, main, sub):
+    return (_ST[res], main, sub, res == "W")
 
 
 L2B_ROWS = [
-    ("Passes everything", [("ok", "Pass", "", True), ("bad", "1 fail", "", False), ("bad", "2 fails", "", False)]),
-    _row("Stack rule", "WWL", subs=("", "", "uses UIPasteboard")),
-    _row("First 40 rows (cold)", "LWL"),
-    ("Cold launch (Instruments)", [("none", "843 ms", "1 of 3 traces saved", False), ("warn", "Not measured", "0 of 3 traces saved", False),
-                                   ("warn", "Not measured", "0 of 3 traces saved", False)]),
-    ("Fling", [("bad", "58.0 fps", "2 hitches (33 ms in 51 s)", False), ("bad", "58.7 fps", "2 hitches (33 ms in 52 s)", False),
-               ("ok", "58.0 fps", "0 hitches (41 s)", True)]),
-    ("Live stream, 600 messages", [("ok", "15.2 fps", "1 hitch (17 ms), CPU 12.2 s", True), ("bad", "27.3 fps", "3 hitches (67 ms), CPU 11.9 s", False),
-                                   ("bad", "33.2 fps", "242 hitches (4.9 s), CPU 22.1 s", False)]),
-    _row("Jump to message 2,500", "LWL"),
-    _row("Load older", "LWL"),
-    ("Text size change", [("bad", "83 / 103 ms", "bottom / mid-list", False), ("ok", "77 / 93 ms", "bottom / mid-list", True),
-                          ("bad", "123 / 139 ms", "bottom / mid-list", False)]),
-    ("Rotation, boost, menu", [("none", "Pass", "all three", False)] * 3),
-    ("Text selection", [("ok", "Pass", "", True), ("bad", "Fail", "", False), ("bad", "Fail", "", False)]),
-    _row("Peak memory", "LWL"),
-    _row("App size", "LWL"),
-    ("Agent wall time", [("bad", "2231 s", "95 turns, 12 builds (0 failed)", False), ("bad", "2884 s", "106 turns, 12 builds (0 failed)", False),
-                         ("ok", "1209 s", "113 turns, 15 builds (8 failed)", True)]),
+    ("Passes everything", [_r("W", "Pass", "Opus"), _r("L", "1 fail", "Opus and Sol (selection)"), _r("L", "2 fails", "Opus and Sol")]),
+    ("Stack rule", [_r("W", "Pass", "Opus and Sol"), _r("W", "Pass", "Opus and Sol"), _r("L", "Fail", "UIPasteboard, Opus and Sol")]),
+    ("First 40 rows (cold)", [_r("L", "196 ms", "Sol"), _r("W", "158 ms", "Opus"), _r("L", "314 ms", "Sol")]),
+    ("Cold launch (Instruments)", [_r("L", "776 ms", "2 of 3 traces saved \u00b7 Sol"), _r("W", "736 ms", "2 of 3 traces saved \u00b7 Sol"),
+                                   _r("N", "Not measured", "0 of 3 traces saved")]),
+    ("Fling", [_r("W", "0 hitches", "58.2 fps, 49 s \u00b7 Sol"), _r("L", "1 hitch (50 ms)", "58.3 fps, 52 s \u00b7 Sol"),
+               _r("W", "0 hitches", "58.0 fps, 41 s \u00b7 Sol")]),
+    ("Live stream, 600 messages", [_r("W", "1 hitch (17 ms)", "15.2 fps, CPU 12.2 s \u00b7 Opus"), _r("L", "3 hitches (67 ms)", "27.3 fps, CPU 11.9 s \u00b7 Opus"),
+                                   _r("L", "242 hitches (4.9 s)", "33.2 fps, CPU 22.1 s \u00b7 Sol")]),
+    ("Jump to message 2,500", [_r("L", "77 ms", "Sol"), _r("W", "67 ms", "Opus"), _r("L", "154 ms", "Opus")]),
+    ("Load older", [_r("L", "75 ms", "drift 0.0 pt \u00b7 Sol"), _r("W", "34 ms", "drift 0.1 pt \u00b7 Opus"), _r("L", "86 ms", "drift 0.2 pt \u00b7 Opus")]),
+    ("Text size change", [_r("W", "53 / 70 ms", "bottom / mid-list \u00b7 Sol"), _r("L", "55 / 75 ms", "bottom / mid-list \u00b7 Sol"),
+                          _r("L", "76 / 108 ms", "bottom / mid-list \u00b7 Opus")]),
+    ("Rotation, boost, menu", [_r("T", "Pass", "all three, both builds")] * 3),
+    ("Text selection", [_r("W", "Pass", "Opus"), _r("L", "Fail", "Opus and Sol"), _r("L", "Fail", "Opus and Sol")]),
+    ("Peak memory", [_r("L", "44.5 MB", "Sol"), _r("W", "35.0 MB", "Sol"), _r("L", "103.4 MB", "Sol")]),
+    ("App size", [_r("W", "0.64 MB", "Sol"), _r("L", "0.66 MB", "Opus"), _r("L", "1.20 MB", "Sol")]),
+    ("Agent wall time", [_r("L", "1233 s", "90 turns, 14 builds (7 failed) \u00b7 Sol"), _r("L", "1297 s", "118 turns, 24 builds (8 failed) \u00b7 Sol"),
+                         _r("W", "1209 s", "113 turns, 15 builds (8 failed) \u00b7 Sol")]),
 ]
 L2B = dict(title="Best UIKit (Swift, Objective-C) vs best SwiftUI, Level 2",
-           subtitle="opus-uikit-ours-pair, opus-objc-ours-objc-pair and sol-swiftui-apple. Colour shows who wins the row.",
-           builds=[("UIKit, Swift", "opus-uikit-ours-pair"), ("UIKit, Objective-C", "opus-objc-ours-objc-pair"),
-                   ("SwiftUI", "sol-swiftui-apple")], rows=L2B_ROWS, col_w=290, file="results-l2-best",
+           subtitle="Best value per row among each stack's Opus and Sol builds; the small text names the build. Colour shows who wins the row.",
+           builds=[("UIKit, Swift", "best of Opus and Sol per row"), ("UIKit, Objective-C", "best of Opus and Sol per row"),
+                   ("SwiftUI", "best of Opus and Sol per row")], rows=L2B_ROWS, col_w=310, file="results-l2-best",
            groups=None, row_h=58,
            legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("none", "Tie"), ("warn", "Not measured")],
-           footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
+           note="fps counts redraws; hitches are late frames you can see",
+           footer="iPhone 12 \u00b7 Level 2 \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
@@ -260,7 +251,7 @@ def render(name, spec=None):
     group_h = GROUP_H if groups else 0
     W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
     title_h = 64
-    H = PAD + title_h + group_h + HEAD_H + ROW_H * len(ROWS) + 56 + PAD
+    H = PAD + title_h + group_h + HEAD_H + ROW_H * len(ROWS) + 56 + PAD + (24 if spec.get("note") else 0)
     img = Image.new("RGB", (W * S, H * S), th["bg"])
     d = ImageDraw.Draw(img)
     x0 = PAD
@@ -329,6 +320,9 @@ def render(name, spec=None):
         d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, outline=th["text"], width=2 * S)
         d.text(((lx + 26) * S, (y + 7) * S), "Best in row (bold, outlined)", font=font(13), fill=th["muted"], anchor="lm")
     y += 28
+    if spec.get("note"):
+        d.text((x0 * S, (y + 6) * S), spec["note"], font=font(13), fill=th["muted"], anchor="lm")
+        y += 24
     d.text((x0 * S, (y + 6) * S), spec.get("footer", "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui"),
            font=font(13), fill=th["muted"], anchor="lm")
     out = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "images",

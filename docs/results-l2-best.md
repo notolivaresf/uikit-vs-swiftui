@@ -1,40 +1,43 @@
 # Level 2: best Swift UIKit, best Objective-C UIKit and best SwiftUI
 
-Fernando asked (20 Oct) for the best UIKit build against the best SwiftUI build of Level 2, then for UIKit split into Swift and Objective-C. Every number is from `docs/results-l2.md` (round 1, iPhone 12). Each pick is the build that passes the most behaviours, then wins the performance tie-breakers (fling and stream hitches and fps, memory, launch, agent cost).
+Fernando asked (20 Oct) for the best UIKit build against the best SwiftUI build of Level 2, UIKit split into Swift and Objective-C, and then: "The best should be the best of each metric regardless if we mix and match." So each column shows, row by row, the best value among that stack's two Level 2 builds (Opus and Sol), and each cell names the build it came from. A column is therefore not one build. Every number is from `docs/results-l2.md` (round 1, iPhone 12).
 
-![Best Swift UIKit, Objective-C UIKit and SwiftUI, Level 2](images/results-l2-best.png)
+![Best Swift UIKit, Objective-C UIKit and SwiftUI per row, Level 2](images/results-l2-best.png)
 
 (Dark version: `images/results-l2-best-dark.png`; rendered with `python3 Harness/tools/results_table.py --l2-best`.)
 
-## The picks
+How a cell is chosen: lowest time, hitches, memory or size; pass if either build passed. Fling and stream lead with hitches (late frames you can see), fps second: fps counts redraws, so a build that redraws only when a message lands shows fewer frames without stuttering. The winner of a row is the best of the three columns; ties both win.
 
-- **Best Swift UIKit: opus-uikit-ours-pair.** It passes every behaviour and the stack rule, the only one of the six Level 2 builds that does.
-- **Best Objective-C UIKit: opus-objc-ours-objc-pair.** It and sol-objc-ours-objc-pair both miss only text selection, and Opus has the smoother stream (3 hitches and 11.9 s of CPU against 9 and 18.7 s) and wins first content, jump, load older and app size, while Sol wins memory (35.0 against 52.0 MB), launch and agent time, so Sol is close.
-- **Best SwiftUI: sol-swiftui-apple.** Both SwiftUI builds fail the same two behaviours (stack rule, text selection), so the tie-breakers decide: 0 fling hitches against 5, 242 stream hitches against 425, 103.4 MB against 215.4 MB, and 1209 s of agent time against 4301 s; cold launch was not measured for either.
+## Head to head (source build in brackets)
 
-## Head to head
-
-| Row | UIKit, Swift: opus-uikit-ours-pair | UIKit, Objective-C: opus-objc-ours-objc-pair | SwiftUI: sol-swiftui-apple | Winner |
+| Row | UIKit, Swift | UIKit, Objective-C | SwiftUI | Winner |
 |---|---|---|---|---|
-| Passes everything | pass | 1 fail (text selection) | 2 fails (stack rule, text selection) | Swift UIKit |
-| Stack rule | pass | pass | fail: imports UIKit's UIPasteboard | Swift and Objective-C UIKit |
-| First content (time to 40 rows) | 252 ms cold | 158 ms cold | 314 ms cold | Objective-C UIKit |
-| Cold launch (Instruments) | 843 ms (1 of 3 samples) | not measured: 0 of 3 traces saved before the 300 s cap | not measured: same | none |
-| Fling | 58.0 fps, 2 hitches (33 ms in 51 s) | 58.7 fps, 2 hitches (33 ms in 52 s) | 58.0 fps, 0 hitches (41 s) | SwiftUI (hitches) |
-| Jump to message 2500 | 90 ms | 67 ms | 191 ms | Objective-C UIKit |
-| Load older keeps place | 93 ms | 34 ms | 143 ms | Objective-C UIKit |
-| Live stream, 600 messages | 15.2 fps, 1 hitch (17 ms), CPU 12.2 s | 27.3 fps, 3 hitches (67 ms), CPU 11.9 s | 33.2 fps, 242 hitches (4.9 s), CPU 22.1 s | Swift UIKit (hitches) |
-| Text size change | 83 / 103 ms | 77 / 93 ms | 123 / 139 ms | Objective-C UIKit |
-| Rotation, boost burst, context menu | pass | pass | pass | tie |
-| Text selection | pass | fail | fail | Swift UIKit |
-| Peak memory | 107.9 MB | 52.0 MB | 103.4 MB | Objective-C UIKit |
-| App size | 0.71 MB | 0.66 MB | 1.20 MB | Objective-C UIKit |
-| Agent wall time / turns / builds (failed) | 2231 s / 95 / 12 (0) | 2884 s / 106 / 12 (0) | 1209 s / 113 / 15 (8) | SwiftUI on time |
+| Passes everything | pass (Opus) | 1 fail, selection (Opus and Sol) | 2 fails (Opus and Sol) | Swift |
+| Stack rule | pass (Opus and Sol) | pass (Opus and Sol) | fail, UIPasteboard (Opus and Sol) | Swift, Objective-C |
+| First 40 rows, cold | 196 ms (Sol) | 158 ms (Opus) | 314 ms (Sol) | Objective-C |
+| Cold launch (Instruments) | 776 ms, 2 of 3 traces (Sol) | 736 ms, 2 of 3 traces (Sol) | not measured: 0 of 3 traces saved | Objective-C |
+| Fling | 0 hitches, 58.2 fps, 49 s (Sol) | 1 hitch (50 ms), 58.3 fps, 52 s (Sol) | 0 hitches, 58.0 fps, 41 s (Sol) | Swift, SwiftUI |
+| Live stream, 600 messages | 1 hitch (17 ms), 15.2 fps, CPU 12.2 s (Opus) | 3 hitches (67 ms), 27.3 fps, CPU 11.9 s (Opus) | 242 hitches (4.9 s), 33.2 fps, CPU 22.1 s (Sol) | Swift |
+| Jump to message 2500 | 77 ms (Sol) | 67 ms (Opus) | 154 ms (Opus) | Objective-C |
+| Load older | 75 ms, drift 0.0 pt (Sol) | 34 ms, drift 0.1 pt (Opus) | 86 ms, drift 0.2 pt (Opus) | Objective-C |
+| Text size change (bottom / mid-list) | 53 / 70 ms (Sol) | 55 / 75 ms (Sol) | 76 / 108 ms (Opus) | Swift |
+| Rotation, boost burst, context menu | pass (both) | pass (both) | pass (both) | tie |
+| Text selection | pass (Opus) | fail (Opus and Sol) | fail (Opus and Sol) | Swift |
+| Peak memory | 44.5 MB (Sol) | 35.0 MB (Sol) | 103.4 MB (Sol) | Objective-C |
+| App size | 0.64 MB (Sol) | 0.66 MB (Opus) | 1.20 MB (Sol) | Swift |
+| Agent wall time, turns, builds (failed) | 1233 s, 90, 14 (7) (Sol) | 1297 s, 118, 24 (8) (Sol) | 1209 s, 113, 15 (8) (Sol) | SwiftUI |
+
+Cold launch is not comparable to Level 1: only 2 of 3 traces saved for the measured builds, and for SwiftUI none saved before the 300 s cap.
+
+## Win counts
+
+Of 14 rows: Swift UIKit wins 7 (passes everything, stack rule shared, fling shared, stream, text size, text selection, app size), Objective-C UIKit wins 6 (stack rule shared, first content, cold launch, jump, load older, peak memory), SwiftUI wins 2 (fling shared, agent time); one row is a tie.
 
 ## Takeaways
 
-- Of 14 rows, Objective-C UIKit wins 7 (one shared), Swift UIKit 4 (one shared), SwiftUI 2; one row is a tie and one is not measured.
-- Only the Swift UIKit build passes everything; the Objective-C build misses text selection, and the SwiftUI build also fails the stack rule (it uses UIKit's UIPasteboard for Copy).
-- Objective-C UIKit is the quickest and leanest: first content 158 ms, load older 34 ms, 52.0 MB against 107.9 MB (Swift) and 103.4 MB (SwiftUI).
-- The stream is where SwiftUI is clearly behind: 242 dropped frames and 22.1 s of CPU against 1 to 3 hitches and about 12 s for both UIKit builds. Its higher fps (33.2) is not smoothness; read fps together with hitches.
-- SwiftUI wins fling hitches (0 against 2 for both UIKit builds, though the Objective-C build has the highest fling fps, 58.7) and agent time (1209 s), but needed 8 failed builds against none for both UIKit builds.
+- Mixing and matching narrows the field: UIKit in Swift and in Objective-C win 13 of the 14 rows between them (7 and 6, stack rule counted for both), SwiftUI only 2, and one is a tie.
+- Correctness is still one-sided: only Swift UIKit (the Opus build) passes everything; Objective-C misses text selection in both builds; SwiftUI fails the stack rule (it uses UIKit's UIPasteboard for Copy) and selection in both.
+- The stream is the biggest gap: 242 hitches and 22.1 s of CPU for SwiftUI against 1 to 3 hitches and about 12 s for both UIKit stacks. Its higher fps (33.2) is redraws, not smoothness.
+- Fling is a draw at the top: Swift UIKit and SwiftUI both get 0 hitches (different Sol builds), and Objective-C's best has 1; fps is 58.0 to 58.3 everywhere.
+- Objective-C UIKit is quickest and leanest: first content 158 ms, load older 34 ms, 35.0 MB against 44.5 MB (Swift) and 103.4 MB (SwiftUI). Swift UIKit wins text size (53 against 55 ms, close) and app size (0.64 against 0.66 MB, close).
+- Agent cost is nearly level when the best build is taken (1209 to 1297 s, all Sol), with SwiftUI first by 24 s, but it took 8 failed builds against 7 for Swift and 8 for Objective-C, so there is no clear saving.
