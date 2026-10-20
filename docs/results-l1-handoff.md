@@ -18,7 +18,7 @@ The failed attempt is in `runs/opus-uikit/aborted-r1-automation-mode-timeout/`. 
 
 Order: opus-uikit, opus-swiftui, sol-uikit, sol-swiftui, then repeat, for rounds 1, 2, 3. Next command:
 
-`buildslot run --label "uvs: record opus-uikit r1" -- Harness/record.sh --build opus-uikit --round 1 --app-path /Users/amazinghumans/uvs-builds/dd/opus-uikit/Build/Products/Release-iphoneos/Campfire.app`
+`buildslot run --label "uvs: record opus-uikit r1" -- Harness/record.sh --build opus-uikit --round 1 --app-path ~/uvs-builds/dd/opus-uikit/Build/Products/Release-iphoneos/Campfire.app`
 
 Then write `docs/results-l1.md` (see the lane brief). Notes for that write-up:
 
