@@ -10,11 +10,18 @@ The same Campfire chat room, built six times with a skill installed: Apple's Xco
   <img src="docs/images/results-l2-best.png" alt="Level 2: best of UIKit (Swift or Objective-C, Opus or Sol) against best of SwiftUI, row by row, each cell naming its source build. Colour shows the winner of each row; UIKit wins 11 rows, SwiftUI 1, fling and one more row are ties.">
 </picture>
 
-Details: [`docs/results-l2-best.md`](docs/results-l2-best.md) (the picks and takeaways) and [`docs/results-l2.md`](docs/results-l2.md) (all six builds). All six builds:
+Three columns, each stack's better build per row (the small text names Opus or Sol):
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-l2-best3-dark.png">
+  <img src="docs/images/results-l2-best3.png" alt="Level 2: UIKit Swift, UIKit Objective-C and SwiftUI side by side, best of two builds each; green outline marks each row's winner.">
+</picture>
+
+Details: [`docs/results-l2-best.md`](docs/results-l2-best.md) (the picks and takeaways) and [`docs/results-l2.md`](docs/results-l2.md) (all six builds). All six builds, grouped by stack:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-l2-dark.png">
-  <img src="docs/images/results-l2.png" alt="Level 2 results table: six builds (Opus and Sol, each in Swift UIKit, SwiftUI and Objective-C UIKit) across behaviour and performance checks. Only opus-uikit-ours-pair passes everything.">
+  <img src="docs/images/results-l2.png" alt="Level 2 results table: six builds (Opus and Sol, each in Swift UIKit, SwiftUI and Objective-C UIKit) across behaviour and performance checks. Green outline marks the best build in each row; only opus-uikit passes everything.">
 </picture>
 
 ## Level 1: no skills

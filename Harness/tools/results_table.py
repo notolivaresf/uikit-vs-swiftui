@@ -5,6 +5,7 @@ Data is in ROWS below. Cell state: ok (green), bad (red), warn (yellow), none (p
 best=True marks the best number in a row: bold text and a thin darker border.
 Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --l2   (Level 2 only: docs/images/results-l2.png and -dark.png)
+       python3 Harness/tools/results_table.py --l2-best3   (best of each stack's two builds, three columns: results-l2-best3.png and -dark.png)
        python3 Harness/tools/results_table.py --l2-best   (best UIKit vs best SwiftUI of Level 2: results-l2-best.png and -dark.png)
 """
 import os
@@ -142,39 +143,129 @@ BEST = dict(title="Best of UIKit vs best of SwiftUI",
             builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None, row_h=76,
             legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("warn", "Within 5%")])
 
-# --- Level 2 (docs/results-l2.md): six builds, rendered only with --l2 ---
-L2_BUILDS = [("uikit-ours-pair", "UIKit, Swift, our pair"), ("swiftui-apple", "SwiftUI, Apple's skills"),
-             ("objc-ours-objc-pair", "UIKit, Objective-C, our pair")] * 2
-L2_ROWS = [
-    ("Passes everything", [("ok", "Pass", "", True), ("bad", "2 fails", "", False), ("bad", "1 fail", "", False),
-                           ("bad", "1 fail", "", False), ("bad", "2 fails", "", False), ("bad", "1 fail", "", False)]),
-    ("First 40 rows (cold)", [("ok", "252 ms", "", False), ("ok", "326 ms", "", False), ("ok", "158 ms", "", True),
-                              ("ok", "196 ms", "", False), ("ok", "314 ms", "", False), ("ok", "198 ms", "", False)]),
-    ("Fling", [("ok", "58.0 fps", "2 hitches", False), ("ok", "57.9 fps", "5 hitches", False),
-               ("ok", "58.7 fps", "2 hitches", True), ("ok", "58.2 fps", "0 hitches", False),
-               ("ok", "58.0 fps", "0 hitches", False), ("ok", "58.3 fps", "1 hitch", False)]),
-    ("Live stream, 600 messages", [("ok", "15.2 fps", "1 hitch", False), ("ok", "22.0 fps", "425 hitches", False),
-                                   ("ok", "27.3 fps", "3 hitches", False), ("ok", "22.4 fps", "6 hitches", False),
-                                   ("ok", "33.2 fps", "242 hitches", False), ("ok", "37.3 fps", "9 hitches", True)]),
-    ("Jump to message 2,500", [("ok", "90 ms", "", False), ("ok", "154 ms", "", False), ("ok", "67 ms", "", True),
-                               ("ok", "77 ms", "", False), ("ok", "191 ms", "", False), ("ok", "109 ms", "", False)]),
-    ("Load older", [("ok", "93 ms", "drift 0.0 pt", False), ("ok", "86 ms", "drift 0.2 pt", False),
-                    ("ok", "34 ms", "drift 0.1 pt", True), ("ok", "75 ms", "drift 0.0 pt", False),
-                    ("ok", "143 ms", "drift 0.1 pt", False), ("ok", "106 ms", "drift 0.0 pt", False)]),
-    ("Peak memory", [("none", "107.9 MB", "", False), ("none", "215.4 MB", "", False), ("none", "52.0 MB", "", False),
-                     ("none", "44.5 MB", "", False), ("none", "103.4 MB", "", False), ("none", "35.0 MB", "", True)]),
-    ("Text selection", [("ok", "Pass", "", False), ("bad", "Fail", "", False), ("bad", "Fail", "", False),
-                        ("bad", "Fail", "", False), ("bad", "Fail", "", False), ("bad", "Fail", "", False)]),
-    ("Stack rule", [("ok", "Pass", "", False), ("bad", "Fail", "uses UIPasteboard", False), ("ok", "Pass", "", False),
-                    ("ok", "Pass", "", False), ("bad", "Fail", "uses UIPasteboard", False), ("ok", "Pass", "", False)]),
-    ("App size", [("none", "0.71 MB", "", False), ("none", "1.50 MB", "", False), ("none", "0.66 MB", "", False),
-                  ("none", "0.64 MB", "", True), ("none", "1.20 MB", "", False), ("none", "2.70 MB", "icon assets", False)]),
+# --- Level 2 (docs/results-l2.md): six builds (--l2) and best of each stack's pair (--l2-best3) ---
+# One table of facts, one place. Each row: label, then per build (key, main, sub). Lower key is better; key None = not measured.
+# Winners are computed (equal keys tie), nothing is marked by hand. All numbers are from docs/results-l2.md.
+L2_ORDER = ["opus-uikit", "sol-uikit", "opus-objc", "sol-objc", "opus-swiftui", "sol-swiftui"]
+L2_MODEL = {"opus": "Opus", "sol": "Sol"}
+NM = (None, "Not measured", "")
+
+
+def _c(key, main, sub=""):
+    return (key, main, sub)
+
+
+L2_DATA = [
+    ("Passes everything", [_c(0, "Pass"), _c(1, "1 fail"), _c(1, "1 fail"), _c(1, "1 fail"), _c(2, "2 fails"), _c(2, "2 fails")]),
+    ("Stack rule", [_c(0, "Pass"), _c(0, "Pass"), _c(0, "Pass"), _c(0, "Pass"), _c(1, "Fail", "UIPasteboard"), _c(1, "Fail", "UIPasteboard")]),
+    ("First 40 rows (cold)", [_c(252, "252 ms"), _c(196, "196 ms"), _c(158, "158 ms"), _c(198, "198 ms"), _c(326, "326 ms"), _c(314, "314 ms")]),
+    ("Cold launch (Instruments)", [_c(843, "843 ms", "1 of 3 traces"), _c(776, "776 ms", "2 of 3 traces"), NM[:2] + ("0 of 3 traces",),
+                                   _c(736, "736 ms", "2 of 3 traces"), NM[:2] + ("0 of 3 traces",), NM[:2] + ("0 of 3 traces",)]),
+    ("Fling", [_c(2, "2 hitches", "58.0 fps, 51 s"), _c(0, "0 hitches", "58.2 fps, 49 s"), _c(2, "2 hitches", "58.7 fps, 52 s"),
+               _c(1, "1 hitch", "58.3 fps, 52 s"), _c(5, "5 hitches", "57.9 fps, 54 s"), _c(0, "0 hitches", "58.0 fps, 41 s")]),
+    ("Live stream, 600 messages", [_c(1, "1 hitch", "17 ms, 15.2 fps"), _c(6, "6 hitches", "100 ms, 22.4 fps"), _c(3, "3 hitches", "67 ms, 27.3 fps"),
+                                   _c(9, "9 hitches", "167 ms, 37.3 fps"), _c(425, "425 hitches", "13.9 s, 22.0 fps"), _c(242, "242 hitches", "4.9 s, 33.2 fps")]),
+    ("Jump to message 2,500", [_c(90, "90 ms"), _c(77, "77 ms"), _c(67, "67 ms"), _c(109, "109 ms"), _c(154, "154 ms"), _c(191, "191 ms")]),
+    ("Load older", [_c(93, "93 ms", "drift 0.0 pt"), _c(75, "75 ms", "drift 0.0 pt"), _c(34, "34 ms", "drift 0.1 pt"),
+                    _c(106, "106 ms", "drift 0.0 pt"), _c(86, "86 ms", "drift 0.2 pt"), _c(143, "143 ms", "drift 0.1 pt")]),
+    ("Text size change", [_c(83, "83 / 103 ms", "bottom / mid-list"), _c(53, "53 / 70 ms", "bottom / mid-list"), _c(77, "77 / 93 ms", "bottom / mid-list"),
+                          _c(55, "55 / 75 ms", "bottom / mid-list"), _c(76, "76 / 108 ms", "bottom / mid-list"), _c(123, "123 / 139 ms", "bottom / mid-list")]),
+    ("Rotation, boost, menu", [_c(0, "Pass", "all three")] * 6),
+    ("Text selection", [_c(0, "Pass"), _c(1, "Fail"), _c(1, "Fail"), _c(1, "Fail"), _c(1, "Fail"), _c(1, "Fail")]),
+    ("Peak memory", [_c(107.9, "107.9 MB"), _c(44.5, "44.5 MB"), _c(52.0, "52.0 MB"), _c(35.0, "35.0 MB"), _c(215.4, "215.4 MB"), _c(103.4, "103.4 MB")]),
+    ("App size", [_c(0.71, "0.71 MB"), _c(0.64, "0.64 MB"), _c(0.66, "0.66 MB"), _c(2.70, "2.70 MB", "icon assets"), _c(1.50, "1.50 MB"), _c(1.20, "1.20 MB")]),
+    ("Agent wall time", [_c(2231, "2231 s", "95 turns, 12 builds"), _c(1233, "1233 s", "90 turns, 14 builds"), _c(2884, "2884 s", "106 turns, 12 builds"),
+                         _c(1297, "1297 s", "118 turns, 24 builds"), _c(4301, "4301 s", "197 turns, 24 builds"), _c(1209, "1209 s", "113 turns, 15 builds")]),
 ]
-L2 = dict(title="UIKit vs SwiftUI, Level 2", subtitle="Same Campfire chat room, built six times with skills installed. Level 2 results.",
-          builds=L2_BUILDS, rows=L2_ROWS, col_w=210, file="results-l2",
-          groups=[("Opus 5.5", (0, 2)), ("GPT-6.1 Sol", (3, 5))],
-          legend=[("ok", "Pass"), ("bad", "Fail")], best_legend=True,
-          footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
+STACK_COLS = [("UIKit Swift", ("opus-uikit", "sol-uikit")), ("UIKit Objective-C", ("opus-objc", "sol-objc")), ("SwiftUI", ("opus-swiftui", "sol-swiftui"))]
+
+
+def _cell(cell, winner, tie_all, extra=""):
+    key, main, sub = cell
+    if key is None:
+        return ("warn", main, (sub + extra).strip(" ·"), False)
+    if tie_all:
+        return ("none", main, ("tie · " + sub + extra).strip(" ·") if sub or extra else "tie", False)
+    return ("ok", main, sub + extra, True) if winner else ("none", main, sub + extra, False)
+
+
+def _winners(keys):
+    """Indexes of the best (lowest) key, and whether every measured cell ties."""
+    ok = [k for k in keys if k is not None]
+    best = min(ok)
+    idx = [i for i, k in enumerate(keys) if k == best]
+    return idx, len(idx) == len(keys)
+
+
+def l2_six_rows():
+    rows = []
+    for label, cells in L2_DATA:
+        by = dict(zip(["opus-uikit", "sol-uikit", "opus-objc", "sol-objc", "opus-swiftui", "sol-swiftui"], cells))
+        ordered = [by[b] for b in L2_ORDER]
+        idx, all_tie = _winners([c[0] for c in ordered])
+        out = []
+        for i, c in enumerate(ordered):
+            tied = len(idx) > 1 and i in idx and not all_tie
+            e = _cell(c, i in idx, all_tie)
+            if tied:
+                e = (e[0], e[1], ("tie · " + e[2]) if e[2] else "tie", e[3])
+            out.append(e)
+        rows.append((label, out))
+    return rows
+
+
+L2_BEST6 = {}  # label -> list of winning build names (filled by l2_six_rows users)
+
+
+def l2_best3():
+    """Per stack column: the better of its two builds. Returns rows and a record of winners."""
+    rows, record = [], []
+    for label, cells in L2_DATA:
+        by = dict(zip(["opus-uikit", "sol-uikit", "opus-objc", "sol-objc", "opus-swiftui", "sol-swiftui"], cells))
+        picks = []
+        for _, (a, b) in STACK_COLS:
+            ca, cb = by[a], by[b]
+            ka, kb = ca[0], cb[0]
+            if ka is None and kb is None:
+                picks.append((ca, "Opus and Sol"))
+            elif kb is None or (ka is not None and ka < kb):
+                picks.append((ca, L2_MODEL[a.split("-")[0]]))
+            elif ka is None or kb < ka:
+                picks.append((cb, L2_MODEL[b.split("-")[0]]))
+            else:
+                picks.append((ca, "Opus and Sol"))
+        keys = [p[0][0] for p in picks]
+        idx, all_tie = _winners(keys)
+        out = []
+        for i, (c, model) in enumerate(picks):
+            sub = c[2]
+            src = (sub + " · " + model) if sub else model
+            e = _cell((c[0], c[1], src), i in idx, all_tie)
+            if len(idx) > 1 and i in idx and not all_tie:
+                e = (e[0], e[1], "tie · " + e[2], e[3])
+            if all_tie:
+                e = (e[0], e[1], "tie · " + src, e[3])
+            out.append(e)
+        rows.append((label, out))
+        record.append((label, [STACK_COLS[i][0] for i in idx], all_tie))
+    return rows, record
+
+
+L2_HEAD = [("opus-uikit", "Opus"), ("sol-uikit", "Sol"), ("opus-objc", "Opus"), ("sol-objc", "Sol"), ("opus-swiftui", "Opus"), ("sol-swiftui", "Sol")]
+_FOOT = "iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui"
+_LEG = [("ok", "Best in row (ties share it)"), ("none", "Not the best, or the whole row ties"), ("warn", "Not measured")]
+L2 = dict(title="UIKit vs SwiftUI, Level 2",
+          subtitle="The six builds, one column each. Rows ordered with hitches first; the best value in each row is outlined in green.",
+          builds=L2_HEAD, rows=l2_six_rows(), col_w=210, file="results-l2", row_h=62,
+          groups=[("UIKit Swift", (0, 1)), ("UIKit Objective-C", (2, 3)), ("SwiftUI", (4, 5))],
+          legend=_LEG, note="fps counts redraws; hitches are late frames you can see", footer=_FOOT)
+
+_B3_ROWS, B3_RECORD = l2_best3()
+L2B3 = dict(title="Best of each stack, Level 2",
+            subtitle="Each column takes the better of its two builds per row (Opus or Sol). Small text names the model the value came from.",
+            builds=[("UIKit Swift", "best of 2 builds"), ("UIKit Objective-C", "best of 2 builds"), ("SwiftUI", "best of 2 builds")],
+            rows=_B3_ROWS, col_w=330, file="results-l2-best3", groups=None, row_h=62,
+            legend=_LEG, note="fps counts redraws; hitches are late frames you can see", footer=_FOOT)
 
 # --- Level 2 best of each stack (docs/results-l2-best.md), rendered only with --l2-best ---
 # Two columns. UIKit = best value per row across the four UIKit builds (Opus and Sol, Swift and Objective-C); SwiftUI = best
@@ -338,6 +429,8 @@ if __name__ == "__main__":
     for n in THEMES:
         if "--l2-best" in sys.argv:
             render(n, L2B)
+        elif "--l2-best3" in sys.argv:
+            render(n, L2B3)
         elif "--l2" in sys.argv:
             render(n, L2)
         else:
