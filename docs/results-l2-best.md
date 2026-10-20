@@ -35,7 +35,7 @@ Of 14 rows: Swift UIKit wins 7 (passes everything, stack rule shared, fling shar
 
 ## Takeaways
 
-- Mixing and matching narrows the field: UIKit in Swift and in Objective-C win 13 of the 14 rows between them (7 and 6, stack rule counted for both), SwiftUI only 2, and one is a tie.
+- Mixing and matching narrows the field: UIKit in Swift and in Objective-C win 12 of the 14 rows between them (7 and 6, with the stack rule and fling counted for the stack that shares it), SwiftUI wins 2 (fling shared, agent time), one row is a tie.
 - Correctness is still one-sided: only Swift UIKit (the Opus build) passes everything; Objective-C misses text selection in both builds; SwiftUI fails the stack rule (it uses UIKit's UIPasteboard for Copy) and selection in both.
 - The stream is the biggest gap: 242 hitches and 22.1 s of CPU for SwiftUI against 1 to 3 hitches and about 12 s for both UIKit stacks. Its higher fps (33.2) is redraws, not smoothness.
 - Fling is a draw at the top: Swift UIKit and SwiftUI both get 0 hitches (different Sol builds), and Objective-C's best has 1; fps is 58.0 to 58.3 everywhere.
