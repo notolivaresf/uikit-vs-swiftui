@@ -63,6 +63,13 @@ Someone has to be at the phone: unlock it and keep it awake, check Settings > De
 - The queue was stopped there, so the other five rounds would not fail the same way. The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-phone-storage-full/`, so round 1 is free again.
 - Someone has to free space on the phone (Settings > General > iPhone Storage). Only Campfire and CampfireBenchUITests-Runner are ours, and both are small; the space is taken by other apps, photos or system data. Then run the probe again before the queue: `buildslot run --label "uvs-l2: automation probe" -- xcodebuild test-without-building -xctestrun build/DDH/Build/Products/CampfireBench_iphoneos26.4-arm64.xctestrun -destination id=00008101-00062D410CE9003A -only-testing:CampfireBenchUITests/TraceScenarios/testWake`. The suites install the runner again, so the probe alone does not prove there is room. Watch the first round until `logs/suite.log` shows tests running.
 
+### 19 Oct, 20:28: still full after four apps were removed
+
+- Before this try, four apps were removed from the phone (Basecamp, Basecamp 2, HEY Email, HEY Calendar). `devicectl device info apps` now lists only Campfire and CampfireBenchUITests-Runner besides Apple's apps, so what fills the 64 GB is photos, Apple's apps or system data. devicectl does not report free space.
+- Round 1 of opus-uikit-ours-pair ran again (20:07 to 20:27) and failed in the same way. The 3 cold launches ran (time to 40 rows 284, 278 and 312 ms; partial, not to be reported). The fling scenario test passed, but its trace stopped with "Failed to stop recording session: Data Providers emitted errors: Logging". After that the stream scenario test and the suites could not install the test runner: **"This app can't be installed because there isn't enough storage ... mkdir of /private/var/containers/Shared/SystemGroup/systemgroup.com.apple.installcoordinationd/Library/InstallCoordination/PromiseStaging/... failed: No space left on device"**. The stream trace failed to start ("Failed starting ktrace session").
+- The attempt was moved (not deleted) to `runs/opus-uikit-ours-pair/aborted-r1-phone-storage-full-2/`, so round 1 is free again. Nothing else was queued.
+- Before the next try, someone has to look at Settings > General > iPhone Storage and free several GB. Space from removed apps can take a few minutes to show as free, and a restart of the phone often frees "System Data". Then watch the first round until `logs/suite.log` shows tests running.
+
 ## What is left
 
 1. Round 1 of each build, one at a time, in this order (about 32 min each, 3 h 15 min in all). Every Level 2 Opus build ran on the fixed stream test, so no stream-only reruns are needed:
