@@ -5,6 +5,7 @@ Data is in ROWS below. Cell state: ok (green), bad (red), warn (yellow), none (p
 best=True marks the best number in a row: bold text and a thin darker border.
 Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --l2   (Level 2 only: docs/images/results-l2.png and -dark.png)
+       python3 Harness/tools/results_table.py --l2-best   (best UIKit vs best SwiftUI of Level 2: results-l2-best.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -175,6 +176,50 @@ L2 = dict(title="UIKit vs SwiftUI, Level 2", subtitle="Same Campfire chat room, 
           legend=[("ok", "Pass"), ("bad", "Fail")], best_legend=True,
           footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
 
+# --- Level 2 best of each stack (docs/results-l2-best.md), rendered only with --l2-best ---
+# UIKit = opus-uikit-ours-pair (index 0 of L2_ROWS), SwiftUI = sol-swiftui-apple (index 4). Numbers come from L2_ROWS;
+# only the rows below that L2_ROWS does not hold are typed here (all from docs/results-l2.md).
+_U, _W = 0, 4
+
+
+def _l2(label):
+    return dict(L2_ROWS)[label]
+
+
+def _pair(label, uw, ww):
+    """uw/ww in {"win","lose","tie","close"}: row result for UIKit and SwiftUI. Cells come from L2_ROWS."""
+    c = _l2(label)
+    st = {"win": "ok", "lose": "bad", "tie": "none", "close": "warn"}
+    out = []
+    for i, r in ((_U, uw), (_W, ww)):
+        _, main, sub, _ = c[i]
+        out.append((st[r], main, sub, r == "win"))
+    return (label, out)
+
+
+L2B_ROWS = [
+    ("Passes everything", [("ok", "Pass", "", True), ("bad", "2 fails", "", False)]),
+    ("Stack rule", [("ok", "Pass", "", True), ("bad", "Fail", "uses UIPasteboard", False)]),
+    _pair("First 40 rows (cold)", "win", "lose"),
+    ("Cold launch (Instruments)", [("none", "843 ms", "1 of 3 traces saved", False), ("warn", "Not measured", "0 of 3 traces saved", False)]),
+    ("Fling", [("bad", "58.0 fps", "2 hitches (33 ms in 51 s)", False), ("ok", "58.0 fps", "0 hitches (41 s)", True)]),
+    ("Live stream, 600 messages", [("ok", "15.2 fps", "1 hitch (17 ms), CPU 12.2 s", True), ("bad", "33.2 fps", "242 hitches (4.9 s), CPU 22.1 s", False)]),
+    _pair("Jump to message 2,500", "win", "lose"),
+    _pair("Load older", "win", "lose"),
+    ("Text size change", [("ok", "83 / 103 ms", "bottom / mid-list", True), ("bad", "123 / 139 ms", "bottom / mid-list", False)]),
+    ("Rotation, boost, menu", [("none", "Pass", "all three", False), ("none", "Pass", "all three", False)]),
+    ("Text selection", [("ok", "Pass", "", True), ("bad", "Fail", "", False)]),
+    ("Peak memory", [("bad", "107.9 MB", "", False), ("ok", "103.4 MB", "4% less", True)]),
+    _pair("App size", "win", "lose"),
+    ("Agent wall time", [("bad", "2231 s", "95 turns, 12 builds (0 failed)", False), ("ok", "1209 s", "113 turns, 15 builds (8 failed)", True)]),
+]
+L2B = dict(title="Best UIKit vs best SwiftUI, Level 2",
+           subtitle="opus-uikit-ours-pair (Swift) against sol-swiftui-apple. Colour shows who wins the row.",
+           builds=[("UIKit", "opus-uikit-ours-pair"), ("SwiftUI", "sol-swiftui-apple")], rows=L2B_ROWS, col_w=330, file="results-l2-best",
+           groups=None, row_h=58,
+           legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("none", "Tie"), ("warn", "Not measured")],
+           footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -289,7 +334,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--l2" in sys.argv:
+        if "--l2-best" in sys.argv:
+            render(n, L2B)
+        elif "--l2" in sys.argv:
             render(n, L2)
         else:
             render(n)
