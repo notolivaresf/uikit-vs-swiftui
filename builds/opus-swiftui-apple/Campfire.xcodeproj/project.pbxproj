@@ -1,0 +1,494 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0ED70F619AD1A2357C67A56D /* RoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A758510BEC7820E1D36971 /* RoomView.swift */; };
+		16882036A2B49513A9CFD97A /* RoomBehaviourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B98AAD39F13F5EF98014297 /* RoomBehaviourTests.swift */; };
+		296A437FD1F865BD3092C060 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69F5F00B46AFC3C773F3500 /* Theme.swift */; };
+		3181C69B5417054E45355A99 /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351C1B782A2DD452F15F9198 /* MessageRow.swift */; };
+		5198E79CA96BECBFB04DAEB0 /* RowParts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DC128133F10EC1FE3D0E60 /* RowParts.swift */; };
+		59D4CC4CF180BD5D517B2875 /* Chrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAC1CF775204E8FA2BAD6EA /* Chrome.swift */; };
+		751C2A3CE01391C85677A4F1 /* CampfireApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880ACB4B82C0B9C8976DEEB4 /* CampfireApp.swift */; };
+		A27B9D6F1D7E3EAB3EFFDC50 /* Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 245FB49D8AD815EF1F1A8475 /* Selection.swift */; };
+		B2EB0447942F0ED22CA2DBAA /* VisualTourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BAC46049D7BBCE293DBAE9 /* VisualTourTests.swift */; };
+		C12786BD6F3DEA57C70A664E /* ReferenceGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548949D1C66CF32D2B7C52E /* ReferenceGallery.swift */; };
+		C45FA2F9B3F32B9DA4BCAE81 /* RowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE98A550C743782C84E1DA4 /* RowModel.swift */; };
+		CA0FAE7A52DC8085CE0058D0 /* SelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF53226A6E3228E184E3E71B /* SelectionTests.swift */; };
+		E3623E0F089AAD884EE94F05 /* RoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3297D2C9DE297524CC05B7 /* RoomModel.swift */; };
+		ECC18F5786FBA5F11683C252 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 91614286C9A125C4311D98B3 /* CampfireKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F6FF320BC8723D850E8A0806 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06B8F519E31A518DF7D336A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0952423F223009CEF62C92EE;
+			remoteInfo = Campfire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0A3297D2C9DE297524CC05B7 /* RoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomModel.swift; sourceTree = "<group>"; };
+		245FB49D8AD815EF1F1A8475 /* Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selection.swift; sourceTree = "<group>"; };
+		24A758510BEC7820E1D36971 /* RoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomView.swift; sourceTree = "<group>"; };
+		351C1B782A2DD452F15F9198 /* MessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
+		49DC128133F10EC1FE3D0E60 /* RowParts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowParts.swift; sourceTree = "<group>"; };
+		880ACB4B82C0B9C8976DEEB4 /* CampfireApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampfireApp.swift; sourceTree = "<group>"; };
+		8CAC1CF775204E8FA2BAD6EA /* Chrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chrome.swift; sourceTree = "<group>"; };
+		9B98AAD39F13F5EF98014297 /* RoomBehaviourTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomBehaviourTests.swift; sourceTree = "<group>"; };
+		B69F5F00B46AFC3C773F3500 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B8BAC46049D7BBCE293DBAE9 /* VisualTourTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualTourTests.swift; sourceTree = "<group>"; };
+		BF53226A6E3228E184E3E71B /* SelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTests.swift; sourceTree = "<group>"; };
+		C7D049547FEABB30EA95AEBB /* CampfireKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CampfireKit; path = CampfireKit; sourceTree = SOURCE_ROOT; };
+		E548949D1C66CF32D2B7C52E /* ReferenceGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceGallery.swift; sourceTree = "<group>"; };
+		E978712C4B5B642C44883D6E /* CampfireUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CampfireUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAE98A550C743782C84E1DA4 /* RowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowModel.swift; sourceTree = "<group>"; };
+		F807A56F85E9DCAE6C55F396 /* Campfire.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Campfire.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		78F4EEED301E84F8C3817CB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ECC18F5786FBA5F11683C252 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		78BC02D2DC331FD2C8734BF8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F807A56F85E9DCAE6C55F396 /* Campfire.app */,
+				E978712C4B5B642C44883D6E /* CampfireUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C77303E582AFC640CCECC35E /* CampfireUITests */ = {
+			isa = PBXGroup;
+			children = (
+				9B98AAD39F13F5EF98014297 /* RoomBehaviourTests.swift */,
+				BF53226A6E3228E184E3E71B /* SelectionTests.swift */,
+				B8BAC46049D7BBCE293DBAE9 /* VisualTourTests.swift */,
+			);
+			path = CampfireUITests;
+			sourceTree = "<group>";
+		};
+		C8004D724E3073D8CBD21B63 /* Campfire */ = {
+			isa = PBXGroup;
+			children = (
+				880ACB4B82C0B9C8976DEEB4 /* CampfireApp.swift */,
+				8CAC1CF775204E8FA2BAD6EA /* Chrome.swift */,
+				351C1B782A2DD452F15F9198 /* MessageRow.swift */,
+				E548949D1C66CF32D2B7C52E /* ReferenceGallery.swift */,
+				0A3297D2C9DE297524CC05B7 /* RoomModel.swift */,
+				24A758510BEC7820E1D36971 /* RoomView.swift */,
+				EAE98A550C743782C84E1DA4 /* RowModel.swift */,
+				49DC128133F10EC1FE3D0E60 /* RowParts.swift */,
+				245FB49D8AD815EF1F1A8475 /* Selection.swift */,
+				B69F5F00B46AFC3C773F3500 /* Theme.swift */,
+			);
+			path = Campfire;
+			sourceTree = "<group>";
+		};
+		CDE908BE4E190065CCFADBA4 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				C7D049547FEABB30EA95AEBB /* CampfireKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		DF1F8CEE45479ED9CEE6AF61 = {
+			isa = PBXGroup;
+			children = (
+				C8004D724E3073D8CBD21B63 /* Campfire */,
+				C77303E582AFC640CCECC35E /* CampfireUITests */,
+				CDE908BE4E190065CCFADBA4 /* Packages */,
+				78BC02D2DC331FD2C8734BF8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0952423F223009CEF62C92EE /* Campfire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54302500CE1C184EF6B34B58 /* Build configuration list for PBXNativeTarget "Campfire" */;
+			buildPhases = (
+				6D3AFCA8C0DF37A18E879FC9 /* Sources */,
+				78F4EEED301E84F8C3817CB6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Campfire;
+			packageProductDependencies = (
+				91614286C9A125C4311D98B3 /* CampfireKit */,
+			);
+			productName = Campfire;
+			productReference = F807A56F85E9DCAE6C55F396 /* Campfire.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E90307CA5A84C7F9B1139DF3 /* CampfireUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D558747AFB22E3919568A7A1 /* Build configuration list for PBXNativeTarget "CampfireUITests" */;
+			buildPhases = (
+				FD7923C28DAF3FCA9E6CF6A4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				435218CABD4B7B15B34BF090 /* PBXTargetDependency */,
+			);
+			name = CampfireUITests;
+			packageProductDependencies = (
+			);
+			productName = CampfireUITests;
+			productReference = E978712C4B5B642C44883D6E /* CampfireUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		06B8F519E31A518DF7D336A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0952423F223009CEF62C92EE = {
+						ProvisioningStyle = Automatic;
+					};
+					E90307CA5A84C7F9B1139DF3 = {
+						TestTargetID = 0952423F223009CEF62C92EE;
+					};
+				};
+			};
+			buildConfigurationList = 8B3F1EEB824FDA2E038C613B /* Build configuration list for PBXProject "Campfire" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DF1F8CEE45479ED9CEE6AF61;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				095F678DC9A600487F22DB70 /* XCLocalSwiftPackageReference "CampfireKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 78BC02D2DC331FD2C8734BF8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0952423F223009CEF62C92EE /* Campfire */,
+				E90307CA5A84C7F9B1139DF3 /* CampfireUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6D3AFCA8C0DF37A18E879FC9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751C2A3CE01391C85677A4F1 /* CampfireApp.swift in Sources */,
+				59D4CC4CF180BD5D517B2875 /* Chrome.swift in Sources */,
+				3181C69B5417054E45355A99 /* MessageRow.swift in Sources */,
+				C12786BD6F3DEA57C70A664E /* ReferenceGallery.swift in Sources */,
+				E3623E0F089AAD884EE94F05 /* RoomModel.swift in Sources */,
+				0ED70F619AD1A2357C67A56D /* RoomView.swift in Sources */,
+				C45FA2F9B3F32B9DA4BCAE81 /* RowModel.swift in Sources */,
+				5198E79CA96BECBFB04DAEB0 /* RowParts.swift in Sources */,
+				A27B9D6F1D7E3EAB3EFFDC50 /* Selection.swift in Sources */,
+				296A437FD1F865BD3092C060 /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD7923C28DAF3FCA9E6CF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16882036A2B49513A9CFD97A /* RoomBehaviourTests.swift in Sources */,
+				CA0FAE7A52DC8085CE0058D0 /* SelectionTests.swift in Sources */,
+				B2EB0447942F0ED22CA2DBAA /* VisualTourTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		435218CABD4B7B15B34BF090 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0952423F223009CEF62C92EE /* Campfire */;
+			targetProxy = F6FF320BC8723D850E8A0806 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		35F1BEE9E22CA98EAEBA6090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Campfire;
+			};
+			name = Debug;
+		};
+		6288B825F412228AC9062C09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B1CD60E197A0914FFBEE230C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		DE2A33582850D6BBBCC7F766 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Campfire;
+			};
+			name = Release;
+		};
+		E9AD36FA99F9BC39B26294EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = Campfire;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F5B9676A07105943C74F4737 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = Campfire;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		54302500CE1C184EF6B34B58 /* Build configuration list for PBXNativeTarget "Campfire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5B9676A07105943C74F4737 /* Debug */,
+				E9AD36FA99F9BC39B26294EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8B3F1EEB824FDA2E038C613B /* Build configuration list for PBXProject "Campfire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6288B825F412228AC9062C09 /* Debug */,
+				B1CD60E197A0914FFBEE230C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D558747AFB22E3919568A7A1 /* Build configuration list for PBXNativeTarget "CampfireUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35F1BEE9E22CA98EAEBA6090 /* Debug */,
+				DE2A33582850D6BBBCC7F766 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		095F678DC9A600487F22DB70 /* XCLocalSwiftPackageReference "CampfireKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = CampfireKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		91614286C9A125C4311D98B3 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 06B8F519E31A518DF7D336A1 /* Project object */;
+}

@@ -1,0 +1,51 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: '18.0'
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    IPHONEOS_DEPLOYMENT_TARGET: '18.0'
+    CODE_SIGNING_ALLOWED: NO
+    TARGETED_DEVICE_FAMILY: '1'
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources: [Campfire]
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKitObjC
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: '1'
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        PRODUCT_NAME: Campfire
+  CampfireTests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [CampfireTests]
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.tests
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+    test:
+      targets: [CampfireTests]

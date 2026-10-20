@@ -1,0 +1,517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B294FB7F4FC65944614D49E /* CFRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F2716B0BB08EDA6740AA6A /* CFRoomViewController.m */; };
+		0B39470F042E9962DFB0CA55 /* CFAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7662C52D6C507BD5526F4C4A /* CFAvatar.m */; };
+		20DC824FDD0F5B5F39D93543 /* CFChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 072F45A376E09BF4F9443D1C /* CFChrome.m */; };
+		3A6862910CCB4845D1787F2F /* CFDebugBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 649413656FA2AB1433EA5561 /* CFDebugBar.m */; };
+		3A7D10D2D6C7873D9DCE21A4 /* CFMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0738E98512688D58A0BA8BB9 /* CFMessageCell.m */; };
+		4BA0DBC0030BEA846D8B1376 /* CFRoomStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B04127A4C318E9E8A825C61 /* CFRoomStore.m */; };
+		9F37845DEB9CD91D1F0788F7 /* CampfireUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B0199B42EAD7D585AE951 /* CampfireUITests.m */; };
+		A7505B79474939C1033AF95E /* CFRowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E42AD844C176F488FEDE7DEC /* CFRowLayout.m */; };
+		D0DFCCC3A7AE5BF915FA6909 /* CFLaunch.m in Sources */ = {isa = PBXBuildFile; fileRef = D4EF18C43BB9E9FDAEBFA375 /* CFLaunch.m */; };
+		D1700FB217576569F0400CF2 /* CFIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = D82D1D17A9768F641B7393DA /* CFIcons.m */; };
+		D267B24C286B265FC8E1A2F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 736653B2003903F7898A9E47 /* main.m */; };
+		D64B4E22366BF0F0742D1D99 /* CFTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A1517A60F3C35F71B9E018 /* CFTheme.m */; };
+		ECC18F5786FBA5F11683C252 /* CampfireKitObjC in Frameworks */ = {isa = PBXBuildFile; productRef = 6756A27B0140774906CBFBAE /* CampfireKitObjC */; };
+		F7C8A1D25CD01221F572CE48 /* CFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A02F5D785EB2CEEC7F6606 /* CFAppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F6FF320BC8723D850E8A0806 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06B8F519E31A518DF7D336A1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0952423F223009CEF62C92EE;
+			remoteInfo = Campfire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		072F45A376E09BF4F9443D1C /* CFChrome.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFChrome.m; sourceTree = "<group>"; };
+		0738E98512688D58A0BA8BB9 /* CFMessageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFMessageCell.m; sourceTree = "<group>"; };
+		385A646920E3ADFF13F20AC1 /* CFMessageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFMessageCell.h; sourceTree = "<group>"; };
+		38ECFBCB109FA70495AE72BA /* CFIcons.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFIcons.h; sourceTree = "<group>"; };
+		3FDD1024EE761096F90D0B61 /* CFDebugBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFDebugBar.h; sourceTree = "<group>"; };
+		45A1517A60F3C35F71B9E018 /* CFTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFTheme.m; sourceTree = "<group>"; };
+		49A5AB5672D1F4A5F874AA64 /* CFRoomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRoomViewController.h; sourceTree = "<group>"; };
+		59550AFCFC14F5B23B4B95E3 /* CFTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFTheme.h; sourceTree = "<group>"; };
+		649413656FA2AB1433EA5561 /* CFDebugBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFDebugBar.m; sourceTree = "<group>"; };
+		6B04127A4C318E9E8A825C61 /* CFRoomStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFRoomStore.m; sourceTree = "<group>"; };
+		6CE8FFF5548CCC9BE21FE38D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		736653B2003903F7898A9E47 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7662C52D6C507BD5526F4C4A /* CFAvatar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFAvatar.m; sourceTree = "<group>"; };
+		7C8B0199B42EAD7D585AE951 /* CampfireUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CampfireUITests.m; sourceTree = "<group>"; };
+		8A0A4D6EBCD2E30BB4F7F971 /* CFRowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRowLayout.h; sourceTree = "<group>"; };
+		954C066699FE5BFCF7445E2E /* CFChrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFChrome.h; sourceTree = "<group>"; };
+		B2E3ABE0D2085B530A60DC16 /* CFLaunch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFLaunch.h; sourceTree = "<group>"; };
+		C7D049547FEABB30EA95AEBB /* CampfireKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CampfireKit; path = CampfireKit; sourceTree = SOURCE_ROOT; };
+		C9A02F5D785EB2CEEC7F6606 /* CFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFAppDelegate.m; sourceTree = "<group>"; };
+		D4EF18C43BB9E9FDAEBFA375 /* CFLaunch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFLaunch.m; sourceTree = "<group>"; };
+		D82D1D17A9768F641B7393DA /* CFIcons.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFIcons.m; sourceTree = "<group>"; };
+		E1704C09C9CA2E127427B641 /* CFAvatar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFAvatar.h; sourceTree = "<group>"; };
+		E42AD844C176F488FEDE7DEC /* CFRowLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFRowLayout.m; sourceTree = "<group>"; };
+		E978712C4B5B642C44883D6E /* CampfireUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CampfireUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF82EE6AFDD2C3AD40D0A16A /* CFRoomStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRoomStore.h; sourceTree = "<group>"; };
+		F4F2716B0BB08EDA6740AA6A /* CFRoomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFRoomViewController.m; sourceTree = "<group>"; };
+		F77FF08490EC40E475C61BD4 /* CFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFAppDelegate.h; sourceTree = "<group>"; };
+		F807A56F85E9DCAE6C55F396 /* Campfire.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Campfire.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		78F4EEED301E84F8C3817CB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ECC18F5786FBA5F11683C252 /* CampfireKitObjC in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		78BC02D2DC331FD2C8734BF8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F807A56F85E9DCAE6C55F396 /* Campfire.app */,
+				E978712C4B5B642C44883D6E /* CampfireUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C77303E582AFC640CCECC35E /* CampfireUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7C8B0199B42EAD7D585AE951 /* CampfireUITests.m */,
+			);
+			path = CampfireUITests;
+			sourceTree = "<group>";
+		};
+		C8004D724E3073D8CBD21B63 /* Campfire */ = {
+			isa = PBXGroup;
+			children = (
+				F77FF08490EC40E475C61BD4 /* CFAppDelegate.h */,
+				C9A02F5D785EB2CEEC7F6606 /* CFAppDelegate.m */,
+				E1704C09C9CA2E127427B641 /* CFAvatar.h */,
+				7662C52D6C507BD5526F4C4A /* CFAvatar.m */,
+				954C066699FE5BFCF7445E2E /* CFChrome.h */,
+				072F45A376E09BF4F9443D1C /* CFChrome.m */,
+				3FDD1024EE761096F90D0B61 /* CFDebugBar.h */,
+				649413656FA2AB1433EA5561 /* CFDebugBar.m */,
+				38ECFBCB109FA70495AE72BA /* CFIcons.h */,
+				D82D1D17A9768F641B7393DA /* CFIcons.m */,
+				B2E3ABE0D2085B530A60DC16 /* CFLaunch.h */,
+				D4EF18C43BB9E9FDAEBFA375 /* CFLaunch.m */,
+				385A646920E3ADFF13F20AC1 /* CFMessageCell.h */,
+				0738E98512688D58A0BA8BB9 /* CFMessageCell.m */,
+				EF82EE6AFDD2C3AD40D0A16A /* CFRoomStore.h */,
+				6B04127A4C318E9E8A825C61 /* CFRoomStore.m */,
+				49A5AB5672D1F4A5F874AA64 /* CFRoomViewController.h */,
+				F4F2716B0BB08EDA6740AA6A /* CFRoomViewController.m */,
+				8A0A4D6EBCD2E30BB4F7F971 /* CFRowLayout.h */,
+				E42AD844C176F488FEDE7DEC /* CFRowLayout.m */,
+				59550AFCFC14F5B23B4B95E3 /* CFTheme.h */,
+				45A1517A60F3C35F71B9E018 /* CFTheme.m */,
+				6CE8FFF5548CCC9BE21FE38D /* Info.plist */,
+				736653B2003903F7898A9E47 /* main.m */,
+			);
+			path = Campfire;
+			sourceTree = "<group>";
+		};
+		CDE908BE4E190065CCFADBA4 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				C7D049547FEABB30EA95AEBB /* CampfireKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		DF1F8CEE45479ED9CEE6AF61 = {
+			isa = PBXGroup;
+			children = (
+				C8004D724E3073D8CBD21B63 /* Campfire */,
+				C77303E582AFC640CCECC35E /* CampfireUITests */,
+				CDE908BE4E190065CCFADBA4 /* Packages */,
+				78BC02D2DC331FD2C8734BF8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0952423F223009CEF62C92EE /* Campfire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54302500CE1C184EF6B34B58 /* Build configuration list for PBXNativeTarget "Campfire" */;
+			buildPhases = (
+				6D3AFCA8C0DF37A18E879FC9 /* Sources */,
+				78F4EEED301E84F8C3817CB6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Campfire;
+			packageProductDependencies = (
+				6756A27B0140774906CBFBAE /* CampfireKitObjC */,
+			);
+			productName = Campfire;
+			productReference = F807A56F85E9DCAE6C55F396 /* Campfire.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E90307CA5A84C7F9B1139DF3 /* CampfireUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D558747AFB22E3919568A7A1 /* Build configuration list for PBXNativeTarget "CampfireUITests" */;
+			buildPhases = (
+				FD7923C28DAF3FCA9E6CF6A4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				435218CABD4B7B15B34BF090 /* PBXTargetDependency */,
+			);
+			name = CampfireUITests;
+			packageProductDependencies = (
+			);
+			productName = CampfireUITests;
+			productReference = E978712C4B5B642C44883D6E /* CampfireUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		06B8F519E31A518DF7D336A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0952423F223009CEF62C92EE = {
+						ProvisioningStyle = Automatic;
+					};
+					E90307CA5A84C7F9B1139DF3 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = 0952423F223009CEF62C92EE;
+					};
+				};
+			};
+			buildConfigurationList = 8B3F1EEB824FDA2E038C613B /* Build configuration list for PBXProject "Campfire" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DF1F8CEE45479ED9CEE6AF61;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				095F678DC9A600487F22DB70 /* XCLocalSwiftPackageReference "CampfireKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 78BC02D2DC331FD2C8734BF8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0952423F223009CEF62C92EE /* Campfire */,
+				E90307CA5A84C7F9B1139DF3 /* CampfireUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6D3AFCA8C0DF37A18E879FC9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7C8A1D25CD01221F572CE48 /* CFAppDelegate.m in Sources */,
+				0B39470F042E9962DFB0CA55 /* CFAvatar.m in Sources */,
+				20DC824FDD0F5B5F39D93543 /* CFChrome.m in Sources */,
+				3A6862910CCB4845D1787F2F /* CFDebugBar.m in Sources */,
+				D1700FB217576569F0400CF2 /* CFIcons.m in Sources */,
+				D0DFCCC3A7AE5BF915FA6909 /* CFLaunch.m in Sources */,
+				3A7D10D2D6C7873D9DCE21A4 /* CFMessageCell.m in Sources */,
+				4BA0DBC0030BEA846D8B1376 /* CFRoomStore.m in Sources */,
+				0B294FB7F4FC65944614D49E /* CFRoomViewController.m in Sources */,
+				A7505B79474939C1033AF95E /* CFRowLayout.m in Sources */,
+				D64B4E22366BF0F0742D1D99 /* CFTheme.m in Sources */,
+				D267B24C286B265FC8E1A2F7 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD7923C28DAF3FCA9E6CF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F37845DEB9CD91D1F0788F7 /* CampfireUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		435218CABD4B7B15B34BF090 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0952423F223009CEF62C92EE /* Campfire */;
+			targetProxy = F6FF320BC8723D850E8A0806 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		35F1BEE9E22CA98EAEBA6090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Campfire;
+			};
+			name = Debug;
+		};
+		6288B825F412228AC9062C09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B1CD60E197A0914FFBEE230C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DE2A33582850D6BBBCC7F766 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Campfire;
+			};
+			name = Release;
+		};
+		E9AD36FA99F9BC39B26294EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Campfire/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = Campfire;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F5B9676A07105943C74F4737 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Campfire/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = Campfire;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		54302500CE1C184EF6B34B58 /* Build configuration list for PBXNativeTarget "Campfire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5B9676A07105943C74F4737 /* Debug */,
+				E9AD36FA99F9BC39B26294EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8B3F1EEB824FDA2E038C613B /* Build configuration list for PBXProject "Campfire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6288B825F412228AC9062C09 /* Debug */,
+				B1CD60E197A0914FFBEE230C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D558747AFB22E3919568A7A1 /* Build configuration list for PBXNativeTarget "CampfireUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35F1BEE9E22CA98EAEBA6090 /* Debug */,
+				DE2A33582850D6BBBCC7F766 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		095F678DC9A600487F22DB70 /* XCLocalSwiftPackageReference "CampfireKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = CampfireKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6756A27B0140774906CBFBAE /* CampfireKitObjC */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKitObjC;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 06B8F519E31A518DF7D336A1 /* Project object */;
+}
