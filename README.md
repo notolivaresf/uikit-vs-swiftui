@@ -3,11 +3,11 @@ Started after 37signals moved <a href="https://once.com">ONCE</a> off Rails.</p>
 
 ## Level 2: with skills
 
-The same Campfire chat room, built six times with a skill installed: Apple's Xcode 27 skills for SwiftUI, and [our UIKit skills](https://github.com/notolivaresf/uikit-skill) for Swift and for Objective-C, each by Opus and by Sol. Best build of each stack, head to head:
+The same Campfire chat room, built six times with a skill installed: Apple's Xcode 27 skills for SwiftUI, and [our UIKit skills](https://github.com/notolivaresf/uikit-skill) for Swift and for Objective-C, each by Opus and by Sol. Best of UIKit against best of SwiftUI, row by row:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-l2-best-dark.png">
-  <img src="docs/images/results-l2-best.png" alt="Level 2: best Swift UIKit build, best Objective-C UIKit build and best SwiftUI build compared row by row. Colour shows the winner of each row; only the Swift UIKit build passes everything.">
+  <img src="docs/images/results-l2-best.png" alt="Level 2: best of UIKit (Swift or Objective-C, Opus or Sol) against best of SwiftUI, row by row, each cell naming its source build. Colour shows the winner of each row; UIKit wins 11 rows, SwiftUI 1, fling and one more row are ties.">
 </picture>
 
 Details: [`docs/results-l2-best.md`](docs/results-l2-best.md) (the picks and takeaways) and [`docs/results-l2.md`](docs/results-l2.md) (all six builds). All six builds:

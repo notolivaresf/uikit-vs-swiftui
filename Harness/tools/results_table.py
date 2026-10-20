@@ -177,43 +177,45 @@ L2 = dict(title="UIKit vs SwiftUI, Level 2", subtitle="Same Campfire chat room, 
           footer="iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui")
 
 # --- Level 2 best of each stack (docs/results-l2-best.md), rendered only with --l2-best ---
-# Per row, each column (UIKit Swift, UIKit Objective-C, SwiftUI) shows the best value among that stack's two Level 2
-# builds (Opus or Sol; mix and match); the small text names the build. All numbers are from docs/results-l2.md.
-# Result per cell: W win (best of the three, ties allowed), L lose, T tie, N not measured.
+# Two columns. UIKit = best value per row across the four UIKit builds (Opus and Sol, Swift and Objective-C); SwiftUI = best
+# per row of its two builds (mix and match). The small text names the source. All numbers are from docs/results-l2.md.
+# Result per cell: W win (ties both win), L lose, T tie, N not measured.
 _ST = {"W": "ok", "L": "bad", "T": "none", "N": "warn"}
+SW, OC = "Swift \u00b7 ", "Objective-C \u00b7 "
 
 
 def _r(res, main, sub):
     return (_ST[res], main, sub, res == "W")
 
 
+def _row(label, u, w):
+    return (label, [_r(*u), _r(*w)])
+
+
 L2B_ROWS = [
-    ("Passes everything", [_r("W", "Pass", "Opus"), _r("L", "1 fail", "Opus and Sol (selection)"), _r("L", "2 fails", "Opus and Sol")]),
-    ("Stack rule", [_r("W", "Pass", "Opus and Sol"), _r("W", "Pass", "Opus and Sol"), _r("L", "Fail", "UIPasteboard, Opus and Sol")]),
-    ("First 40 rows (cold)", [_r("L", "196 ms", "Sol"), _r("W", "158 ms", "Opus"), _r("L", "314 ms", "Sol")]),
-    ("Cold launch (Instruments)", [_r("L", "776 ms", "2 of 3 traces saved \u00b7 Sol"), _r("W", "736 ms", "2 of 3 traces saved \u00b7 Sol"),
-                                   _r("N", "Not measured", "0 of 3 traces saved")]),
-    ("Fling", [_r("W", "0 hitches", "58.2 fps, 49 s \u00b7 Sol"), _r("L", "1 hitch (50 ms)", "58.3 fps, 52 s \u00b7 Sol"),
-               _r("W", "0 hitches", "58.0 fps, 41 s \u00b7 Sol")]),
-    ("Live stream, 600 messages", [_r("W", "1 hitch (17 ms)", "15.2 fps, CPU 12.2 s \u00b7 Opus"), _r("L", "3 hitches (67 ms)", "27.3 fps, CPU 11.9 s \u00b7 Opus"),
-                                   _r("L", "242 hitches (4.9 s)", "33.2 fps, CPU 22.1 s \u00b7 Sol")]),
-    ("Jump to message 2,500", [_r("L", "77 ms", "Sol"), _r("W", "67 ms", "Opus"), _r("L", "154 ms", "Opus")]),
-    ("Load older", [_r("L", "75 ms", "drift 0.0 pt \u00b7 Sol"), _r("W", "34 ms", "drift 0.1 pt \u00b7 Opus"), _r("L", "86 ms", "drift 0.2 pt \u00b7 Opus")]),
-    ("Text size change", [_r("W", "53 / 70 ms", "bottom / mid-list \u00b7 Sol"), _r("L", "55 / 75 ms", "bottom / mid-list \u00b7 Sol"),
-                          _r("L", "76 / 108 ms", "bottom / mid-list \u00b7 Opus")]),
-    ("Rotation, boost, menu", [_r("T", "Pass", "all three, both builds")] * 3),
-    ("Text selection", [_r("W", "Pass", "Opus"), _r("L", "Fail", "Opus and Sol"), _r("L", "Fail", "Opus and Sol")]),
-    ("Peak memory", [_r("L", "44.5 MB", "Sol"), _r("W", "35.0 MB", "Sol"), _r("L", "103.4 MB", "Sol")]),
-    ("App size", [_r("W", "0.64 MB", "Sol"), _r("L", "0.66 MB", "Opus"), _r("L", "1.20 MB", "Sol")]),
-    ("Agent wall time", [_r("L", "1233 s", "90 turns, 14 builds (7 failed) \u00b7 Sol"), _r("L", "1297 s", "118 turns, 24 builds (8 failed) \u00b7 Sol"),
-                         _r("W", "1209 s", "113 turns, 15 builds (8 failed) \u00b7 Sol")]),
+    _row("Passes everything", ("W", "Pass", SW + "Opus"), ("L", "2 fails", "Opus and Sol")),
+    _row("Stack rule", ("W", "Pass", "all four builds"), ("L", "Fail", "UIPasteboard, Opus and Sol")),
+    _row("First 40 rows (cold)", ("W", "158 ms", OC + "Opus"), ("L", "314 ms", "Sol")),
+    _row("Cold launch (Instruments)", ("W", "736 ms", "2 of 3 traces saved \u00b7 " + OC + "Sol"), ("N", "Not measured", "0 of 3 traces saved")),
+    _row("Fling", ("W", "0 hitches", "58.2 fps, 49 s \u00b7 " + SW + "Sol"), ("W", "0 hitches", "58.0 fps, 41 s \u00b7 Sol")),
+    _row("Live stream, 600 messages", ("W", "1 hitch (17 ms)", "15.2 fps, CPU 12.2 s \u00b7 " + SW + "Opus"),
+         ("L", "242 hitches (4.9 s)", "33.2 fps, CPU 22.1 s \u00b7 Sol")),
+    _row("Jump to message 2,500", ("W", "67 ms", OC + "Opus"), ("L", "154 ms", "Opus")),
+    _row("Load older", ("W", "34 ms", "drift 0.1 pt \u00b7 " + OC + "Opus"), ("L", "86 ms", "drift 0.2 pt \u00b7 Opus")),
+    _row("Text size change", ("W", "53 / 70 ms", "bottom / mid-list \u00b7 " + SW + "Sol"), ("L", "76 / 108 ms", "bottom / mid-list \u00b7 Opus")),
+    _row("Rotation, boost, menu", ("T", "Pass", "all three, all builds"), ("T", "Pass", "all three, both builds")),
+    _row("Text selection", ("W", "Pass", SW + "Opus"), ("L", "Fail", "Opus and Sol")),
+    _row("Peak memory", ("W", "35.0 MB", OC + "Sol"), ("L", "103.4 MB", "Sol")),
+    _row("App size", ("W", "0.64 MB", SW + "Sol"), ("L", "1.20 MB", "Sol")),
+    _row("Agent wall time", ("L", "1233 s", "90 turns, 14 builds (7 failed) \u00b7 " + SW + "Sol"),
+         ("W", "1209 s", "113 turns, 15 builds (8 failed) \u00b7 Sol")),
 ]
-L2B = dict(title="Best UIKit (Swift, Objective-C) vs best SwiftUI, Level 2",
-           subtitle="Best value per row among each stack's Opus and Sol builds; the small text names the build. Colour shows who wins the row.",
-           builds=[("UIKit, Swift", "best of Opus and Sol per row"), ("UIKit, Objective-C", "best of Opus and Sol per row"),
-                   ("SwiftUI", "best of Opus and Sol per row")], rows=L2B_ROWS, col_w=310, file="results-l2-best",
+L2B = dict(title="Best of UIKit vs best of SwiftUI, Level 2",
+           subtitle="Best value per row. UIKit: any of its four builds (Swift or Objective-C, Opus or Sol); SwiftUI: its two builds. Small text names the source.",
+           builds=[("UIKit", "best of 4 builds: Swift and Objective-C, Opus and Sol"), ("SwiftUI", "best of 2 builds: Opus and Sol")],
+           rows=L2B_ROWS, col_w=420, file="results-l2-best",
            groups=None, row_h=58,
-           legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("none", "Tie"), ("warn", "Not measured")],
+           legend=[("ok", "Wins the row (ties both win)"), ("bad", "Loses the row"), ("none", "Tie"), ("warn", "Not measured")],
            note="fps counts redraws; hitches are late frames you can see",
            footer="iPhone 12 \u00b7 Level 2 \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
