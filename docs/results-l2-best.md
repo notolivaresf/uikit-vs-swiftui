@@ -36,5 +36,5 @@ Fernando asked (20 Oct) for the best UIKit build against the best SwiftUI build 
 - UIKit wins 9 of 14 rows; SwiftUI wins 3 (fling hitches, peak memory by 4%, agent time); one is a tie and one is not measured.
 - The clearest gap is correctness: the best UIKit build passes everything, while even the best SwiftUI build still uses UIKit's UIPasteboard for Copy and cannot select text.
 - The stream is the other big gap: SwiftUI shows more frames per second (33.2 against 15.2) but drops 242 frames and burns 22.1 s of CPU against 12.2 s; UIKit redraws only when a message lands, so read fps together with hitches.
-- UIKit is faster in every timed action (first content, jump, load older, text size), by about 60 to 100 ms.
+- UIKit is faster in every timed action (first content, jump, load older, text size), by 36 to 101 ms.
 - SwiftUI was cheaper for the agent in wall time (1209 s against 2231 s) but needed more turns and 8 failed builds against none, so the saving is not clean.
