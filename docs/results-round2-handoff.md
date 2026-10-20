@@ -1,5 +1,7 @@
 # L2 results: hand-off (19 Oct, 16:50; updated 18:55)
 
+> Historical hand-off, kept as written. Its "L1"/"Level 1" now means Round 1 (no skills) and "L2"/"Level 2" means Round 2 (with skills); build names are the old run names (see `builds/README.md`), and "round" here means a measurement pass.
+
 The six Level 2 builds are built for the phone, but no benchmark round could run yet: the phone would not start UI automation. Nothing about any build was changed.
 
 ## Done
@@ -21,7 +23,7 @@ The six Level 2 builds are built for the phone, but no benchmark round could run
   | sol-objc-ours-objc-pair | pass |
 
   Both SwiftUI builds still reach for UIPasteboard for Copy, the same as in Level 1, even with Apple's skills installed.
-- **App size** (method in `docs/results-l1.md`, "App size"; `du -sk` of the signed Release `.app` ÷ 1024; Level 1 sizes are also in `docs/results-l1.md`):
+- **App size** (method in `docs/results-round1.md`, "App size"; `du -sk` of the signed Release `.app` ÷ 1024; Level 1 sizes are also in `docs/results-round1.md`):
 
   | Build | App size | Executable (bytes) | Notes |
   |---|---|---|---|
@@ -78,7 +80,7 @@ Someone has to be at the phone: unlock it and keep it awake, check Settings > De
 
 ### 20 Oct, 02:30 CST: all six rounds done
 
-Fernando accepted the prompt on the phone at about 22:30 and the wake probe passed. Round 1 of all six builds then ran in order (22:35 to 02:30); every suite test passed in each. In 13 of 18 launch traces Instruments did not finish saving within the cap, so cold launch (Instruments) is missing or partial; cold time to 40 rows is complete. Results: `docs/results-l2.md`, rows as sent: `docs/results-l2-rows.md`, images: `docs/images/results-l2*.png`. Steps 1 to 4 below are done.
+Fernando accepted the prompt on the phone at about 22:30 and the wake probe passed. Round 1 of all six builds then ran in order (22:35 to 02:30); every suite test passed in each. In 13 of 18 launch traces Instruments did not finish saving within the cap, so cold launch (Instruments) is missing or partial; cold time to 40 rows is complete. Results: `docs/results-round2.md`, rows as sent: `docs/results-round2-rows.md`, images: `docs/images/results-round2*.png`. Steps 1 to 4 below are done.
 
 ## What is left (done 20 Oct)
 
@@ -89,6 +91,6 @@ Fernando accepted the prompt on the phone at about 22:30 and the wake probe pass
    ```
 
    for `opus-uikit-ours-pair sol-uikit-ours-pair opus-swiftui-apple sol-swiftui-apple opus-objc-ours-objc-pair sol-objc-ours-objc-pair`, from the repo root. Watch `logs/failures.txt` in the round folder: if the first launch fails with the automation-mode time-out again, stop at once.
-2. Write `docs/results-l2.md` shaped like `docs/results-l1.md`: one table per build (or one table with six columns) with the same rows, the stack rule, app size and agent cost from above, judged against the spec numbers in `summary.json` (drift within 2 pt, still pinned, 600 added, first content under 1 s, selection and menu both "yes"; the harness tests pass even when a spec number misses). Then a Level 1 vs Level 2 comparison: opus-uikit vs opus-uikit-ours-pair, sol-uikit vs sol-uikit-ours-pair, opus-swiftui vs opus-swiftui-apple, sol-swiftui vs sol-swiftui-apple (the objc builds have no Level 1 twin; compare them with the Swift UIKit builds of the same model).
-3. Images: add an `L2` spec to `Harness/tools/results_table.py` (six columns, `file="results-l2"`, groups Opus (0, 2) and Sol (3, 5), `footer` naming Level 2) and a `--l2` switch that renders only it, so the Level 1 images stay as they are.
+2. Write `docs/results-round2.md` shaped like `docs/results-round1.md`: one table per build (or one table with six columns) with the same rows, the stack rule, app size and agent cost from above, judged against the spec numbers in `summary.json` (drift within 2 pt, still pinned, 600 added, first content under 1 s, selection and menu both "yes"; the harness tests pass even when a spec number misses). Then a Level 1 vs Level 2 comparison: opus-uikit vs opus-uikit-ours-pair, sol-uikit vs sol-uikit-ours-pair, opus-swiftui vs opus-swiftui-apple, sol-swiftui vs sol-swiftui-apple (the objc builds have no Level 1 twin; compare them with the Swift UIKit builds of the same model).
+3. Images: add an `L2` spec to `Harness/tools/results_table.py` (six columns, `file="results-round2"`, groups Opus (0, 2) and Sol (3, 5), `footer` naming Level 2) and a `--l2` switch that renders only it, so the Level 1 images stay as they are.
 4. Commit by name (`runs/` is never committed) and push.

@@ -1,6 +1,8 @@
 # L1 results: hand-off (18 Oct, 16:05)
 
-**Superseded:** L1 is finished; results are in `docs/results-l1.md`. Nothing is left to run (rounds 2 and 3 cut by Fernando, 18 Oct).
+> Historical hand-off, kept as written. Its "L1"/"Level 1" now means Round 1 (no skills) and "L2"/"Level 2" means Round 2 (with skills); build names are the old run names (see `builds/README.md`), and "round" here means a measurement pass.
+
+**Superseded:** L1 is finished; results are in `docs/results-round1.md`. Nothing is left to run (rounds 2 and 3 cut by Fernando, 18 Oct).
 
 ## Done
 
@@ -20,9 +22,9 @@ Order: opus-uikit, opus-swiftui, sol-uikit, sol-swiftui, then repeat, for rounds
 
 `buildslot run --label "uvs: record opus-uikit r1" -- Harness/record.sh --build opus-uikit --round 1 --app-path ~/uvs-builds/dd/opus-uikit/Build/Products/Release-iphoneos/Campfire.app`
 
-Then write `docs/results-l1.md` (see the lane brief). Notes for that write-up:
+Then write `docs/results-round1.md` (see the lane brief). Notes for that write-up:
 
 - The harness tests pass even when a spec number misses, e.g. smoke round 8 had a rotation drift of 61 pt and passed. So judge each behaviour against the spec numbers in `summary.json`: drift within 2 pt, still pinned, 600 added, first content under 1 s, selection and menu both "yes".
 - `docs/spec.md` doesn't exist. The spec is `PROMPT.md` and the levels are in `docs/timing.md`.
 - The level 2 layout match (screenshots and constants within 2 pt) and the jump-to-bottom button have no harness test: report them as not covered.
-- `runs/<build>/` is not in `.gitignore` (only `runs/smoke/` is), so commit `docs/results-l1.md` by name.
+- `runs/<build>/` is not in `.gitignore` (only `runs/smoke/` is), so commit `docs/results-round1.md` by name.

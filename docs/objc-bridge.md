@@ -1,6 +1,6 @@
 # Objective-C bridge (CampfireKitObjC)
 
-V2 adds a UIKit app written in Objective-C. CampfireKit is pure Swift (structs, enums with associated values, `AsyncStream`), which Objective-C cannot see, so `CampfireKit/Sources/CampfireKitObjC` wraps it in `@objc` classes. The `CampfireKit` target and its public API are unchanged; the four Level 1 builds do not use the new target.
+V2 adds a UIKit app written in Objective-C. CampfireKit is pure Swift (structs, enums with associated values, `AsyncStream`), which Objective-C cannot see, so `CampfireKit/Sources/CampfireKitObjC` wraps it in `@objc` classes. The `CampfireKit` target and its public API are unchanged; the four Round 1 builds do not use the new target.
 
 ## Rules for the Objective-C build
 

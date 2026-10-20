@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Render the README results table to docs/images/results.png (light) and results-dark.png.
+"""Render the README results table to docs/images/results-round1.png (light) and results-round1-dark.png.
 
 Data is in ROWS below. Cell state: ok (green), bad (red), warn (yellow), none (plain).
 best=True marks the best number in a row: bold text and a thin darker border.
 Usage: python3 Harness/tools/results_table.py
-       python3 Harness/tools/results_table.py --l2   (Level 2 only: docs/images/results-l2.png and -dark.png)
-       python3 Harness/tools/results_table.py --l2-best3   (best of each stack's two builds, three columns: results-l2-best3.png and -dark.png)
-       python3 Harness/tools/results_table.py --l2-best   (best UIKit vs best SwiftUI of Level 2: results-l2-best.png and -dark.png)
+       python3 Harness/tools/results_table.py --round2   (Round 2 only: docs/images/results-round2.png and -dark.png)
+       python3 Harness/tools/results_table.py --round2-best3   (best of each stack's two builds, three columns: results-round2-best3.png and -dark.png)
+       python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
 
 HEL = "/System/Library/Fonts/Helvetica.ttc"
-BUILDS = [("opus-uikit", "UIKit"), ("opus-swiftui", "SwiftUI"), ("sol-uikit", "UIKit"), ("sol-swiftui", "SwiftUI")]
+BUILDS = [("round1-uikit-swift-opus", "UIKit"), ("round1-swiftui-opus", "SwiftUI"), ("round1-uikit-swift-sol", "UIKit"), ("round1-swiftui-sol", "SwiftUI")]
 
 # (label, [(state, main, sub, best) x4])
 ROWS = [
@@ -47,8 +47,8 @@ THEMES = {
                  head=(38, 38, 43)),
 }
 
-FULL = dict(title="UIKit vs SwiftUI", subtitle="Same Campfire chat room, built four times. Level 1 results.",
-            builds=BUILDS, rows=ROWS, col_w=220, file="results",
+FULL = dict(title="UIKit vs SwiftUI", subtitle="Same Campfire chat room, built four times. Round 1 (no skills).",
+            builds=BUILDS, rows=ROWS, col_w=220, file="results-round1",
             groups=[("Opus 5.5", (0, 1)), ("GPT-6.1 Sol", (2, 3))],
             legend=[("ok", "Pass"), ("bad", "Fail"), ("warn", "Not measurable or not measured")], best_legend=True)
 
@@ -140,12 +140,12 @@ def best_rows():
 
 BEST = dict(title="Best of UIKit vs best of SwiftUI",
             subtitle="Each stack's best build per row. Colour shows who wins; the last line shows how far behind.",
-            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-best", groups=None, row_h=76,
+            builds=[("UIKit", ""), ("SwiftUI", "")], rows=best_rows(), col_w=300, file="results-round1-best", groups=None, row_h=76,
             legend=[("ok", "Wins the row"), ("bad", "Loses the row"), ("warn", "Within 5%")])
 
-# --- Level 2 (docs/results-l2.md): six builds (--l2) and best of each stack's pair (--l2-best3) ---
+# --- Round 2 (docs/results-round2.md): six builds (--round2) and best of each stack's pair (--round2-best3) ---
 # One table of facts, one place. Each row: label, then per build (key, main, sub). Lower key is better; key None = not measured.
-# Winners are computed (equal keys tie), nothing is marked by hand. All numbers are from docs/results-l2.md.
+# Winners are computed (equal keys tie), nothing is marked by hand. All numbers are from docs/results-round2.md.
 L2_ORDER = ["opus-uikit", "sol-uikit", "opus-objc", "sol-objc", "opus-swiftui", "sol-swiftui"]
 L2_MODEL = {"opus": "Opus", "sol": "Sol"}
 NM = (None, "Not measured", "")
@@ -251,25 +251,25 @@ def l2_best3():
     return rows, record
 
 
-L2_HEAD = [("opus-uikit", "Opus"), ("sol-uikit", "Sol"), ("opus-objc", "Opus"), ("sol-objc", "Sol"), ("opus-swiftui", "Opus"), ("sol-swiftui", "Sol")]
-_FOOT = "iPhone 12 · Level 2 · github.com/notolivaresf/uikit-vs-swiftui"
+L2_HEAD = [("round2-uikit-swift-opus", "Opus"), ("round2-uikit-swift-sol", "Sol"), ("round2-uikit-objc-opus", "Opus"), ("round2-uikit-objc-sol", "Sol"), ("round2-swiftui-opus", "Opus"), ("round2-swiftui-sol", "Sol")]
+_FOOT = "iPhone 12 · Round 2 · github.com/notolivaresf/uikit-vs-swiftui"
 _LEG = [("ok", "Best in row (ties share it)"), ("none", "Not the best, or the whole row ties"), ("warn", "Not measured")]
-L2 = dict(title="UIKit vs SwiftUI, Level 2",
+L2 = dict(title="UIKit vs SwiftUI, Round 2",
           subtitle="The six builds, one column each. Rows ordered with hitches first; the best value in each row is outlined in green.",
-          builds=L2_HEAD, rows=l2_six_rows(), col_w=210, file="results-l2", row_h=62,
+          builds=L2_HEAD, rows=l2_six_rows(), col_w=210, file="results-round2", row_h=62,
           groups=[("UIKit Swift", (0, 1)), ("UIKit Objective-C", (2, 3)), ("SwiftUI", (4, 5))],
           legend=_LEG, note="fps counts redraws; hitches are late frames you can see", footer=_FOOT)
 
 _B3_ROWS, B3_RECORD = l2_best3()
-L2B3 = dict(title="Best of each stack, Level 2",
+L2B3 = dict(title="Best of each stack, Round 2",
             subtitle="Each column takes the better of its two builds per row (Opus or Sol). Small text names the model the value came from.",
             builds=[("UIKit Swift", "best of 2 builds"), ("UIKit Objective-C", "best of 2 builds"), ("SwiftUI", "best of 2 builds")],
-            rows=_B3_ROWS, col_w=330, file="results-l2-best3", groups=None, row_h=62,
+            rows=_B3_ROWS, col_w=330, file="results-round2-best3", groups=None, row_h=62,
             legend=_LEG, note="fps counts redraws; hitches are late frames you can see", footer=_FOOT)
 
-# --- Level 2 best of each stack (docs/results-l2-best.md), rendered only with --l2-best ---
+# --- Round 2 best of each stack (docs/results-round2-best.md), rendered only with --round2-best ---
 # Two columns. UIKit = best value per row across the four UIKit builds (Opus and Sol, Swift and Objective-C); SwiftUI = best
-# per row of its two builds (mix and match). The small text names the source. All numbers are from docs/results-l2.md.
+# per row of its two builds (mix and match). The small text names the source. All numbers are from docs/results-round2.md.
 # Result per cell: W win (ties both win), L lose, T tie, N not measured.
 _ST = {"W": "ok", "L": "bad", "T": "none", "N": "warn"}
 SW, OC = "Swift \u00b7 ", "Objective-C \u00b7 "
@@ -301,14 +301,14 @@ L2B_ROWS = [
     _row("Agent wall time", ("L", "1233 s", "90 turns, 14 builds (7 failed) \u00b7 " + SW + "Sol"),
          ("W", "1209 s", "113 turns, 15 builds (8 failed) \u00b7 Sol")),
 ]
-L2B = dict(title="Best of UIKit vs best of SwiftUI, Level 2",
+L2B = dict(title="Best of UIKit vs best of SwiftUI, Round 2",
            subtitle="Best value per row. UIKit: any of its four builds (Swift or Objective-C, Opus or Sol); SwiftUI: its two builds. Small text names the source.",
            builds=[("UIKit", "best of 4 builds: Swift and Objective-C, Opus and Sol"), ("SwiftUI", "best of 2 builds: Opus and Sol")],
-           rows=L2B_ROWS, col_w=420, file="results-l2-best",
+           rows=L2B_ROWS, col_w=420, file="results-round2-best",
            groups=None, row_h=58,
            legend=[("ok", "Wins the row (ties both win)"), ("bad", "Loses the row"), ("none", "Tie"), ("warn", "Not measured")],
            note="fps counts redraws; hitches are late frames you can see",
-           footer="iPhone 12 \u00b7 Level 2 \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
+           footer="iPhone 12 \u00b7 Round 2 (with skills) \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
@@ -416,7 +416,7 @@ def render(name, spec=None):
     if spec.get("note"):
         d.text((x0 * S, (y + 6) * S), spec["note"], font=font(13), fill=th["muted"], anchor="lm")
         y += 24
-    d.text((x0 * S, (y + 6) * S), spec.get("footer", "iPhone 12 · Level 1 · github.com/notolivaresf/uikit-vs-swiftui"),
+    d.text((x0 * S, (y + 6) * S), spec.get("footer", "iPhone 12 · Round 1 (no skills) · github.com/notolivaresf/uikit-vs-swiftui"),
            font=font(13), fill=th["muted"], anchor="lm")
     out = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "images",
                        spec["file"] + (".png" if name == "light" else "-dark.png"))
@@ -427,11 +427,11 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--l2-best" in sys.argv:
+        if "--round2-best" in sys.argv:
             render(n, L2B)
-        elif "--l2-best3" in sys.argv:
+        elif "--round2-best3" in sys.argv:
             render(n, L2B3)
-        elif "--l2" in sys.argv:
+        elif "--round2" in sys.argv:
             render(n, L2)
         else:
             render(n)

@@ -1,6 +1,6 @@
-# Skills used in Level 2
+# Skills used in Round 2
 
-Level 2 gives each build a pair of agent skills (see `docs/harness.md`, "Level 2"). `Harness/skillset.py` installs them into the build folder, and checks the installed copy against the hash below.
+Round 2 gives each build a pair of agent skills (see `docs/harness.md`, "Round 2"). `Harness/skillset.py` installs them into the build folder, and checks the installed copy against the hash below.
 
 ## Ours, Swift (vendored here)
 

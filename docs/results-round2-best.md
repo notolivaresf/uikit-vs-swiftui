@@ -1,10 +1,10 @@
-# Level 2: best of UIKit against best of SwiftUI
+# Round 2: best of UIKit against best of SwiftUI
 
-Fernando's brief (20 Oct): "The best should be the best of each metric regardless if we mix and match", then "just best of UIKit vs. best of SwiftUI and mark in each row if it's Swift/ObjC". So each column shows, row by row, the best value among that stack's builds, and each cell names where it came from. UIKit is the best of four builds (Swift and Objective-C, each by Opus and by Sol); SwiftUI is the best of two (Opus and Sol). A column is therefore not one build. Every number is from `docs/results-l2.md` (round 1, iPhone 12).
+Fernando's brief (20 Oct): "The best should be the best of each metric regardless if we mix and match", then "just best of UIKit vs. best of SwiftUI and mark in each row if it's Swift/ObjC". So each column shows, row by row, the best value among that stack's builds, and each cell names where it came from. UIKit is the best of four builds (Swift and Objective-C, each by Opus and by Sol); SwiftUI is the best of two (Opus and Sol). A column is therefore not one build. Every number is from `docs/results-round2.md` (pass 1, iPhone 12).
 
-![Best of UIKit vs best of SwiftUI per row, Level 2](images/results-l2-best.png)
+![Best of UIKit vs best of SwiftUI per row, Round 2](images/results-round2-best.png)
 
-(Dark version: `images/results-l2-best-dark.png`; rendered with `python3 Harness/tools/results_table.py --l2-best`.)
+(Dark version: `images/results-round2-best-dark.png`; rendered with `python3 Harness/tools/results_table.py --round2-best`.)
 
 How a cell is chosen: lowest time, hitches, memory or size; pass if any build of that stack passed. Fling and stream lead with hitches (late frames you can see), fps second: fps counts redraws, so a build that redraws only when a message lands shows fewer frames without stuttering. The winner of a row is the better of the two columns; ties both win.
 
@@ -27,7 +27,7 @@ How a cell is chosen: lowest time, hitches, memory or size; pass if any build of
 | App size | 0.64 MB (Swift, Sol) | 1.20 MB (Sol) | UIKit |
 | Agent wall time, turns, builds (failed) | 1233 s, 90, 14 (7) (Swift, Sol) | 1209 s, 113, 15 (8) (Sol) | SwiftUI |
 
-Cold launch is not comparable to Level 1: only 2 of 3 traces saved for the measured UIKit build, and none for SwiftUI before the 300 s cap.
+Cold launch is not comparable to Round 1: only 2 of 3 traces saved for the measured UIKit build, and none for SwiftUI before the 300 s cap.
 
 ## Win counts
 
