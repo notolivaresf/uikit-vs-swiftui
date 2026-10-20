@@ -57,10 +57,12 @@ fail() { echo "FAILED: $1" | tee -a "$out/logs/failures.txt" >&2; failed=1; }
 
 # Signing: team H8HSTBN8ZP (Amazing Humans), automatic. The App Store Connect key lets xcodebuild make the
 # profile; it lives outside the repo.
-auth=(-allowProvisioningUpdates
-  -authenticationKeyPath "$HOME/.appstoreconnect/private_keys/AuthKey_MYT9KLPSWK.p8"
-  -authenticationKeyID MYT9KLPSWK
-  -authenticationKeyIssuerID 69a6de85-b768-47e3-e053-5b8c7c11a4d1)
+# App Store Connect key: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH, from the untracked Harness/local.env when present.
+[ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
+auth=(-allowProvisioningUpdates)
+if [ -n "${ASC_KEY_ID:-}" ] && [ -n "${ASC_ISSUER_ID:-}" ] && [ -n "${ASC_KEY_PATH:-}" ]; then
+  auth+=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+fi
 
 # 0. Build the tests once; every later step runs them without building.
 xcodebuild build-for-testing -project "$here/CampfireBench.xcodeproj" -scheme CampfireBench \

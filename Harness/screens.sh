@@ -25,10 +25,12 @@ out="$repo/runs/screens/$build"
 if [ -e "$out" ]; then echo "refusing: $out already exists" >&2; exit 2; fi
 mkdir -p "$out"
 derived="$repo/build/DDH"
-auth=(-allowProvisioningUpdates
-  -authenticationKeyPath "$HOME/.appstoreconnect/private_keys/AuthKey_MYT9KLPSWK.p8"
-  -authenticationKeyID MYT9KLPSWK
-  -authenticationKeyIssuerID 69a6de85-b768-47e3-e053-5b8c7c11a4d1)
+# App Store Connect key: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH, from the untracked Harness/local.env when present.
+[ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
+auth=(-allowProvisioningUpdates)
+if [ -n "${ASC_KEY_ID:-}" ] && [ -n "${ASC_ISSUER_ID:-}" ] && [ -n "${ASC_KEY_PATH:-}" ]; then
+  auth+=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+fi
 
 xcodebuild build-for-testing -project "$here/CampfireBench.xcodeproj" -scheme CampfireBench \
   -destination "id=$device_udid" -derivedDataPath "$derived" "${auth[@]}" >"$out/build.log" 2>&1 || { echo "build-for-testing failed ($out/build.log)" >&2; exit 1; }
