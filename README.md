@@ -38,7 +38,7 @@ One Campfire chat room, built four times with no skills available for SwiftUI or
 
 ## How it works
 
-- **One prompt.** [`PROMPT.md`](PROMPT.md) asks for a single iPhone chat room copied 1:1 from the screenshots in [`screenshots/`](screenshots), light and dark, within 2 pt of [`Fixtures/constants.json`](Fixtures/constants.json).
+- **One prompt.** [`PROMPT.md`](PROMPT.md) asks for a single iPhone chat room copied 1:1 from the screenshots in [`screenshots/`](screenshots), light and dark, within 2 pt of [`Fixtures/constants.json`](Fixtures/constants.json). The exact prompt each build got, per round and stack, is in [`prompts/`](prompts).
 - **One shared package.** [`CampfireKit`](CampfireKit) makes 50 people and 50,000 messages from a fixed seed, pages of 40, the threading rule and a live stream of 20 messages a second. Foundation only, so it is neutral.
 - **Frozen inputs.** Prompt, package, fixtures and screenshots do not change once runs start.
 - **Clean runs.** Each build starts in an empty folder with no memory of the others.
