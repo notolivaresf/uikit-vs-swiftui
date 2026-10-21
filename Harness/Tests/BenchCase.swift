@@ -53,9 +53,33 @@ class BenchCase: XCTestCase {
     /// hitches). Same for every build.
     static let singleIterationTests: Set<String> = ["testFling", "testMemory"]
 
+    /// Simulator mode (record.sh --sim sets UVS_FAST=1 for the test runner; never set for the iPhone passes, whose
+    /// numbers are compared with Round 2's). Fast means: no throw-away warm-up run (the block returns at once the
+    /// first time), and one iteration for the tests that only feed pass/fail checks or play the 30 s stream.
+    /// testLiveStream's memory metric is then the simulator's peak-memory number (testMemory is not run).
+    static let fast = ProcessInfo.processInfo.environment["UVS_FAST"] == "1"
+    static let fastSingleIterationTests: Set<String> = ["testLiveStream", "testRotationAtBottom", "testRotationAt2500", "testBoostBurst"]
+
     var iterationCount: Int {
         let test = name.split(separator: " ").last.map { String($0.dropLast()) } ?? ""
+        if Self.fast, let n = ProcessInfo.processInfo.environment["UVS_ITER"].flatMap({ Int($0) }) { return n }
+        if Self.fast && Self.fastSingleIterationTests.contains(test) { return 1 }
         return Self.singleIterationTests.contains(test) ? 1 : Self.iterations
+    }
+
+    /// measure(), except in fast mode, where XCTest's first (thrown-away) run does nothing.
+    func bench(metrics: [XCTMetric], options: XCTMeasureOptions, block: () -> Void) {
+        guard Self.fast else { measure(metrics: metrics, options: options, block: block); return }
+        let manual = options.invocationOptions.contains(.manuallyStart)
+        var warmup = true
+        measure(metrics: metrics, options: options) { [self] in
+            if warmup {
+                warmup = false
+                if manual { startMeasuring(); stopMeasuring() }
+                return
+            }
+            block()
+        }
     }
 
     var options: XCTMeasureOptions {
@@ -95,7 +119,9 @@ class BenchCase: XCTestCase {
 
     /// Taps Reset and waits until the room is back at the bottom and the label has settled.
     func reset() {
-        tap(Bar.reset)
+        // Straight after a launch the room is already at the bottom and Reset changes nothing on the label: the
+        // simulator pass does not wait the full 10 s for a change that is not coming.
+        tap(Bar.reset, changeWait: Self.fast ? 2 : 10)
         XCTAssertTrue(waitUntil(timeout: 15) { self.state().pinned }, "not pinned after Reset")
         _ = settled()
     }

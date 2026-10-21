@@ -347,7 +347,9 @@ def cmd_summary(args):
     tr = lambda name, scroll: (hitches(d / f"{name}.trace", d / "logs" / f"{name}.test.log", scroll)
                                if (d / f"{name}.trace").exists() else None)
     launches = [launch_ms(t) for t in sorted(d.glob("launch.*.trace"))]
-    mem = lambda needle: pick(m, "testMemory", needle, convert=1/1000)
+    # The simulator pass (UVS_FAST) has no testMemory: the stream test's own memory metric is the peak memory.
+    mem_test = "testMemory" if "testMemory" in m else "testLiveStream"
+    mem = lambda needle: pick(m, mem_test, needle, convert=1/1000)
     s = {
         "device": "iPhone 12, iOS 26.0",
         "iterations_per_test": {"default": ITERATIONS, **ITERATIONS_BY_TEST},
@@ -408,7 +410,7 @@ def cmd_summary(args):
         },
         "memory_mb": {
             "peak_footprint": mem("memory peak physical"),
-            "growth_over_scenario": next((round(v["median"] / 1000, 3) for n, v in m.get("testMemory", {}).items()
+            "growth_over_scenario": next((round(v["median"] / 1000, 3) for n, v in m.get(mem_test, {}).items()
                                           if n.lower().startswith("memory physical (")), None),
             "footprint_at_end": mem("absolute memory physical"),
             "instruments_allocations_from_launch": allocations(d / "memory.trace") if (d / "memory.trace").exists() else None,

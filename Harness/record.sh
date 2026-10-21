@@ -29,7 +29,7 @@ LAUNCH_SAMPLES=3; heap_trace=0; stream_only=0
 [ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
 device_core="${UVS_DEVICE_CORE:-}"
 device_udid="${UVS_DEVICE_UDID:-}"
-out_dir=""; derived_dir=""; quick=0; sim=""
+out_dir=""; derived_dir=""; quick=0; sim=""; only=""
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -54,6 +54,9 @@ while [ $# -gt 0 ]; do
     # --sim <simulator udid>: measure in that (booted) simulator instead of the phone. Implies --quick. Only the
     # state label's own ms, XCTest's CPU and memory metrics and the checks mean anything there; no Instruments.
     --sim) sim="$2"; quick=1; shift 2;;
+    # --only a,b,c: (with --sim) run only these steps: launch (the cold launch read) and any test names, e.g.
+    # launch,testJumpTo2500,testTextSizeMidScroll. Used by ./bench <number>.
+    --only) only="$2"; shift 2;;
     *) echo "unknown option $1" >&2; exit 2;;
   esac
 done
@@ -81,11 +84,23 @@ if [ -n "${ASC_KEY_ID:-}" ] && [ -n "${ASC_ISSUER_ID:-}" ] && [ -n "${ASC_KEY_PA
   auth+=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 fi
 
-# 0. Build the tests once; every later step runs them without building.
-xcodebuild build-for-testing -project "$here/CampfireBench.xcodeproj" -scheme CampfireBench \
-  -destination "$dest" -derivedDataPath "$derived" "${auth[@]}" >"$out/logs/build.log" 2>&1 \
-  || { fail "build-for-testing (logs/build.log)"; exit 1; }
+# 0. Build the tests once; every later step runs them without building. On the simulator the built bundle is
+#    reused while the test sources are unchanged (a stamp of their checksums sits next to it).
+stamp="$(find "$here/Tests" "$here/CampfireBench.xcodeproj" -type f -not -path '*/xcuserdata/*' | sort | xargs shasum | shasum | cut -d' ' -f1)-$dest"
+if [ -n "$sim" ] && [ "$(cat "$derived/.tests-stamp" 2>/dev/null)" = "$stamp" ] && ls "$derived"/Build/Products/*.xctestrun >/dev/null 2>&1; then
+  echo "test bundle unchanged, reused" >"$out/logs/build.log"
+else
+  xcodebuild build-for-testing -project "$here/CampfireBench.xcodeproj" -scheme CampfireBench \
+    -destination "$dest" -derivedDataPath "$derived" "${auth[@]}" >"$out/logs/build.log" 2>&1 \
+    || { fail "build-for-testing (logs/build.log)"; exit 1; }
+  [ -n "$sim" ] && echo "$stamp" >"$derived/.tests-stamp"
+fi
 xctestrun="$(ls -t "$derived"/Build/Products/*.xctestrun | head -1)"
+# Simulator pass: the tests run in their fast mode (BenchCase.fast: no warm-up run, one iteration where only a
+# pass/fail check or the 30 s stream is measured). Never set for the phone.
+[ -n "$sim" ] && [ -z "${UVS_NOFAST:-}" ] && export TEST_RUNNER_UVS_FAST=1
+[ -n "$sim" ] && [ -n "${UVS_ITER:-}" ] && export TEST_RUNNER_UVS_ITER="$UVS_ITER"
+want() { [ -z "$only" ] || case ",$only," in *",$1,"*) true;; *) false;; esac; }
 xct=(xcodebuild test-without-building -xctestrun "$xctestrun" -destination "$dest")
 
 # xctrace with a hard wall-clock cap: perl sets an alarm and execs xctrace, so SIGALRM ends it after $1 seconds
@@ -185,7 +200,9 @@ trace_scenario() {
 if [ $quick -eq 1 ]; then
   # Quick: one fresh launch without Instruments, then the same state-label read as the traced launch.
   LAUNCH_SAMPLES=0
-  if [ -n "$sim" ]; then
+  if [ -n "$sim" ] && ! want launch; then
+    :
+  elif [ -n "$sim" ]; then
     xcrun simctl terminate "$sim" "$app" >/dev/null 2>&1
     if [ -n "$app_path" ]; then
       xcrun simctl install "$sim" "$app_path" >"$out/logs/install.1.log" 2>&1 || fail "install before launch (logs/install.1.log)"
@@ -203,10 +220,12 @@ if [ $quick -eq 1 ]; then
     xcrun devicectl device process launch --device "$device_core" --terminate-existing "$app" -uvsBenchmark YES >"$out/logs/launch.1.devicectl.log" 2>&1 \
       || fail "quick cold launch (logs/launch.1.devicectl.log)"
   fi
-  sleep 8
+  if [ -z "$sim" ] || want launch; then
+  [ -n "$sim" ] && sleep 1 || sleep 8
   "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
     -resultBundlePath "$out/logs/launch.1.xcresult" >"$out/logs/launch.1.test.log" 2>&1 \
     || fail "quick launch: time to 40 rows (logs/launch.1.test.log)"
+  fi
 fi
 for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
   pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
@@ -249,10 +268,23 @@ if [ $quick -eq 1 ]; then
   C=CampfireBenchUITests/ChatBenchmarks; S=CampfireBenchUITests/StressBenchmarks
   suites=(-only-testing:$C/testTimeTo40Rows -only-testing:$C/testJumpTo2500 -only-testing:$C/testLoadOlder
           -only-testing:$C/testLiveStream -only-testing:$C/testMemory -only-testing:$S)
+  if [ -n "$sim" ]; then
+    # no testMemory in the simulator pass: the stream test's memory metric is the peak memory (BenchCase.fast)
+    suites=(-only-testing:$C/testTimeTo40Rows -only-testing:$C/testJumpTo2500 -only-testing:$C/testLoadOlder
+            -only-testing:$C/testLiveStream -only-testing:$S)
+    if [ -n "$only" ]; then
+      suites=()
+      for t in ${only//,/ }; do
+        case "$t" in launch) ;; testTextSize*|testRotation*|testBoost*|testTextSelection*) suites+=(-only-testing:$S/$t);; *) suites+=(-only-testing:$C/$t);; esac
+      done
+    fi
+  fi
 fi
 [ $stream_only -eq 1 ] && suites=(-only-testing:CampfireBenchUITests/ChatBenchmarks/testLiveStream)
+if [ ${#suites[@]} -gt 0 ]; then
 "${xct[@]}" "${suites[@]}" \
   -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
+fi
 echo "suites finished"
 
 # 4. Numbers.

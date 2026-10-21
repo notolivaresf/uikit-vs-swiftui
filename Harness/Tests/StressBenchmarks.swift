@@ -8,7 +8,7 @@ final class StressBenchmarks: BenchCase {
     // Text size at the bottom: 3 steps of "Text size +"; the room must stay pinned. Re-layout time from `ms`.
     func testTextSizeAtBottom() {
         app.launch(); waitForBar()
-        measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
+        bench(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
             startMeasuring()
             var steps: [[String: Any]] = []
@@ -24,7 +24,7 @@ final class StressBenchmarks: BenchCase {
     // Text size mid-scroll (at message 2,500): 3 steps; the row at the top stays in place. Drift per step.
     func testTextSizeMidScroll() {
         app.launch(); waitForBar()
-        measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
+        bench(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
             var before = tap(Bar.jump)
             startMeasuring()
@@ -44,7 +44,7 @@ final class StressBenchmarks: BenchCase {
     // Rotation at the bottom: landscape and back; the room stays pinned.
     func testRotationAtBottom() {
         app.launch(); waitForBar()
-        measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
+        bench(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
             startMeasuring()
             let land = rotate(.landscapeLeft)
@@ -57,7 +57,7 @@ final class StressBenchmarks: BenchCase {
     // Rotation at message 2,500: landscape and back; the row at the top stays in place. Drift per turn.
     func testRotationAt2500() {
         app.launch(); waitForBar()
-        measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
+        bench(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
             let before = tap(Bar.jump)
             startMeasuring()
@@ -74,7 +74,7 @@ final class StressBenchmarks: BenchCase {
     // Boost burst: 5 boosts on the newest message, one every 200 ms, while pinned; must still be pinned.
     func testBoostBurst() {
         app.launch(); waitForBar()
-        measure(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
+        bench(metrics: hitchMetric + [XCTClockMetric()], options: manualOptions) {
             reset()
             let before = state()
             startMeasuring()

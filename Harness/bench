@@ -1,6 +1,9 @@
 #!/bin/bash
 # Builds this app and measures it in your simulator, then prints a scorecard: each measure, your value, the baseline.
 #   ./bench            simulator pass: timing rows, stream CPU, peak memory, app size, the 13 checks
+#   ./bench <number>   only that one number, much faster: build, launch, record, one row (and the checks it answers)
+#                      numbers: rows-cold rows-repeat stream jump older textsize-bottom textsize-mid memory size
+#                      (./bench --help describes them). Measure as often as you like.
 #   ./bench --build    compile only (a minute or so): build errors and the stack rule, no measuring
 #   ./bench --device   the same on the iPhone 12 (ours, at the end; --device-full adds the Instruments rows)
 # It refuses to run when a locked file has changed (CampfireKit, Fixtures, screenshots, PROMPT.md, this script,

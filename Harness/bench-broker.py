@@ -6,8 +6,9 @@ and the lock checksums saved outside the folders (<builds root>/.locks/), so not
 
   bench-broker.py [--root ~/uvs-builds] [--once] [--max-passes N]
 
-Each build gets at most N measuring passes (./bench with no flag; default 1, Fernando 20 Oct: "one pass at most").
-The count lives outside the folders (<builds root>/.locks/<build>.passes). ./bench --build is not counted.
+Measuring is unlimited by default (Fernando, 20 Oct: agents iterate as often as they like). --max-passes N gives each
+build at most N full measuring passes (./bench with no flag), counted outside the folders in
+<builds root>/.locks/<build>.passes; ./bench --build and ./bench <number> are never counted.
 """
 import glob, json, os, subprocess, sys, time
 
@@ -16,7 +17,7 @@ root = os.path.expanduser("~/uvs-builds")
 once = "--once" in sys.argv
 if "--root" in sys.argv:
     root = os.path.expanduser(sys.argv[sys.argv.index("--root") + 1])
-max_passes = 1
+max_passes = None
 if "--max-passes" in sys.argv:
     max_passes = int(sys.argv[sys.argv.index("--max-passes") + 1])
 
@@ -49,15 +50,14 @@ def serve(req):
     if r.returncode != 0:
         out.write(r.stdout + "Not scoring. Put these back as they were, then run ./bench again.\n")
         rc = 3
-    elif rq["mode"] == "sim" and used >= max_passes:
+    elif max_passes is not None and rq["mode"] == "sim" and not rq.get("number") and used >= max_passes:
         out.write("Not measuring: this build has used its %d measuring pass%s. ./bench --build still works, and the "
-                  "debug bar's ms label still measures each change. Keep improving, then write NOTES.md; we measure "
-                  "the final app ourselves.\n" % (max_passes, "" if max_passes == 1 else "es"))
+                  "debug bar's ms label still measures each change.\n" % (max_passes, "" if max_passes == 1 else "es"))
         rc = 4
     else:
-        if rq["mode"] == "sim":
+        if max_passes is not None and rq["mode"] == "sim" and not rq.get("number"):
             open(counter, "w").write(str(used + 1))
-        rc = subprocess.call([os.path.join(HERE, "bench-inner.sh"), rq["mode"], folder], stdout=out, stderr=subprocess.STDOUT)
+        rc = subprocess.call([os.path.join(HERE, "bench-inner.sh"), rq["mode"], folder] + ([rq["number"]] if rq.get("number") else []), stdout=out, stderr=subprocess.STDOUT)
     out.close()
     open(base + ".done", "w").write(str(rc))
     log("%s: done, exit %d" % (name, rc))

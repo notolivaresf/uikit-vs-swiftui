@@ -127,6 +127,33 @@ def fmt(v, unit):
     return "%d" % round(v)
 
 
+# The checks a single number's run can answer (./bench <number>)
+RELATED = {"first40_cold": ["first_content"], "first40_repeated": ["first_content"], "jump": ["jump_drift"],
+           "older": ["older_drift"], "stream_cpu": ["stream_added", "stream_pinned"], "memory": [],
+           "text_bottom": ["text_pinned"], "text_mid": ["text_drift"], "app_size": []}
+
+
+def only_row(a, s, bl, sim):
+    """./bench <number>: one row against the baseline, plus the checks that same run answers."""
+    row = [r for r in measures(s, a.app_size_mb) if r[0] == a.only][0]
+    key, label, unit, val, direction, _ = row
+    b = bl["measures"].get(key, {}).get("value")
+    print("%-30s %12s %12s" % ("Measure", "Yours", "Baseline"))
+    mark = "" if val is None or b is None else ("better" if val < b else "to beat")
+    print("%-30s %12s %12s  %s" % (label, fmt(val, unit) + " " + unit if val is not None else "not measured",
+                                   fmt(b, unit) + " " + unit if b is not None else "-", mark))
+    checks = evaluate(s, a.stack_rule == "ok")
+    if key in ("first40_cold", "first40_repeated"):   # one of the two readings is missing in a single run
+        t = g(s, "time_to_40_rows_ms", "cold_app" if key == "first40_cold" else "repeated_app", "median")
+        checks["first_content"] = t is not None and t < 1000
+    names = dict(CHECKS)
+    for c in RELATED[key]:
+        print("check: %s: %s" % (names[c], "pass" if checks[c] else "FAIL"))
+    if a.stack_rule != "ok":
+        print("check: %s: FAIL%s" % (names["stack"], " (" + a.stack_detail + ")" if a.stack_detail else ""))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--summary")
@@ -139,6 +166,7 @@ def main():
     ap.add_argument("--app-size-mb", type=float)
     ap.add_argument("--locks")
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--only", help="simulator pass: print only this measure (a key of SIM_KEYS) and the checks it feeds")
     ap.add_argument("--json")
     ap.add_argument("--markdown", action="store_true")
     a = ap.parse_args()
@@ -152,6 +180,8 @@ def main():
         best = {"measures": {k: {"best": v["value"]} for k, v in bl["measures"].items()}}
     else:
         best = json.load(open(a.best))
+    if a.only:
+        return only_row(a, s, bl, sim)
     locks = json.load(open(a.locks)) if a.locks else {"ok": True, "changed": []}
     checks = evaluate(s, a.stack_rule == "ok")
     rows = measures(s, a.app_size_mb)

@@ -13,7 +13,7 @@ final class ChatBenchmarks: BenchCase {
     // Repeated launch to the debug bar on screen (already installed, not idle: the cold, freshly installed
     // launch is record.sh's launch traces; this is a second opinion).
     func testLaunch() {
-        measure(metrics: [XCTApplicationLaunchMetric(), XCTClockMetric()], options: options) {
+        bench(metrics: [XCTApplicationLaunchMetric(), XCTClockMetric()], options: options) {
             app.launch()
             waitForBar()
             app.terminate()
@@ -23,7 +23,7 @@ final class ChatBenchmarks: BenchCase {
     // Repeated launch until the first 40 rows are on screen, timed by the app (`ms` at launch). The cold one
     // comes from record.sh's launch traces (TraceScenarios.testLaunchState).
     func testTimeTo40Rows() {
-        measure(metrics: [XCTClockMetric()], options: options) {
+        bench(metrics: [XCTClockMetric()], options: options) {
             app.launch()
             waitForBar()
             XCTAssertTrue(waitUntil(timeout: 30) { self.state().loaded >= 40 }, "fewer than 40 rows")
@@ -37,7 +37,7 @@ final class ChatBenchmarks: BenchCase {
     // metrics, which only count while a scroll is moving.
     func testFling() {
         app.launch(); waitForBar()
-        measure(metrics: scrollMetrics(deceleration: true) +
+        bench(metrics: scrollMetrics(deceleration: true) +
                           [XCTClockMetric(), XCTCPUMetric(application: app), XCTMemoryMetric(application: app)],
                 options: manualOptions) {
             reset()
@@ -51,7 +51,7 @@ final class ChatBenchmarks: BenchCase {
     // "Jump to 2500": message 2,500's top lands just under the header (y 0). Time from the app, drift = |y|.
     func testJumpTo2500() {
         app.launch(); waitForBar()
-        measure(metrics: [XCTClockMetric(), XCTCPUMetric(application: app), XCTMemoryMetric(application: app)],
+        bench(metrics: [XCTClockMetric(), XCTCPUMetric(application: app), XCTMemoryMetric(application: app)],
                 options: manualOptions) {
             reset()
             startMeasuring()
@@ -68,7 +68,7 @@ final class ChatBenchmarks: BenchCase {
     // "Load older": 40 older messages arrive; the row at the top stays put. Drift = how far it moved.
     func testLoadOlder() {
         app.launch(); waitForBar()
-        measure(metrics: [XCTClockMetric(), XCTCPUMetric(application: app), XCTMemoryMetric(application: app)],
+        bench(metrics: [XCTClockMetric(), XCTCPUMetric(application: app), XCTMemoryMetric(application: app)],
                 options: manualOptions) {
             reset()
             let before = settled()
@@ -87,7 +87,7 @@ final class ChatBenchmarks: BenchCase {
     // PROMPT.md does not require the stream to replay after Reset (decision 18 Oct, after opus-uikit r1, whose
     // build plays it once per launch, counted 0 added on the second play).
     func testLiveStream() {
-        measure(metrics: hitchMetric + [XCTCPUMetric(application: app), XCTMemoryMetric(application: app), XCTClockMetric()],
+        bench(metrics: hitchMetric + [XCTCPUMetric(application: app), XCTMemoryMetric(application: app), XCTClockMetric()],
                 options: manualOptions) {
             app.launch(); waitForBar()
             XCTAssertTrue(waitUntil(timeout: 30) { self.state().loaded >= 40 }, "fewer than 40 rows")
@@ -107,7 +107,7 @@ final class ChatBenchmarks: BenchCase {
     // Memory: physical footprint from a fresh launch through a heavy scenario. "Memory Peak Physical" is the
     // peak footprint during the scenario, "Memory Physical" the growth from its start to its end.
     func testMemory() {
-        measure(metrics: [XCTMemoryMetric(application: app), XCTClockMetric()], options: manualOptions) {
+        bench(metrics: [XCTMemoryMetric(application: app), XCTClockMetric()], options: manualOptions) {
             app.launch(); waitForBar()
             XCTAssertTrue(waitUntil(timeout: 30) { self.state().loaded >= 40 }, "fewer than 40 rows")
             _ = settled()
