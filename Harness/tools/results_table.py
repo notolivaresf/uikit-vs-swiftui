@@ -6,6 +6,7 @@ best=True marks the best number in a row: bold text and a thin darker border.
 Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2   (Round 2 only: docs/images/results-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best3   (best of each stack's two builds, three columns: results-round2-best3.png and -dark.png)
+       python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
 """
 import os
@@ -310,6 +311,101 @@ L2B = dict(title="Best of UIKit vs best of SwiftUI, Round 2",
            note="fps counts redraws; hitches are late frames you can see",
            footer="iPhone 12 \u00b7 Round 2 (with skills) \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
+# --- Round 2 distance from optimal (docs/optimal-gap-round2.md), rendered only with --round2-gap ---
+# Each row: label, kind, optimal value, source of the optimal, unit, and per build (L2_HEAD order) the measured value.
+# kind "low": lower is better, score = optimal / value. "high": higher is better, score = value / optimal.
+# "frac": the value already is a share (0..1) of the ideal 1.0. None = not measured (left out of the mean).
+# All numbers are from docs/results-round2.md and docs/results-round1.md (stream smoothness and fling smoothness from
+# the hitch time over the trace window, as published there).
+GAP_ROWS = [
+    ("First 40 rows (cold)", "low", 158, "round2-uikit-objc-opus", "ms", [252, 196, 158, 198, 326, 314]),
+    ("First 40 rows (repeated)", "low", 222, "round1-uikit-swift-opus", "ms", [256, 305, 242, 299, 329, 408]),
+    ("Cold launch (Instruments)", "low", 596, "round1-uikit-swift-opus", "ms", [843, 776, None, 736, None, None]),
+    ("Fling speed", "high", 60, "60 Hz screen", "fps", [58.0, 58.2, 58.7, 58.3, 57.9, 58.0]),
+    ("Fling smoothness", "frac", 1.0, "no hitches", "", [1 - 0.0333 / 51.34, 1.0, 1 - 0.0333 / 52.35, 1 - 0.050 / 52.18, 1 - 0.1501 / 54.15, 1.0]),
+    ("Stream smoothness", "frac", 1.0, "no hitches", "", [1 - 0.0167 / 30.76, 1 - 0.1002 / 31.02, 1 - 0.0669 / 31.09, 1 - 0.167 / 31.03, 1 - 13.8525 / 37.56, 1 - 4.8533 / 31.11]),
+    ("Stream CPU", "low", 11.719, "round1-uikit-swift-sol", "s", [12.164, 11.982, 11.921, 18.686, 34.804, 22.101]),
+    ("Jump to message 2,500", "low", 52, "round1-uikit-swift-opus", "ms", [90, 77, 67, 109, 154, 191]),
+    ("Load older", "low", 34, "round2-uikit-objc-opus", "ms", [93, 75, 34, 106, 86, 143]),
+    ("Text size (bottom)", "low", 35, "round1-swiftui-opus", "ms", [83, 53, 77, 55, 76, 123]),
+    ("Text size (mid-list)", "low", 54, "round1-swiftui-opus", "ms", [103, 70, 93, 75, 108, 139]),
+    ("Peak memory", "low", 35.0, "round2-uikit-objc-sol", "MB", [107.9, 44.5, 52.0, 35.0, 215.4, 103.4]),
+    ("App size", "low", 0.62, "round1-uikit-swift-sol", "MB", [0.71, 0.64, 0.66, 2.70, 1.50, 1.20]),
+    ("Checks passed (of 13)", "high", 13, "all 13", "", [13, 12, 12, 12, 11, 11]),
+]
+GAP_AGENT = [
+    ("Agent wall time", "low", 1200, "round1-uikit-swift-sol", "s", [2231, 1233, 2884, 1297, 4301, 1209]),
+    ("Agent turns", "low", 75, "round1-uikit-swift-opus", "", [95, 90, 106, 118, 197, 113]),
+    ("Builds that compiled", "frac", 1.0, "no failed builds", "", [1.0, 7 / 14, 1.0, 16 / 24, 1.0, 7 / 15]),
+]
+
+
+def gap_score(kind, opt, v):
+    if v is None:
+        return None
+    if kind == "low":
+        return min(1.0, opt / v)
+    if kind == "high":
+        return min(1.0, v / opt)
+    return v
+
+
+def _fmt(v, unit):
+    if unit == "MB":
+        return "%.2f MB" % v if v < 10 else "%.1f MB" % v
+    if unit == "s":
+        return ("%.0f s" if v >= 100 else "%.1f s") % v
+    if unit == "fps":
+        return "%.1f fps" % v
+    if unit == "ms":
+        return "%d ms" % v
+    return ("%.0f" % v) if v == int(v) else "%.1f%%" % (v * 100)
+
+
+def _gap_state(p):
+    return "ok" if p >= 0.9 else ("warn" if p >= 0.6 else "bad")
+
+
+def gap_table():
+    """Rows of (label, optimal text, [score or None]) plus the two means per build."""
+    app, agent = [], []
+    for rows, out in ((GAP_ROWS, app), (GAP_AGENT, agent)):
+        for label, kind, opt, src, unit, vals in rows:
+            out.append((label, kind, opt, src, unit, vals, [gap_score(kind, opt, v) for v in vals]))
+    def mean(rows, i):
+        xs = [r[6][i] for r in rows if r[6][i] is not None]
+        return sum(xs) / len(xs), len(xs)
+    return app, agent, [mean(app, i) for i in range(6)], [mean(agent, i) for i in range(6)]
+
+
+def gap_rows():
+    app, agent, am, gm = gap_table()
+    rows = []
+    rows.append(("App score (mean)", [(_gap_state(m), "%.0f%%" % (m * 100), "mean of %d rows" % n, m == max(x for x, _ in am)) for m, n in am]))
+    for label, kind, opt, src, unit, vals, sc in app:
+        cells = []
+        for v, p in zip(vals, sc):
+            if p is None:
+                cells.append(("none", "Not measured", "left out of the mean", False))
+                continue
+            if kind == "frac":
+                sub = "%.1f%% of the time smooth" % (v * 100) if "smooth" in label else "%.0f%% of builds" % (v * 100)
+            else:
+                sub = _fmt(v, unit)
+            cells.append((_gap_state(p), "%.0f%%" % (p * 100) if p < 0.995 or p == 1 else ">99%", sub, False))
+        rows.append((label, cells))
+    rows.append(("Agent score (mean)", [(_gap_state(m), "%.0f%%" % (m * 100), "wall time, turns, builds", False) for m, n in gm]))
+    return rows
+
+
+L2GAP = dict(title="How far from optimal, Round 2",
+             subtitle="Each cell is the build's share of the best possible value for that row (100% = optimal). Small text: what it measured.",
+             builds=L2_HEAD, rows=gap_rows(), col_w=200, file="optimal-gap-round2", row_h=50,
+             groups=[("UIKit Swift", (0, 1)), ("UIKit Objective-C", (2, 3)), ("SwiftUI", (4, 5))],
+             legend=[("ok", "90% or more"), ("warn", "60 to 89%"), ("bad", "Under 60%"), ("none", "Not measured")],
+             note="Optimal: 60 fps and no hitches where the phone sets a ceiling, otherwise the best value any of the 10 builds reached. See docs/optimal-gap-round2.md.",
+             footer=_FOOT)
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -427,7 +523,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--round2-best" in sys.argv:
+        if "--round2-gap" in sys.argv:
+            render(n, L2GAP)
+        elif "--round2-best" in sys.argv:
             render(n, L2B)
         elif "--round2-best3" in sys.argv:
             render(n, L2B3)

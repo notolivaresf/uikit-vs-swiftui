@@ -22,6 +22,13 @@ The same Campfire chat room, built six times with a skill installed: Apple's Xco
   <img src="docs/images/results-round2.png" alt="Round 2 results table: six builds (Opus and Sol, each in Swift UIKit, SwiftUI and Objective-C UIKit) across behaviour and performance checks. Green outline marks the best build in each row; only round2-uikit-swift-opus passes everything.">
 </picture>
 
+**How far from optimal?** Each Round 2 build as a share of the best possible value per row: 60 fps and no hitches where the phone sets a ceiling, otherwise the best any of the ten builds reached. round2-uikit-objc-opus is closest (86%), the two SwiftUI builds sit at 55 to 56%. Method, scores and what each build leaves on the table: [`docs/optimal-gap-round2.md`](docs/optimal-gap-round2.md).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/optimal-gap-round2-dark.png">
+  <img src="docs/images/optimal-gap-round2.png" alt="Round 2, how far from optimal: six builds, each row as a percentage of the best possible value. App score: round2-uikit-objc-opus 86%, round2-uikit-swift-sol 82%, round2-uikit-swift-opus and round2-uikit-objc-sol 73%, round2-swiftui-sol 56%, round2-swiftui-opus 55%.">
+</picture>
+
 ## Round 1: no skills
 
 One Campfire chat room, built four times with no skills available for SwiftUI or UIKit, each by Opus and by Sol. The source of all four builds is in [`builds/`](builds).
