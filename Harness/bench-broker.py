@@ -4,7 +4,10 @@
 also the measure lock: two agents never build or measure at the same moment. It uses the repo's own harness
 and the lock checksums saved outside the folders (<builds root>/.locks/), so nothing an agent edits is run.
 
-  bench-broker.py [--root ~/uvs-builds] [--once]
+  bench-broker.py [--root ~/uvs-builds] [--once] [--max-passes N]
+
+Each build gets at most N measuring passes (./bench with no flag; default 1, Fernando 20 Oct: "one pass at most").
+The count lives outside the folders (<builds root>/.locks/<build>.passes). ./bench --build is not counted.
 """
 import glob, json, os, subprocess, sys, time
 
@@ -13,6 +16,9 @@ root = os.path.expanduser("~/uvs-builds")
 once = "--once" in sys.argv
 if "--root" in sys.argv:
     root = os.path.expanduser(sys.argv[sys.argv.index("--root") + 1])
+max_passes = 1
+if "--max-passes" in sys.argv:
+    max_passes = int(sys.argv[sys.argv.index("--max-passes") + 1])
 
 
 def log(m):
@@ -38,10 +44,19 @@ def serve(req):
     locks = os.path.join(root, ".locks", name + ".json")
     r = subprocess.run([sys.executable, "-I", os.path.join(HERE, "lockcheck.py"), "verify", "--root", folder, "--locks", locks],
                        capture_output=True, text=True)
+    counter = os.path.join(root, ".locks", name + ".passes")
+    used = int(open(counter).read()) if os.path.exists(counter) else 0
     if r.returncode != 0:
         out.write(r.stdout + "Not scoring. Put these back as they were, then run ./bench again.\n")
         rc = 3
+    elif rq["mode"] == "sim" and used >= max_passes:
+        out.write("Not measuring: this build has used its %d measuring pass%s. ./bench --build still works, and the "
+                  "debug bar's ms label still measures each change. Keep improving, then write NOTES.md; we measure "
+                  "the final app ourselves.\n" % (max_passes, "" if max_passes == 1 else "es"))
+        rc = 4
     else:
+        if rq["mode"] == "sim":
+            open(counter, "w").write(str(used + 1))
         rc = subprocess.call([os.path.join(HERE, "bench-inner.sh"), rq["mode"], folder], stdout=out, stderr=subprocess.STDOUT)
     out.close()
     open(base + ".done", "w").write(str(rc))
