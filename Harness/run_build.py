@@ -10,7 +10,7 @@ usage: run_build.py --model opus|sol --side uikit|swiftui
                     --effort high -- <command...>
 Environment is inherited (launch-build.sh sets CLAUDE_CONFIG_DIR / CODEX_HOME).
 """
-import argparse, json, os, re, signal, subprocess, sys, threading, time
+import argparse, json, os, queue, re, signal, subprocess, sys, threading, time
 from datetime import datetime, timezone
 
 BUILD_RE = re.compile(r"\b(xcodebuild|swift\s+build)\b")
@@ -138,7 +138,26 @@ def main():
                         p.terminate()
                         threading.Timer(30, lambda: p.poll() is None and p.kill()).start()
                 threading.Timer(a.time_limit_s, stop_at_limit).start()
-            for line in p.stdout:
+            # Read the transcript on a thread: the model's helper processes can keep the pipe open after the model
+            # itself exits (Codex, 20 Oct: the supervisor sat 20 min), so the end is p.wait(), not the pipe closing.
+            lines = queue.Queue()
+            def pump():
+                for ln in p.stdout:
+                    lines.put(ln)
+                lines.put(None)
+            threading.Thread(target=pump, daemon=True).start()
+            exited_at = None
+            while True:
+                try:
+                    line = lines.get(timeout=1)
+                except queue.Empty:
+                    if p.poll() is not None:
+                        exited_at = exited_at or time.time()
+                        if time.time() - exited_at > 5:
+                            break
+                    continue
+                if line is None:
+                    break
                 out.write(line); out.flush()
                 tm.write("%.3f\n" % time.time()); tm.flush()
                 if a.expect_skills is not None and a.model == "opus" and isolation_error is None and b'"init"' in line:
