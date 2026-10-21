@@ -8,6 +8,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2-best3   (best of each stack's two builds, three columns: results-round2-best3.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
+       python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -311,6 +312,56 @@ L2B = dict(title="Best of UIKit vs best of SwiftUI, Round 2",
            note="fps counts redraws; hitches are late frames you can see",
            footer="iPhone 12 \u00b7 Round 2 (with skills) \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
+# --- Round 3 best of UIKit vs best of SwiftUI (docs/results-round3.md), rendered only with --round3-best ---
+# Values are the "After (measured here)" column of runs/round3-*/verify.md (iPhone 17 simulator):
+# (checks of 13, cold first 40 rows ms, stream CPU s, jump ms, load older ms, text size at bottom ms, peak memory MB, app size MB)
+R3 = {("Swift", "Opus"): (13, 175, 6.4, 41, 39, 44, 53.9, 0.84), ("Swift", "Sol"): (13, 130, 7.5, 32, 31, 18, 57.9, 0.79),
+      ("Obj-C", "Opus"): (13, 135, 4.6, 40, 42, 46, 52.8, 0.71), ("Obj-C", "Sol"): (13, 161, 8.8, 40, 4, 12, 44.4, 2.77),
+      ("SwiftUI", "Opus"): (13, 181, 9.9, 19, 27, 8, 127.4, 2.86), ("SwiftUI", "Sol"): (12, 278, 12.5, 76, 71, 55, 77.2, 0.89)}
+R3_UI = [("Swift", "Opus"), ("Swift", "Sol"), ("Obj-C", "Opus"), ("Obj-C", "Sol")]
+R3_SW = [("SwiftUI", "Opus"), ("SwiftUI", "Sol")]
+# Rows where the winning build bent the rules (starred in the chart): see "Bent rules" in docs/results-round3.md.
+R3_ROWS = [("Checks passed", 0, lambda v: "%d of 13" % v, set()), ("First 40 rows, cold", 1, lambda v: "%g ms" % v, set()),
+           ("Stream CPU", 2, lambda v: "%g s" % v, {("Swift", "Opus"), ("Obj-C", "Opus")}),
+           ("Jump to message 2,500", 3, lambda v: "%g ms" % v, {("Obj-C", "Opus")}),
+           ("Load older", 4, lambda v: "%g ms" % v, {("Obj-C", "Sol")}), ("Text size, bottom", 5, lambda v: "%g ms" % v, set()),
+           ("Peak memory", 6, lambda v: "%g MB" % v, set()), ("App size", 7, lambda v: "%g MB" % v, set())]
+R3_EXTRA = {"Checks passed": [("Stack rule", (("Pass", "all four builds"), ("Pass", "both builds")))],
+            "Text size, bottom": [("Rotation, boost, menu", (("Pass", "all three, all builds"), ("Pass", "all three, both builds"))),
+                                  ("Text selection", (("Pass", "all four builds"), ("Pass", "Opus")))]}
+
+
+def l2_round3_rows():
+    rows = []
+    for label, i, fmt, bends in R3_ROWS:
+        key = (lambda v: -v) if i == 0 else (lambda v: v)
+        picks = []
+        for grp in (R3_UI, R3_SW):
+            bk = min(key(R3[b][i]) for b in grp)
+            picks.append((R3[[b for b in grp if key(R3[b][i]) == bk][0]][i], [b for b in grp if key(R3[b][i]) == bk]))
+        best = min(key(p[0]) for p in picks)
+        out = []
+        for v, ws in picks:
+            win = key(v) == best
+            lab = "%s \u00b7 %s" % ws[0] if len(ws) == 1 else "all four builds"
+            if ws[0][0] == "SwiftUI" and len(ws) == 1:
+                lab = ws[0][1]
+            star = win and len(ws) == 1 and ws[0] in bends
+            out.append(("ok" if win else "bad", fmt(v) + (" *" if star else ""), lab, win))
+        rows.append((label, out))
+        for lb, (a, b) in R3_EXTRA.get(label, []):
+            rows.append((lb, [("ok",) + a + (True,), ("ok",) + b + (True,)]))
+    return rows
+
+
+L2R3 = dict(title="Best of UIKit vs best of SwiftUI, Round 3",
+            subtitle="Best value per row. UIKit: any of its four builds; SwiftUI: its two. Small text names the source.",
+            builds=[("UIKit", "best of 4 builds"), ("SwiftUI", "best of 2 builds")],
+            rows=l2_round3_rows(), col_w=300, label_w=190, file="results-round3-best", groups=None, row_h=62,
+            legend=[("ok", "Wins the row (ties: both green)"), ("bad", "Loses the row")],
+            note="* Bent rules: Opus Obj-C redraws the stream every 100 ms; Sol Obj-C times part of load older.",
+            footer="iPhone 17 simulator \u00b7 Round 3 (3 hours of fixes) \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
+
 # --- Round 2 distance from optimal (docs/optimal-gap-round2.md), rendered only with --round2-gap ---
 # Each row: label, kind, optimal value, source of the optimal, unit, and per build (L2_HEAD order) the measured value.
 # kind "low": lower is better, score = optimal / value. "high": higher is better, score = value / optimal.
@@ -438,6 +489,7 @@ def render(name, spec=None):
     ROW_H = spec.get("row_h", 62)
     groups = spec["groups"]
     group_h = GROUP_H if groups else 0
+    LABEL_W = spec.get("label_w", globals()["LABEL_W"])
     W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
     title_h = 64
     H = PAD + title_h + group_h + HEAD_H + ROW_H * len(ROWS) + 56 + PAD + (24 if spec.get("note") else 0)
@@ -525,6 +577,8 @@ if __name__ == "__main__":
     for n in THEMES:
         if "--round2-gap" in sys.argv:
             render(n, L2GAP)
+        elif "--round3-best" in sys.argv:
+            render(n, L2R3)
         elif "--round2-best" in sys.argv:
             render(n, L2B)
         elif "--round2-best3" in sys.argv:

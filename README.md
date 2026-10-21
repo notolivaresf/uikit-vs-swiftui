@@ -3,6 +3,15 @@ Build a <a href="https://github.com/basecamp/once-campfire">Campfire chat room</
 
 <p align="center"><img src="docs/images/room-top-light.png" alt="The top of the room in each build, light"></p>
 
+## Round 3: three hours to optimise.
+
+Each of the six Round 2 builds went back to its agent for three hours, with the same prompt and the same checks, to make it faster and smaller. This pass ran on the simulator only; fling, hitches and cold launch wait for the iPhone 12. Across the best of each stack, UIKit wins 5 rows, SwiftUI 2, and 4 are ties. Two of the UIKit wins bend the rules, so read the [Round 3 write-up](docs/results-round3.md) before quoting them.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/results-round3-best-dark.png">
+  <img src="docs/images/results-round3-best.png" alt="Round 3: best of UIKit (Swift or Objective-C, Opus or Sol) against best of SwiftUI, row by row, each cell naming its source build. UIKit wins 5 rows (cold first rows, stream CPU, load older, peak memory, app size), SwiftUI 2 (jump to message 2,500, text size at the bottom), and 4 rows are ties.">
+</picture>
+
 ## Round 2: One prompt with skills.
 
 The same Campfire chat room, built six times with a skill installed: Apple's Xcode 27 skills for SwiftUI (swiftui-specialist, swiftui-whats-new-27) and [my own UIKit skills](https://github.com/notolivaresf/uikit-skill) for Swift and for Objective-C, each by Opus and by Sol. The source of all six builds is in [`builds/`](builds) (Apple's skill text is not included).
