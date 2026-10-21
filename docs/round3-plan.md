@@ -129,4 +129,6 @@ When the phone is back: `./bench --device-full` in each folder, one at a time, a
 
 ## Timing
 
-Not measured yet: the first simulator pass was aborted (see docs/round3-handoff.md). The test bundle's first build is slow (minutes) and is then cached in `~/.uvs-bench/dd-tests-sim`; the suites are XCUITest and the stream test alone plays the 30 s stream three times. Expect more than the 5 to 10 minutes asked for until it is measured; if so, cut iterations for the simulator pass in `record.sh --sim`.
+Measured 20 Oct (uikit-swift-opus, iPhone 17 simulator, Max under load): a full `./bench` pass takes **9 min 6 s** with the test bundle cached (the first pass, building the bundle, about 9.5 min). `./bench --build` takes about 12 s. Repeat passes of unchanged code differ by about 1 to 10 percent per row.
+
+That is just under the 10 minutes asked for, and with two agents the broker serves one request at a time, so an agent can wait for the partner's pass as well. Proposal: add `./bench --quick` that skips the three-times stream test and the rotation and text-selection checks (the slow ones), for iterating, and keep the full `./bench` for the final scorecard. Not built yet: it would change `Harness/`, which is locked once agents run, so build it before the pair starts or not at all.
