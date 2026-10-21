@@ -37,3 +37,15 @@ Apple's two skills, `swiftui-specialist` and `swiftui-whats-new-27`, are Apple's
 - `swiftui-whats-new-27`: 8 files, `5cfdad876e1a192fbe741694c3b694545a174ae7abe02eeb5806294f160e604f`
 
 Used by: SwiftUI builds, `--skills apple`.
+
+## Third-party, AvdLee (vendored here)
+
+`skills/avdlee/swiftui-expert-skill/` is Antoine van der Lee's SwiftUI skill from https://github.com/AvdLee/SwiftUI-Agent-Skill, commit `204dba7c67256a8b707ee3fbc5759a824191974f` (6 Oct 2026, plugin version 5.2.1), MIT licence (`skills/avdlee/LICENSE`, copied unchanged). Taken with `git archive 204dba7 skills/swiftui-expert-skill LICENSE`. The upstream plugin ships this one skill; the repo's other skill, `.agents/skills/update-swiftui-apis`, is a maintainer tool for updating the skill itself (it needs an outside documentation server) and is not part of the plugin, so it is not used.
+
+| Skill | Files | sha256 of the folder |
+|---|---|---|
+| `swiftui-expert-skill` | 51 | `bf151a948a006007ec175e898ba5689ed90a283e6e74634382165ee0487d3b4f` |
+
+Same folder-hash formula as above (`python3 Harness/skillset.py --kind avdlee`).
+
+Used by: the Level 2 third-party arm, SwiftUI builds, `--skills avdlee` (Fernando, 21 Oct). See `docs/results-l2-avdlee.md`.

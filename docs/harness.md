@@ -167,3 +167,20 @@ Our Swift pair (`ours-pair`), probed 19 Oct (no build launched): skills installe
 - The extra `uikit-specialist` seen once in a plain load test (no harness settings): it is not in `~/.claude/skills`, `~/.agents/skills`, `~/.codex`, any installed plugin or marketplace, or `~/.claude/settings.json`. Plain `claude -p` run in the scratch folder and in `~/olivares-burgos/uikit-skill` listed no `uikit-specialist` either, so it came from that test's own folder or flags (a Swift-pair install in its working folder or a plugin dir pointing at the uikit-skill repo), not from the user-level install. With the harness settings (`--setting-sources project`, bundled skills off) the init list is exactly the arm's two skills, so it cannot leak into a build. `~/.claude.json` only holds a usage counter for it (1 use, 19 Oct).
 - Inputs tag: `v2-inputs` moved on 19 Oct to the commit that vendors this pair. Its old target, `8f7340b`, was the first cut (no Objective-C pair).
 - If a Claude Code upgrade adds survivors of the bundled switch, extend the `skillOverrides` list in `launch-build.sh`; the init check catches it before a build is wasted.
+
+## Level 2, third-party skills: AvdLee (21 Oct)
+
+Fernando, 21 Oct: run the two Level 2 SwiftUI builds again with only the skill of https://github.com/AvdLee/SwiftUI-Agent-Skill, "comparable to the experiment that we did with Apple's skills but these are third party skills". Everything is as for `--skills apple` (prompt, stack line, skill sentence, inputs, model, effort, flags, Codex config) except the skill set.
+
+| Kind | Stack | Skills installed | Build names |
+|---|---|---|---|
+| SwiftUI + third-party skills (AvdLee) | swiftui | `swiftui-expert-skill` (vendored in `skills/avdlee/`, MIT, commit `204dba7`) | `opus-swiftui-avdlee`, `sol-swiftui-avdlee` |
+
+```
+UVS_INPUTS_TAG=v2-inputs Harness/launch-build.sh opus swiftui --skills avdlee
+UVS_INPUTS_TAG=v2-inputs Harness/launch-build.sh sol swiftui --skills avdlee
+```
+
+- Inputs: `v2-inputs` is given by name so the build folder is byte for byte the Apple arm's (later commits added one line to `.gitignore`). Tag `v2-avdlee-inputs` marks the commit of this harness and the vendored skill.
+- Isolation, probed 21 Oct (no build launched), skill installed with `skillset.py --kind avdlee --dest <scratch> --install`, clean environment (`env -i`) as for the launches. Claude Code 2.1.306 (Level 2 ran 2.1.299), `--model claude-haiku-5-5`, the Level 2 flags and settings, prompt "List the names of the skills you have, nothing else.": init `skills` = `swiftui-expert-skill` only, `mcp_servers` empty, plugins the same three built-ins and agents the same five built-ins as the Apple arm's init, answer "swiftui-expert-skill". Codex 0.162.1 (as in Level 2), empty `CODEX_HOME` with `auth.json` and the generated `config.toml` (24 host skills off, sha256 `9f6364a6...d4a8`, the same file as Level 2), "list the names of your skills, nothing else": `swiftui-expert-skill` (no leak).
+- File reads: Level 2 had no read fence (the builds must run `xcodebuild` and the simulator, which neither sandbox allows), so neither does this arm. What each build read outside its folder is checked after the run with `Harness/round3-audit.py` on its transcript.

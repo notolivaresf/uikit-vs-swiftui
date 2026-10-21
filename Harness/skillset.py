@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skill sets for Level 2 builds (called by launch-build.sh, not by hand).
 
-  skillset.py --kind none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple [--dest BUILD_DIR] [--install]
+  skillset.py --kind none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee [--dest BUILD_DIR] [--install]
 
 Prints one JSON record on stdout: the kind, the skills (name, version, source,
 file count, hash of the folder) and the names a model should list. With --install the
@@ -20,6 +20,8 @@ Sources
              uikit-whats-new-27} (copied from uikit-skill tag v0.3-pair, see skills/README.md)
   ours-objc-pair  skills/uikit-objc/{uikit-specialist-objc,uikit-whats-new-27-objc} of this repo
              (vendored later; the kind fails clearly while the folder is missing)
+  avdlee     skills/avdlee/swiftui-expert-skill of this repo: Antoine van der Lee's third-party
+             SwiftUI skill (MIT), vendored from github.com/AvdLee/SwiftUI-Agent-Skill at 204dba7
   apple      a local export of Apple's Xcode skills, UVS_APPLE_SKILLS (default: the newest
              ~/uvs-skills/apple-*), one sub-folder per skill with a SKILL.md; the skills are
              APPLE_SKILLS below. Apple's text is never copied into a repo: only names and
@@ -34,7 +36,9 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # vendored pairs: kind -> (folder under skills/, the names the two SKILL.md files must carry)
 VENDORED = {"ours-pair": ("uikit", ["uikit-specialist", "uikit-whats-new-27"],
                           ("v0.3-pair", "131b2a90a78a2b9359de728f021ba8db146c8f58")),
-            "ours-objc-pair": ("uikit-objc", ["uikit-specialist-objc", "uikit-whats-new-27-objc"], (None, None))}
+            "ours-objc-pair": ("uikit-objc", ["uikit-specialist-objc", "uikit-whats-new-27-objc"], (None, None)),
+            # third-party SwiftUI skill (MIT), github.com/AvdLee/SwiftUI-Agent-Skill, plugin 5.2.1
+            "avdlee": ("avdlee", ["swiftui-expert-skill"], ("5.2.1", "204dba7c67256a8b707ee3fbc5759a824191974f"))}
 
 
 def fail(msg):
@@ -166,7 +170,7 @@ def codex_config(out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--codex-config", metavar="OUT", help="write the Codex config.toml to OUT ('-' = only count)")
-    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "ours-pair", "ours-objc-pair", "apple"])
+    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "ours-pair", "ours-objc-pair", "apple", "avdlee"])
     ap.add_argument("--dest")
     ap.add_argument("--install", action="store_true")
     a = ap.parse_args()
