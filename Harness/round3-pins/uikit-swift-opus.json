@@ -1,0 +1,13 @@
+{
+ "Campfire/main.swift": [
+  "let appLaunchUptime = ProcessInfo.processInfo.systemUptime"
+ ],
+ "Campfire/Chrome.swift": [
+  "let time = event.allTouches?.first?.timestamp ?? event.timestamp"
+ ],
+ "Campfire/RoomViewController.swift": [
+  "lastMs = max(0, Int((ProcessInfo.processInfo.systemUptime - start) * 1000))",
+  "finishTiming(from: appLaunchUptime)",
+  "text += \" ms \\(lastMs)\""
+ ]
+}

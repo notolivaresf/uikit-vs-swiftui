@@ -1,0 +1,11 @@
+{
+ "Campfire/CampfireApp.swift": [
+  "private let started = ContinuousClock.now"
+ ],
+ "Campfire/RoomView.swift": [
+  "tapStart = started",
+  "if action != .startStream && action != .boostBurst { tapStart = .now }",
+  "let elapsed = tapStart.duration(to: .now).components",
+  "diagnostics.milliseconds = Int(elapsed.seconds * 1000 + elapsed.attoseconds / 1_000_000_000_000_000)"
+ ]
+}

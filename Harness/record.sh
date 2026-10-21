@@ -24,8 +24,12 @@ set -u
 
 build=""; round=""; app="campfire.bench"; app_path=""
 LAUNCH_SAMPLES=3; heap_trace=0; stream_only=0
-device_core="73FC3857-7993-59CC-8A8E-34FB2E08AE71"   # devicectl id (iPhone 12, iOS 26.0)
-device_udid="00008101-00062D410CE9003A"              # xctrace / xcodebuild id of the same phone
+# The phone's ids (devicectl id, and the xctrace / xcodebuild UDID) come from the untracked Harness/local.env
+# (UVS_DEVICE_CORE, UVS_DEVICE_UDID), so no device id is kept in the repo; --device / --udid override.
+[ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
+device_core="${UVS_DEVICE_CORE:-}"
+device_udid="${UVS_DEVICE_UDID:-}"
+out_dir=""; derived_dir=""; quick=0
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -40,25 +44,32 @@ while [ $# -gt 0 ]; do
     # tests). Used for the L1 stream reruns of opus-uikit and opus-swiftui, whose round 1 ran the stream test
     # before the relaunch fix (98b2d48); Fernando cut rounds 2 and 3, 18 Oct.
     --stream-only) stream_only=1; shift;;
+    # --out-dir / --derived: put the round and the test build products here instead of runs/<build>/<round> and
+    # build/DDH (used by the Round 3 ./bench, whose folder is all an agent may write to).
+    --out-dir) out_dir="$2"; shift 2;;
+    --derived) derived_dir="$2"; shift 2;;
+    # --quick: no Instruments (no cold-launch trace, no fling or stream traces); the cold time to 40 rows comes
+    # from one fresh launch with devicectl, the suites run once each without ChatBenchmarks.testFling.
+    --quick) quick=1; shift;;
     *) echo "unknown option $1" >&2; exit 2;;
   esac
 done
 if [ -z "$build" ] || [ -z "$round" ]; then echo "usage: record.sh --build <name> --round <n>" >&2; exit 2; fi
+if [ -z "$device_core" ] || [ -z "$device_udid" ]; then echo "no phone ids: set UVS_DEVICE_CORE and UVS_DEVICE_UDID in Harness/local.env" >&2; exit 2; fi
 if [ -n "$app_path" ] && [ ! -d "$app_path" ]; then echo "no app at $app_path" >&2; exit 2; fi
 
 here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$here/.." && pwd)"
-out="$repo/runs/$build/$round"
+out="${out_dir:-$repo/runs/$build/$round}"
 if [ -e "$out" ]; then echo "refusing: $out already exists; every round gets a new number" >&2; exit 2; fi
 mkdir -p "$out/logs"
-derived="$repo/build/DDH"
+derived="${derived_dir:-$repo/build/DDH}"
 failed=0
 fail() { echo "FAILED: $1" | tee -a "$out/logs/failures.txt" >&2; failed=1; }
 
 # Signing: team H8HSTBN8ZP (Amazing Humans), automatic. The App Store Connect key lets xcodebuild make the
 # profile; it lives outside the repo.
 # App Store Connect key: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH, from the untracked Harness/local.env when present.
-[ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
 auth=(-allowProvisioningUpdates)
 if [ -n "${ASC_KEY_ID:-}" ] && [ -n "${ASC_ISSUER_ID:-}" ] && [ -n "${ASC_KEY_PATH:-}" ]; then
   auth+=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
@@ -165,6 +176,23 @@ trace_scenario() {
 #    idle 30 s, and Instruments launches it (App Launch template). 10 s in, when the launch is over, a UI test
 #    reads the app's own time to the first 40 rows from that same launch (TraceScenarios.testLaunchState).
 [ $stream_only -eq 1 ] && LAUNCH_SAMPLES=0
+if [ $quick -eq 1 ]; then
+  # Quick: one fresh launch with devicectl (no Instruments), then the same state-label read as the traced launch.
+  LAUNCH_SAMPLES=0
+  pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
+  [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
+  if [ -n "$app_path" ]; then
+    xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.1.log" 2>&1 \
+      || fail "install before launch (logs/install.1.log)"
+  fi
+  "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testWake >>"$out/logs/wake.log" 2>&1
+  xcrun devicectl device process launch --device "$device_core" --terminate-existing "$app" -uvsBenchmark YES >"$out/logs/launch.1.devicectl.log" 2>&1 \
+    || fail "quick cold launch (logs/launch.1.devicectl.log)"
+  sleep 8
+  "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
+    -resultBundlePath "$out/logs/launch.1.xcresult" >"$out/logs/launch.1.test.log" 2>&1 \
+    || fail "quick launch: time to 40 rows (logs/launch.1.test.log)"
+fi
 for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
   pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
   [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
@@ -193,22 +221,30 @@ echo "launch traces done"
 #    did not scroll the app: 84 frames instead of about 4,300; run alone they scroll). Light instrument sets:
 #    Hitches for the hitches, Frame Lifetimes and Display so every frame is listed (Hitches alone lists only a sample of them). The Allocations heap trace (2 GB) only with
 #    --heap-trace; memory numbers come from testMemory.
-[ $stream_only -eq 1 ] || trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
-trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
+if [ $quick -eq 0 ]; then
+  [ $stream_only -eq 1 ] || trace_scenario testTraceFling fling 240 Hitches "Frame Lifetimes" Display
+  trace_scenario testTraceStream stream 150 Hitches "Frame Lifetimes" Display
+fi
 [ $heap_trace -eq 1 ] && trace_scenario testTraceMemory memory 200 Allocations
 
 # 3. The suites: repeated launch, time to 40 rows, fling, jump, load older, stream, memory; text size,
 #    rotation, boost burst, text selection and context menu (3 iterations each where measured; fling and memory 1).
 suites=(-only-testing:CampfireBenchUITests/ChatBenchmarks -only-testing:CampfireBenchUITests/StressBenchmarks)
+if [ $quick -eq 1 ]; then
+  C=CampfireBenchUITests/ChatBenchmarks; S=CampfireBenchUITests/StressBenchmarks
+  suites=(-only-testing:$C/testTimeTo40Rows -only-testing:$C/testJumpTo2500 -only-testing:$C/testLoadOlder
+          -only-testing:$C/testLiveStream -only-testing:$C/testMemory -only-testing:$S)
+fi
 [ $stream_only -eq 1 ] && suites=(-only-testing:CampfireBenchUITests/ChatBenchmarks/testLiveStream)
 "${xct[@]}" "${suites[@]}" \
   -resultBundlePath "$out/bench.xcresult" >"$out/logs/suite.log" 2>&1 || fail "suite (logs/suite.log)"
 echo "suites finished"
 
 # 4. Numbers.
-if [ $stream_only -eq 1 ]; then
+if [ $stream_only -eq 1 ] || [ $quick -eq 1 ]; then
   # Most numbers are missing by design in a stream-only round; summary.json is still written.
   python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" 2>"$out/logs/summarize.log"
+  [ $quick -eq 1 ] && : >"$out/logs/quick.txt"
 else
   python3 "$here/summarize.py" summary --dir "$out" --out "$out/summary.json" || fail "summarize"
 fi

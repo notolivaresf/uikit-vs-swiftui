@@ -1,0 +1,15 @@
+#!/bin/bash
+# Measures this build on the iPhone 12 and prints a scorecard: each measure, your value, best seen.
+#   ./bench          quick pass (about 5 to 10 min): timing rows, stream CPU, peak memory, app size, the 13 checks
+#   ./bench --full   the full scoring pass (about 40 min): adds cold launch, fling and stream hitches
+# One run at a time on the phone: it waits its turn if another build is being measured.
+# It refuses to run when a locked file has changed (CampfireKit, Fixtures, screenshots, PROMPT.md, this script,
+# .bench/, or the debug bar's timing code).
+here="$(cd "$(dirname "$0")" && pwd)"
+mode=quick
+case "${1:-}" in "") ;; --full) mode=full ;; *) echo "usage: ./bench [--full]" >&2; exit 2 ;; esac
+res="$(python3 -I "$here/.bench/Harness/lockcheck.py" verify --root "$here" --locks "$here/.bench/locks.json")"
+if [ $? -ne 0 ]; then echo "$res"; echo "Not scoring. Put these back as they were, then run ./bench again."; exit 3; fi
+lockdir="$(cat "$here/.bench/lockdir")"
+exec python3 -I "$here/.bench/Harness/withlock.py" "$lockdir/phone.lock" "$(cat "$here/.bench/name") $mode" -- \
+  "$here/.bench/Harness/bench-inner.sh" "$mode" "$here"

@@ -1,0 +1,44 @@
+{
+  "source": "best value any of the ten Round 1 and Round 2 builds reached on the iPhone 12 (docs/optimal-gap-round2.md; fling speed, fling and stream hitch time from docs/results-round1.md and results-round2.md); a floor to beat, not a ceiling",
+  "measures": {
+    "first40_cold": {
+      "best": 158
+    },
+    "first40_repeated": {
+      "best": 222
+    },
+    "cold_launch": {
+      "best": 596
+    },
+    "fling_fps": {
+      "best": 58.7
+    },
+    "fling_hitch_ms": {
+      "best": 0
+    },
+    "stream_hitch_ms": {
+      "best": 17
+    },
+    "stream_cpu": {
+      "best": 11.7
+    },
+    "jump": {
+      "best": 52
+    },
+    "older": {
+      "best": 34
+    },
+    "text_bottom": {
+      "best": 35
+    },
+    "text_mid": {
+      "best": 54
+    },
+    "memory": {
+      "best": 35.0
+    },
+    "app_size": {
+      "best": 0.62
+    }
+  }
+}

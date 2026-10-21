@@ -1,0 +1,10 @@
+{
+ "Campfire/main.swift": [
+  "let appLaunchTime = CACurrentMediaTime()"
+ ],
+ "Campfire/RoomViewController.swift": [
+  "self.elapsedMS = Int((CACurrentMediaTime() - started) * 1000)",
+  "if sender.tag != 3 && sender.tag != 5 { tapStarted = CACurrentMediaTime() }",
+  "if let started = tapStarted { elapsedMS = Int((CACurrentMediaTime() - started) * 1000); tapStarted = nil }"
+ ]
+}

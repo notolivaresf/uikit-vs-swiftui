@@ -1,0 +1,10 @@
+{
+ "Campfire/main.m": [
+  "CFLaunchTime = CACurrentMediaTime();"
+ ],
+ "Campfire/CFRoomController.m": [
+  "self.elapsedMS=lround((CACurrentMediaTime()-self.tapStart)*1000)",
+  "self.tapStart=CFLaunchTime",
+  "self.tapStart=CACurrentMediaTime()"
+ ]
+}

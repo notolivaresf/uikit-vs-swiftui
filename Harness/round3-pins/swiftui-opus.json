@@ -1,0 +1,11 @@
+{
+ "Campfire/RoomModel.swift": [
+  "static func markStart() { if start == 0 { start = CACurrentMediaTime() } }",
+  "private func beginMeasure() { measureStart = CACurrentMediaTime() }",
+  "lastMs = max(0, Int(((CACurrentMediaTime() - start) * 1000).rounded(.down)))",
+  "measureStart = Launch.start"
+ ],
+ "Campfire/CampfireApp.swift": [
+  "Launch.markStart()"
+ ]
+}

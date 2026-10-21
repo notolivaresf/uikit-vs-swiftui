@@ -5,6 +5,7 @@ import argparse
 import json
 import statistics
 import subprocess
+import tempfile
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -21,7 +22,7 @@ def run(cmd):
 
 def installed_executable(device, bundle):
     """File path of the installed app's executable, from `devicectl device info apps`."""
-    out = Path("/tmp") / "uvs-apps.json"
+    out = Path(tempfile.gettempdir()) / "uvs-apps.json"
     subprocess.run(["xcrun", "devicectl", "device", "info", "apps", "--device", device, "--bundle-id", bundle,
                     "--json-output", str(out)], capture_output=True)
     try:
@@ -35,7 +36,7 @@ def cmd_pid(args):
     base = installed_executable(args.device, args.bundle)
     procs_path = args.procs
     if not procs_path:
-        procs_path = str(Path("/tmp") / "uvs-procs.json")
+        procs_path = str(Path(tempfile.gettempdir()) / "uvs-procs.json")
         subprocess.run(["xcrun", "devicectl", "device", "info", "processes", "--device", args.device,
                         "--json-output", procs_path], capture_output=True)
     try:

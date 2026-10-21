@@ -1,0 +1,10 @@
+{
+ "Campfire/main.m": [
+  "CFLaunchStart = NSProcessInfo.processInfo.systemUptime;"
+ ],
+ "Campfire/CFRoomViewController.m": [
+  "if (touch && touch.timestamp > 0 && touch.timestamp <= now) { return touch.timestamp; }",
+  "_lastMs = (NSInteger)floor(MAX(0, now - _measureStart) * 1000);",
+  "[self beginMeasuringFrom:CFLaunchStart];"
+ ]
+}
