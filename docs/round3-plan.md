@@ -109,9 +109,9 @@ Limit: the Claude sandbox settings are taken from Claude Code's documentation (v
 - `extends = ":workspace"` (write in the working directory, which `-C` sets to the build folder), `":root" = "deny"` with read re-allowed for `":minimal"`, Xcode, `/Library/Developer`, `/usr`, `/opt/homebrew`, and write for the temp and cache directories Xcode and Swift need and the folder. Tested with `codex sandbox -P`: `ls ~/olivares-burgos`, reading another build folder and writing to `~` all fail with "Operation not permitted"; the folder is readable and writable.
 - Network on, with `features.network_proxy` and domain rules denying `github.com`, `raw.githubusercontent.com` and `api.github.com` for shell commands. Domain rules apply per host (all of GitHub, for commands) and only while the proxy runs, which `codex sandbox` does not start, so **this part is untested**. Codex's hosted web search has its own access settings and cannot be filtered by path or denied by host here: a search can still return a page of ours and the model can read the snippet. That gap is covered only by the audit.
 
-### What a sandboxed process can still do (tested)
+### What a sandboxed process can still do
 
-With `codex sandbox -P r3` in a Round 3 folder: Python and git work (git needs `~/.gitconfig`, allowed), `lockcheck.py verify` passes, the request files are written, and `./bench` reaches the broker, which does the build and the measuring outside. `xcodebuild` itself does not run inside either sandbox (no CoreSimulator service; the Swift module cache path needs more holes), so **agents compile through `./bench --build`**, not by calling xcodebuild. The prompt does not say how to compile; `./bench` is the only command it names.
+Tested with `codex sandbox -P r3` in a Round 3 folder: Python works, `lockcheck.py verify` passes, the lock directory can be written; git failed on `~/.gitconfig` until it was allowed (the launch profile allows it). **Not tested yet:** that `./bench` reaches the broker from inside the sandbox (hand-off, step 2). `xcodebuild` itself does not run inside either sandbox (no CoreSimulator service; the Swift module cache path needs more holes), so **agents compile through `./bench --build`**, not by calling xcodebuild. The prompt does not say how to compile; `./bench` is the only command it names.
 
 ## After a run: audit
 
@@ -129,4 +129,4 @@ When the phone is back: `./bench --device-full` in each folder, one at a time, a
 
 ## Timing
 
-(filled in from the first real run; see "Timing" in docs/round3-handoff.md if still empty)
+Not measured yet: the first simulator pass was aborted (see docs/round3-handoff.md). The test bundle's first build is slow (minutes) and is then cached in `~/.uvs-bench/dd-tests-sim`; the suites are XCUITest and the stream test alone plays the 30 s stream three times. Expect more than the 5 to 10 minutes asked for until it is measured; if so, cut iterations for the simulator pass in `record.sh --sim`.
