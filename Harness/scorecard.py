@@ -91,6 +91,26 @@ def measures(s, size_mb):
     ]
 
 
+SIM_KEYS = ["first40_cold", "first40_repeated", "stream_cpu", "jump", "older", "text_bottom", "text_mid", "memory", "app_size"]
+
+
+def aggregate(paths, out):
+    """Median of each measure over several scorecard.json files (the baseline pass: the same build measured
+    a few times). A check counts as failed when it failed in at least half of the runs."""
+    import statistics
+    runs = [json.load(open(p)) for p in paths]
+    base = {"runs": len(runs), "measures": {}, "checks_failed": [], "checks_passed": 0, "checks_total": runs[0]["checks_total"]}
+    for i, m in enumerate(runs[0]["measures"]):
+        vals = [r["measures"][i]["value"] for r in runs if r["measures"][i]["value"] is not None]
+        base["measures"][m["key"]] = {"label": m["label"], "unit": m["unit"], "value": statistics.median(vals) if vals else None,
+                                      "values": vals}
+    for t in runs[0]["checks_failed"] + [t for r in runs[1:] for t in r["checks_failed"]]:
+        if t not in base["checks_failed"] and sum(t in r["checks_failed"] for r in runs) * 2 >= len(runs):
+            base["checks_failed"].append(t)
+    base["checks_passed"] = base["checks_total"] - len(base["checks_failed"])
+    json.dump(base, open(out, "w"), indent=2)
+
+
 def met(value, best, direction):
     if value is None or best is None:
         return None
@@ -109,8 +129,11 @@ def fmt(v, unit):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--summary", required=True)
-    ap.add_argument("--best", required=True)
+    ap.add_argument("--summary")
+    ap.add_argument("--best")
+    ap.add_argument("--sim", action="store_true", help="simulator pass: only the rows a simulator can measure")
+    ap.add_argument("--baseline", help="simulator pass: compare with this baseline (from --aggregate) instead of best seen")
+    ap.add_argument("--aggregate", nargs="+", help="scorecard.json files -> median baseline, written to --json")
     ap.add_argument("--stack-rule", default="ok")
     ap.add_argument("--stack-detail", default="")
     ap.add_argument("--app-size-mb", type=float)
@@ -119,8 +142,16 @@ def main():
     ap.add_argument("--json")
     ap.add_argument("--markdown", action="store_true")
     a = ap.parse_args()
+    if a.aggregate:
+        aggregate(a.aggregate, a.json)
+        return 0
     s = json.load(open(a.summary))
-    best = json.load(open(a.best))
+    sim = a.sim or bool(a.baseline)
+    if sim:
+        bl = json.load(open(a.baseline)) if a.baseline else {"measures": {k: {"value": None} for k in SIM_KEYS}}
+        best = {"measures": {k: {"best": v["value"]} for k, v in bl["measures"].items()}}
+    else:
+        best = json.load(open(a.best))
     locks = json.load(open(a.locks)) if a.locks else {"ok": True, "changed": []}
     checks = evaluate(s, a.stack_rule == "ok")
     rows = measures(s, a.app_size_mb)
@@ -131,16 +162,21 @@ def main():
            "checks_failed": [t for _, t in failed], "measures": []}
     lines = []
     if a.markdown:
-        lines.append("| Measure | Yours | Best seen | |\n|---|---|---|---|")
+        lines.append(("| Measure | Yours | Baseline | |\n|---|---|---|---|" if sim else "| Measure | Yours | Best seen | |\n|---|---|---|---|"))
     else:
-        lines.append("%-30s %12s %12s" % ("Measure", "Yours", "Best seen"))
+        lines.append("%-30s %12s %12s" % ("Measure", "Yours", "Baseline" if sim else "Best seen"))
+    if sim:
+        rows = [r for r in rows if r[0] in SIM_KEYS]
     for key, label, unit, val, direction, full_only in rows:
         b = best["measures"][key]["best"]
-        skipped = a.quick and full_only
+        skipped = a.quick and full_only and not sim
         hit = None if skipped else met(val, b, direction)
         shown = "full pass only" if skipped else (fmt(val, unit) + " " + unit if val is not None else "not measured")
-        bshown = fmt(b, unit) + " " + unit
-        mark = "" if hit is None else ("at or better" if hit else "to beat")
+        bshown = fmt(b, unit) + " " + unit if b is not None else "-"
+        if sim:
+            mark = "" if val is None or b is None else ("better" if val < b else "to beat")
+        else:
+            mark = "" if hit is None else ("at or better" if hit else "to beat")
         out["measures"].append({"key": key, "label": label, "unit": unit, "value": None if skipped else val,
                                 "best": b, "met": hit, "skipped_in_quick": skipped})
         if a.markdown:
@@ -157,7 +193,7 @@ def main():
     if not locks["ok"]:
         lines.insert(0, "NOT A VALID SCORE: locked files changed: " + ", ".join(locks["changed"]) +
                      "\n(Restore them; the numbers below do not count.)\n")
-    if a.quick:
+    if a.quick and not sim:
         lines.append("")
         lines.append("Quick pass: rows marked 'full pass only' (cold launch, fling, stream hitches) need ./bench --full.")
     print("\n".join(lines))

@@ -29,7 +29,7 @@ LAUNCH_SAMPLES=3; heap_trace=0; stream_only=0
 [ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
 device_core="${UVS_DEVICE_CORE:-}"
 device_udid="${UVS_DEVICE_UDID:-}"
-out_dir=""; derived_dir=""; quick=0
+out_dir=""; derived_dir=""; quick=0; sim=""
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -51,10 +51,14 @@ while [ $# -gt 0 ]; do
     # --quick: no Instruments (no cold-launch trace, no fling or stream traces); the cold time to 40 rows comes
     # from one fresh launch with devicectl, the suites run once each without ChatBenchmarks.testFling.
     --quick) quick=1; shift;;
+    # --sim <simulator udid>: measure in that (booted) simulator instead of the phone. Implies --quick. Only the
+    # state label's own ms, XCTest's CPU and memory metrics and the checks mean anything there; no Instruments.
+    --sim) sim="$2"; quick=1; shift 2;;
     *) echo "unknown option $1" >&2; exit 2;;
   esac
 done
 if [ -z "$build" ] || [ -z "$round" ]; then echo "usage: record.sh --build <name> --round <n>" >&2; exit 2; fi
+if [ -n "$sim" ]; then device_core="$sim"; device_udid="$sim"; fi
 if [ -z "$device_core" ] || [ -z "$device_udid" ]; then echo "no phone ids: set UVS_DEVICE_CORE and UVS_DEVICE_UDID in Harness/local.env" >&2; exit 2; fi
 if [ -n "$app_path" ] && [ ! -d "$app_path" ]; then echo "no app at $app_path" >&2; exit 2; fi
 
@@ -71,16 +75,18 @@ fail() { echo "FAILED: $1" | tee -a "$out/logs/failures.txt" >&2; failed=1; }
 # profile; it lives outside the repo.
 # App Store Connect key: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH, from the untracked Harness/local.env when present.
 auth=(-allowProvisioningUpdates)
+dest="id=$device_udid"
+if [ -n "$sim" ]; then auth=(CODE_SIGNING_ALLOWED=NO); dest="platform=iOS Simulator,id=$sim"; fi
 if [ -n "${ASC_KEY_ID:-}" ] && [ -n "${ASC_ISSUER_ID:-}" ] && [ -n "${ASC_KEY_PATH:-}" ]; then
   auth+=(-authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 fi
 
 # 0. Build the tests once; every later step runs them without building.
 xcodebuild build-for-testing -project "$here/CampfireBench.xcodeproj" -scheme CampfireBench \
-  -destination "id=$device_udid" -derivedDataPath "$derived" "${auth[@]}" >"$out/logs/build.log" 2>&1 \
+  -destination "$dest" -derivedDataPath "$derived" "${auth[@]}" >"$out/logs/build.log" 2>&1 \
   || { fail "build-for-testing (logs/build.log)"; exit 1; }
 xctestrun="$(ls -t "$derived"/Build/Products/*.xctestrun | head -1)"
-xct=(xcodebuild test-without-building -xctestrun "$xctestrun" -destination "id=$device_udid")
+xct=(xcodebuild test-without-building -xctestrun "$xctestrun" -destination "$dest")
 
 # xctrace with a hard wall-clock cap: perl sets an alarm and execs xctrace, so SIGALRM ends it after $1 seconds
 # even if it never finishes saving. Run in the background, so the kill -INT that stops a recording must reach
@@ -177,17 +183,26 @@ trace_scenario() {
 #    reads the app's own time to the first 40 rows from that same launch (TraceScenarios.testLaunchState).
 [ $stream_only -eq 1 ] && LAUNCH_SAMPLES=0
 if [ $quick -eq 1 ]; then
-  # Quick: one fresh launch with devicectl (no Instruments), then the same state-label read as the traced launch.
+  # Quick: one fresh launch without Instruments, then the same state-label read as the traced launch.
   LAUNCH_SAMPLES=0
-  pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
-  [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
-  if [ -n "$app_path" ]; then
-    xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.1.log" 2>&1 \
-      || fail "install before launch (logs/install.1.log)"
+  if [ -n "$sim" ]; then
+    xcrun simctl terminate "$sim" "$app" >/dev/null 2>&1
+    if [ -n "$app_path" ]; then
+      xcrun simctl install "$sim" "$app_path" >"$out/logs/install.1.log" 2>&1 || fail "install before launch (logs/install.1.log)"
+    fi
+    xcrun simctl launch --terminate-running-process "$sim" "$app" -uvsBenchmark YES >"$out/logs/launch.1.simctl.log" 2>&1 \
+      || fail "quick cold launch (logs/launch.1.simctl.log)"
+  else
+    pid="$(python3 "$here/summarize.py" pid --device "$device_core" --bundle "$app")"
+    [ -n "$pid" ] && xcrun devicectl device process terminate --device "$device_core" --pid "$pid" >/dev/null 2>&1
+    if [ -n "$app_path" ]; then
+      xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.1.log" 2>&1 \
+        || fail "install before launch (logs/install.1.log)"
+    fi
+    "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testWake >>"$out/logs/wake.log" 2>&1
+    xcrun devicectl device process launch --device "$device_core" --terminate-existing "$app" -uvsBenchmark YES >"$out/logs/launch.1.devicectl.log" 2>&1 \
+      || fail "quick cold launch (logs/launch.1.devicectl.log)"
   fi
-  "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testWake >>"$out/logs/wake.log" 2>&1
-  xcrun devicectl device process launch --device "$device_core" --terminate-existing "$app" -uvsBenchmark YES >"$out/logs/launch.1.devicectl.log" 2>&1 \
-    || fail "quick cold launch (logs/launch.1.devicectl.log)"
   sleep 8
   "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
     -resultBundlePath "$out/logs/launch.1.xcresult" >"$out/logs/launch.1.test.log" 2>&1 \

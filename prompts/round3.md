@@ -10,7 +10,7 @@ Find current best practices for your stack and use them: the installed skills, A
 
 ## Your scorecard
 
-Measured on an iPhone 12. "Best seen" is the best value any build of this same app reached on this phone.
+Measured in an iPhone 17 simulator (iOS 26.4) with `./bench`, on the app as it stands now. Lower is better in every row.
 
 {{SCORECARD}}
 
@@ -18,16 +18,16 @@ Measured on an iPhone 12. "Best seen" is the best value any build of this same a
 
 ## Measuring
 
-Run `./bench` in this folder. It builds the app, measures it on the iPhone 12 and prints this same scorecard with your new values. It takes about 5 to 10 minutes; if another build is on the phone it waits its turn. Rows marked "full pass only" are not in `./bench`; we measure them at the end.
+Run `./bench` in this folder. It builds the app, measures it in your simulator and prints this same scorecard next to your new values. It takes a few minutes; if another build is being measured it waits its turn. Use it, and the debug bar's ms label, to measure before and after each change.
 
 ## Goal
 
-Reach or beat best seen on every number. Best seen is a floor that another build already hit on this phone, not a ceiling: beating it is the point.
+Beat your scorecard on every number. Each number is a floor you already reached, not a ceiling.
 {{FIX_FIRST}}- Then work through the scorecard, biggest gap first.
 - A change to one message (a new one, a boost, a page of older ones) should cost about the same whether 50 or 5,000 messages are loaded.
-- Measure before and after each change with the debug bar's ms label and `./bench`. Keep a change only if it helps.
+- Measure before and after each change. Keep a change only if it helps.
 - Same look, same behaviours, same 2 pt tolerances.
 - Don't change `CampfireKit/`, `Fixtures/`, `screenshots/`, `PROMPT.md`, `bench`, `.bench/`, or the lines of the debug bar that start and stop its ms clock. `./bench` refuses to run if any of them changed. At the end all 13 checks run again, so keep every one that passes passing.
-- You have 2 hours in total. You're done when every number is at or under best seen, or when you can show a number can't get there on this stack. Say which, and why, in NOTES.md.
+- You have 3 hours in total. You're done when every number beats the scorecard, or when you can show a number can't get there on this stack. Say which, and why, in NOTES.md.
 
 When you're done, write NOTES.md: what you changed, and the before and after for each number.

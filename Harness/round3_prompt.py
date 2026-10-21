@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fills prompts/round3.md for one build: its Round 2 stack line, its baseline scorecard and the exact wording of
-each check it failed. Baselines come from docs/round3-baselines.json (written by the baseline pass); without it
+each check it failed. The scorecard comes from <folder>/.bench/baseline.json (Harness/round3-baseline.sh); without it
 the scorecard stays a placeholder and a warning is printed.
 
   round3_prompt.py --build uikit-swift-opus --folder DIR --out FILE
@@ -20,18 +20,16 @@ src = open(os.path.join(REPO, "prompts", "round2-%s.md" % stack)).read().split("
 stack_line = src[2]
 assert stack_line.startswith("Stack: "), stack_line
 text = open(os.path.join(REPO, "prompts", "round3.md")).read()
-best = json.load(open(os.path.join(HERE, "round3-best.json")))["measures"]
-path = os.path.join(REPO, "docs", "round3-baselines.json")
-base = json.load(open(path)).get(a.build) if os.path.exists(path) else None
+path = os.path.join(a.folder, ".bench", "baseline.json")
+base = json.load(open(path)) if os.path.exists(path) else None
 if base is None:
-    print("WARNING: no baseline scorecard for %s in docs/round3-baselines.json; the prompt keeps a placeholder" % a.build, file=sys.stderr)
-    table, checks, failed_n = "[scorecard: filled in when the baseline pass has run]", "[checks failed: same]", 1
+    print("WARNING: no .bench/baseline.json in %s; the prompt keeps a placeholder (run Harness/round3-baseline.sh)" % a.folder, file=sys.stderr)
+    table, checks, failed_n = "[scorecard: filled in by Harness/round3-baseline.sh]", "[checks failed: same]", 1
 else:
-    rows = ["| Measure | Yours | Best seen |", "|---|---|---|"]
-    for m in base["measures"]:
-        unit = m["unit"]
-        v = "full pass only" if m["skipped_in_quick"] else ("not measured" if m["value"] is None else "%s %s" % (scorecard.fmt(m["value"], unit), unit))
-        rows.append("| %s | %s | %s %s |" % (m["label"], v, scorecard.fmt(m["best"], unit), unit))
+    rows = ["| Measure | Your scorecard |", "|---|---|"]
+    for k in scorecard.SIM_KEYS:
+        m = base["measures"][k]
+        rows.append("| %s | %s |" % (m["label"], "not measured" if m["value"] is None else "%s %s" % (scorecard.fmt(m["value"], m["unit"]), m["unit"])))
     table = "\n".join(rows)
     failed = base["checks_failed"]
     failed_n = len(failed)

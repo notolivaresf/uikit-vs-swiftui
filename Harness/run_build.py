@@ -10,7 +10,7 @@ usage: run_build.py --model opus|sol --side uikit|swiftui
                     --effort high -- <command...>
 Environment is inherited (launch-build.sh sets CLAUDE_CONFIG_DIR / CODEX_HOME).
 """
-import argparse, json, os, re, signal, subprocess, sys, time
+import argparse, json, os, re, signal, subprocess, sys, threading, time
 from datetime import datetime, timezone
 
 BUILD_RE = re.compile(r"\b(xcodebuild|swift\s+build)\b")
@@ -113,6 +113,8 @@ def main():
     ap.add_argument("--expect-skills", help="Level 2, Claude: comma-separated skill names the init event must list "
                     "exactly (empty string = none); on a mismatch the build is stopped before it starts")
     ap.add_argument("--extra-json", help="Level 2: extra fields for meta.json (stack, inputs tag, config hashes)")
+    ap.add_argument("--time-limit-s", type=int, default=0, help="Round 3: stop the model after this many seconds "
+                    "(SIGTERM, then SIGKILL 30 s later); meta.json records stopped_by_limit")
     ap.add_argument("--parse-only", help="skip running; parse this transcript (self-test)")
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     a = ap.parse_args()
@@ -123,10 +125,19 @@ def main():
     start, t0 = now(), time.time()
     exit_code = None
     isolation_error = None
+    stopped_by_limit = False
     if not a.parse_only:
         with open(transcript, "wb") as out, open(os.path.join(a.run_dir, "transcript.times"), "w") as tm, \
                 open(os.path.join(a.run_dir, "stderr.log"), "wb") as err:
             p = subprocess.Popen(cmd, cwd=a.build_dir, stdout=subprocess.PIPE, stderr=err)
+            if a.time_limit_s:
+                def stop_at_limit():
+                    nonlocal stopped_by_limit
+                    if p.poll() is None:
+                        stopped_by_limit = True
+                        p.terminate()
+                        threading.Timer(30, lambda: p.poll() is None and p.kill()).start()
+                threading.Timer(a.time_limit_s, stop_at_limit).start()
             for line in p.stdout:
                 out.write(line); out.flush()
                 tm.write("%.3f\n" % time.time()); tm.flush()
@@ -150,7 +161,7 @@ def main():
                 model_version=parsed.pop("model_version") or a.requested_model,
                 effort=a.effort, cli_version=a.cli_version, level=a.level,
                 start=start, stop=stop, wall_seconds=round(t1 - t0), idle_gaps_over_20min=idle,
-                exit_code=exit_code, commits=commits(a.build_dir), transcript=os.path.basename(transcript),
+                exit_code=exit_code, time_limit_s=a.time_limit_s or None, stopped_by_limit=stopped_by_limit, commits=commits(a.build_dir), transcript=os.path.basename(transcript),
                 **parsed)
     if a.expect_skills is not None:
         meta["skill_isolation"] = dict(expected=sorted(x for x in a.expect_skills.split(",") if x),

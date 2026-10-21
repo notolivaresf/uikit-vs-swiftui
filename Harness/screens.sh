@@ -9,8 +9,9 @@
 # Refuses an existing output folder. Does not use record.sh; builds the tests into build/DDH like it does.
 set -u
 build=""; app_path=""
-device_core="73FC3857-7993-59CC-8A8E-34FB2E08AE71"
-device_udid="00008101-00062D410CE9003A"
+[ -f "$(dirname "$0")/local.env" ] && . "$(dirname "$0")/local.env"
+device_core="${UVS_DEVICE_CORE:?set it in Harness/local.env}"
+device_udid="${UVS_DEVICE_UDID:?set it in Harness/local.env}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --build) build="$2"; shift 2;;
