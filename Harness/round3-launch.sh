@@ -102,8 +102,16 @@ if [ $DRY -eq 1 ]; then
 fi
 mkdir -p "$RUN"
 if [ "$MODEL" = sol ]; then
-  # top-level key first: appended after a table header it would land inside that table
-  grep -q '^default_permissions' "$CONFIG/config.toml" || { printf '%s\n' "$PROFILE" | cat - "$CONFIG/config.toml" > "$CONFIG/config.toml.new" && mv "$CONFIG/config.toml.new" "$CONFIG/config.toml"; }
+  # top-level key first: appended after a table header it would land inside that table. An older profile (everything
+  # before [skills.bundled]) is replaced, so a changed profile reaches folders that were set up earlier.
+  python3 -I - "$CONFIG/config.toml" "$PROFILE" <<'PY'
+import sys
+path, profile = sys.argv[1:]
+text = open(path).read()
+if text.startswith("default_permissions"):
+    text = text[text.index("[skills.bundled]"):]
+open(path, "w").write(profile + "\n" + text)
+PY
   export CODEX_HOME="$CONFIG"
 fi
 exec "${SUP[@]}" "${MODEL_CMD[@]}"
