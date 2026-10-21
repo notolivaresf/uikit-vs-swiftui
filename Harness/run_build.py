@@ -136,8 +136,13 @@ def main():
                     if p.poll() is None:
                         stopped_by_limit = True
                         p.terminate()
-                        threading.Timer(30, lambda: p.poll() is None and p.kill()).start()
-                threading.Timer(a.time_limit_s, stop_at_limit).start()
+                        kill = threading.Timer(30, lambda: p.poll() is None and p.kill())
+                        kill.daemon = True
+                        kill.start()
+                # Daemon, so the script ends when the model ends instead of holding on until the limit (21 Oct).
+                limit = threading.Timer(a.time_limit_s, stop_at_limit)
+                limit.daemon = True
+                limit.start()
             # Read the transcript on a thread: the model's helper processes can keep the pipe open after the model
             # itself exits (Codex, 20 Oct: the supervisor sat 20 min), so the end is p.wait(), not the pipe closing.
             lines = queue.Queue()
