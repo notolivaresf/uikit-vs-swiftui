@@ -9,7 +9,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
        python3 Harness/tools/results_table.py --swiftui-3way   (best SwiftUI build per row: Round 1, Apple skills, AvdLee skills; 16:9: results-swiftui-3way.png and -dark.png)
-       python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against AvdLee skills: results-swiftui-skills.png and -dark.png)
+       python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against AvdLee skills: results-swiftui-skills.png and -dark.png, 4:5 portrait)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
 """
 import os
@@ -417,7 +417,7 @@ SWSK = dict(title="AvdLee's skills beat Apple's on %d of 9 rows, Apple's on %d, 
             subtitle="Best SwiftUI build of each, per row. Small text names the model the value came from.",
             builds=[("Round 2, Apple skills", "%d wins (with the tie)" % SK_WINS[0]), ("Round 2, AvdLee skills", "%d wins (with the tie)" % SK_WINS[1])],
             rows=[(l, [(st, m.rstrip(" *"), sb, b) for st, m, sb, b in c]) for l, c in _SK_ROWS],
-            col_w=520, label_w=260, file="results-swiftui-skills", groups=None, aspect=16 / 9,
+            col_w=240, label_w=220, file="results-swiftui-skills", groups=None, aspect=4 / 5,
             legend=SW3["legend"],
             note="iPhone 12, iOS 26, one pass per build. Each column takes the better of its Opus and Sol builds. Cold start = app's own time to 40 rows.",
             footer=SW3["footer"])
@@ -552,7 +552,13 @@ def render(name, spec=None):
     LABEL_W = spec.get("label_w", globals()["LABEL_W"])
     W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
     title_h = 64
-    fixed = PAD + title_h + group_h + HEAD_H + 56 + PAD + (24 if spec.get("note") else 0)
+    _m = Image.new("RGB", (1, 1))
+    _md = ImageDraw.Draw(_m)
+    tlines = wrap(_md, spec["title"], font(26, True), W - 2 * PAD)  # a narrow chart wraps its headline and note
+    title_h += 32 * (len(tlines) - 1)
+    nlines = wrap(_md, spec["note"], font(13), W - 2 * PAD) if spec.get("note") else []
+    note_h = 18 * max(len(nlines), 1) + 6 if nlines else 0
+    fixed = PAD + title_h + group_h + HEAD_H + 56 + PAD + note_h
     if spec.get("aspect"):  # fit the canvas to the ratio by sizing the rows
         ROW_H = int((W / spec["aspect"] - fixed) // len(ROWS))
     H = fixed + ROW_H * len(ROWS)
@@ -562,8 +568,9 @@ def render(name, spec=None):
     d = ImageDraw.Draw(img)
     x0 = PAD
     y = PAD
-    d.text((x0 * S, (y + 14) * S), spec["title"], font=font(26, True), fill=th["text"], anchor="lm")
-    d.text((x0 * S, (y + 46) * S), spec["subtitle"],
+    for k, tl in enumerate(tlines):
+        d.text((x0 * S, (y + 14 + 32 * k) * S), tl, font=font(26, True), fill=th["text"], anchor="lm")
+    d.text((x0 * S, (y + 46 + 32 * (len(tlines) - 1)) * S), spec["subtitle"],
            font=font(15), fill=th["muted"], anchor="lm")
     y += title_h
     # group header
@@ -626,9 +633,10 @@ def render(name, spec=None):
         d.rounded_rectangle([lx * S, y * S, (lx + 18) * S, (y + 14) * S], 3 * S, outline=th["text"], width=2 * S)
         d.text(((lx + 26) * S, (y + 7) * S), "Best in row (bold, outlined)", font=font(13), fill=th["muted"], anchor="lm")
     y += 28
-    if spec.get("note"):
-        d.text((x0 * S, (y + 6) * S), spec["note"], font=font(13), fill=th["muted"], anchor="lm")
-        y += 24
+    for k, nl in enumerate(nlines):
+        d.text((x0 * S, (y + 6 + 18 * k) * S), nl, font=font(13), fill=th["muted"], anchor="lm")
+    if nlines:
+        y += note_h
     d.text((x0 * S, (y + 6) * S), spec.get("footer", "iPhone 12 · Round 1 (no skills) · github.com/notolivaresf/uikit-vs-swiftui"),
            font=font(13), fill=th["muted"], anchor="lm")
     out = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "images",
