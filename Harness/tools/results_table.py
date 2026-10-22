@@ -8,6 +8,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2-best3   (best of each stack's two builds, three columns: results-round2-best3.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
+       python3 Harness/tools/results_table.py --swiftui-3way   (best SwiftUI build per row: Round 1, Apple skills, AvdLee skills; 16:9: results-swiftui-3way.png and -dark.png)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
 """
 import os
@@ -362,6 +363,48 @@ L2R3 = dict(title="Best of UIKit vs best of SwiftUI, Round 3",
             note="* Bent rules: Opus Obj-C redraws the stream every 100 ms; Sol Obj-C times part of load older.",
             footer="iPhone 17 simulator \u00b7 Round 3 (3 hours of fixes) \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
+# --- Best SwiftUI build per row across three setups (docs/results-round1.md, results-round2.md, results-l2-avdlee.md), rendered only with --swiftui-3way ---
+# iPhone 12, one pass per build. Each cell is the better of that setup's Opus and Sol SwiftUI builds for the row; winners are computed, ties share.
+# (label, [(key, main, sub) x3]); lower key wins. Stars: Round 1 Sol's stream test failed, so those cells are Opus only.
+SW3_ROWS = [
+    ("Cold start, 40 rows", [(174, "174 ms", "Opus"), (314, "314 ms", "Sol"), (216, "216 ms", "Sol")]),
+    ("Fling", [(2, "2 hitches", "58.3 fps \u00b7 Sol"), (0, "0 hitches", "58.0 fps \u00b7 Sol"), (1, "1 hitch", "57.7 fps \u00b7 Sol")]),
+    ("Jump to message 2,500", [(85, "85 ms", "Opus"), (154, "154 ms", "Opus"), (72, "72 ms", "Opus")]),
+    ("Load older", [(133, "133 ms", "Sol"), (86, "86 ms", "Opus"), (86, "86 ms", "Sol")]),
+    ("Stream hitches", [(25, "25 hitches *", "Opus"), (242, "242 hitches", "Sol"), (73, "73 hitches", "Sol")]),
+    ("Stream CPU", [(13.6, "13.6 s *", "Opus"), (22.1, "22.1 s", "Sol"), (12.4, "12.4 s", "Opus")]),
+    ("Text size, bottom / mid", [(35, "35 / 54 ms", "Opus"), (76, "76 / 108 ms", "Opus"), (55, "55 / 89 ms", "bottom Opus \u00b7 mid Sol")]),
+    ("Peak memory", [(69.7, "69.7 MB *", "Opus"), (103.4, "103.4 MB", "Sol"), (57.2, "57.2 MB", "Opus")]),
+    ("App size", [(1.48, "1.48 MB", "Opus"), (1.20, "1.20 MB", "Sol"), (1.54, "1.54 MB", "Opus")]),
+]
+
+
+def sw3_rows():
+    rows, wins = [], [0, 0, 0]
+    for label, cells in SW3_ROWS:
+        best = min(c[0] for c in cells)
+        idx = [i for i, c in enumerate(cells) if c[0] == best]
+        for i in idx:
+            wins[i] += 1
+        out = []
+        for i, (k, main, sub) in enumerate(cells):
+            win = i in idx
+            out.append(("ok" if win else "none", main, ("tie \u00b7 " + sub) if win and len(idx) > 1 else sub, win))
+        rows.append((label, out))
+    return rows, wins
+
+
+_SW3_ROWS, SW3_WINS = sw3_rows()
+assert SW3_WINS == [3, 3, 4], SW3_WINS
+SW3 = dict(title="Best SwiftUI build per row: AvdLee's skills win 4 of 9, no skills 3",
+           subtitle="Apple's skills win 3. Each column takes the better of its Opus and Sol builds per row. Small text names the model.",
+           builds=[("Round 1", "no skills \u00b7 %d wins" % SW3_WINS[0]), ("Round 2, Apple skills", "%d wins" % SW3_WINS[1]),
+                   ("Round 2, AvdLee skills", "%d wins" % SW3_WINS[2])],
+           rows=_SW3_ROWS, col_w=370, label_w=230, file="results-swiftui-3way", groups=None, aspect=16 / 9,
+           legend=[("ok", "Best in row (ties share it)"), ("none", "Not the best")],
+           note="* Round 1 Sol's stream test failed, so these cells are Opus only. iPhone 12, iOS 26, one pass per build. Cold start = app's own time to 40 rows.",
+           footer="UIKit vs SwiftUI \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
+
 # --- Round 2 distance from optimal (docs/optimal-gap-round2.md), rendered only with --round2-gap ---
 # Each row: label, kind, optimal value, source of the optimal, unit, and per build (L2_HEAD order) the measured value.
 # kind "low": lower is better, score = optimal / value. "high": higher is better, score = value / optimal.
@@ -492,7 +535,12 @@ def render(name, spec=None):
     LABEL_W = spec.get("label_w", globals()["LABEL_W"])
     W = PAD * 2 + LABEL_W + COL_W * len(BUILDS)
     title_h = 64
-    H = PAD + title_h + group_h + HEAD_H + ROW_H * len(ROWS) + 56 + PAD + (24 if spec.get("note") else 0)
+    fixed = PAD + title_h + group_h + HEAD_H + 56 + PAD + (24 if spec.get("note") else 0)
+    if spec.get("aspect"):  # fit the canvas to the ratio by sizing the rows
+        ROW_H = int((W / spec["aspect"] - fixed) // len(ROWS))
+    H = fixed + ROW_H * len(ROWS)
+    if spec.get("aspect"):
+        H = round(W / spec["aspect"])
     img = Image.new("RGB", (W * S, H * S), th["bg"])
     d = ImageDraw.Draw(img)
     x0 = PAD
@@ -575,7 +623,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--round2-gap" in sys.argv:
+        if "--swiftui-3way" in sys.argv:
+            render(n, SW3)
+        elif "--round2-gap" in sys.argv:
             render(n, L2GAP)
         elif "--round3-best" in sys.argv:
             render(n, L2R3)
