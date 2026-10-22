@@ -1,0 +1,25 @@
+name: MacSmokeApp
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    macOS: "15.0"
+packages:
+  CampfireKit:
+    path: ../../CampfireKit
+targets:
+  MacSmokeApp:
+    type: application
+    platform: macOS
+    sources: [Sources]
+    dependencies:
+      - package: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: MacSmokeApp
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: NO
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication

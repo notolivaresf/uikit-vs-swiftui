@@ -1,0 +1,29 @@
+name: CampfireBenchMac
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    macOS: "15.0"
+targets:
+  CampfireBenchMacUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - ../MacTests
+      - ../Tests/Identifiers.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.macuitests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
+schemes:
+  CampfireBenchMac:
+    build:
+      targets:
+        CampfireBenchMacUITests: all
+    test:
+      config: Release
+      targets: [CampfireBenchMacUITests]

@@ -22,6 +22,9 @@
 # Run it through the build queue: buildslot run --label "uvs: record" -- Harness/record.sh ...
 set -u
 
+# Round 4 (Mac builds): `record.sh --mac ...` hands everything to record-mac.sh.
+for a in "$@"; do [ "$a" = "--mac" ] && exec bash "$(dirname "$0")/record-mac.sh" "$@"; done
+
 build=""; round=""; app="campfire.bench"; app_path=""
 LAUNCH_SAMPLES=3; heap_trace=0; stream_only=0
 # The phone's ids (devicectl id, and the xctrace / xcodebuild UDID) come from the untracked Harness/local.env

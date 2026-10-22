@@ -1,0 +1,338 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4261DA72BEFDF79379450579 /* SmokeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862769E1A4934BFF98FD621 /* SmokeViewController.swift */; };
+		5878560AE6125D1567862EE2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AB6AB31D3F236D7A9B61C2 /* main.swift */; };
+		EF541EF739BDEA722C4DA4D4 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = EE95523F64E27799E40B676C /* CampfireKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6862769E1A4934BFF98FD621 /* SmokeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeViewController.swift; sourceTree = "<group>"; };
+		B1AB6AB31D3F236D7A9B61C2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		DA2748A97EEABB48545C648F /* CampfireKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CampfireKit; path = ../../CampfireKit; sourceTree = SOURCE_ROOT; };
+		FCB67BAC026012CD7B8C1B20 /* MacSmokeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacSmokeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EA409B60AA066F050A02FBF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF541EF739BDEA722C4DA4D4 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6576DF1B95D2E42CC3A65A8B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B1AB6AB31D3F236D7A9B61C2 /* main.swift */,
+				6862769E1A4934BFF98FD621 /* SmokeViewController.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9193D441A4E97523D5B81578 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCB67BAC026012CD7B8C1B20 /* MacSmokeApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9B19E51F254E6686F3E2224B = {
+			isa = PBXGroup;
+			children = (
+				B627E97E56E4A0C024F638CB /* Packages */,
+				6576DF1B95D2E42CC3A65A8B /* Sources */,
+				9193D441A4E97523D5B81578 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B627E97E56E4A0C024F638CB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				DA2748A97EEABB48545C648F /* CampfireKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3C6C04D2E06F0BA1FFCE9D1E /* MacSmokeApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93A0CACA36B5B1E65DBF4D5E /* Build configuration list for PBXNativeTarget "MacSmokeApp" */;
+			buildPhases = (
+				55722ED83561C0A54B4C79F4 /* Sources */,
+				EA409B60AA066F050A02FBF1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacSmokeApp;
+			packageProductDependencies = (
+				EE95523F64E27799E40B676C /* CampfireKit */,
+			);
+			productName = MacSmokeApp;
+			productReference = FCB67BAC026012CD7B8C1B20 /* MacSmokeApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DAFE50E186BAAF7F451E83ED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					3C6C04D2E06F0BA1FFCE9D1E = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 6765B3EBE2776324F6A89D8B /* Build configuration list for PBXProject "MacSmokeApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9B19E51F254E6686F3E2224B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D279CF28833D41C435D2A979 /* XCLocalSwiftPackageReference "../../CampfireKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9193D441A4E97523D5B81578 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3C6C04D2E06F0BA1FFCE9D1E /* MacSmokeApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		55722ED83561C0A54B4C79F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4261DA72BEFDF79379450579 /* SmokeViewController.swift in Sources */,
+				5878560AE6125D1567862EE2 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1B1F5823178202E54C719CB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6AC0910EE2331AFEA92A1546 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = MacSmokeApp;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C1E0AE18C7F468285DC6E46B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = MacSmokeApp;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E6170D77BA34F9959F50FF3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6765B3EBE2776324F6A89D8B /* Build configuration list for PBXProject "MacSmokeApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B1F5823178202E54C719CB4 /* Debug */,
+				E6170D77BA34F9959F50FF3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		93A0CACA36B5B1E65DBF4D5E /* Build configuration list for PBXNativeTarget "MacSmokeApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC0910EE2331AFEA92A1546 /* Debug */,
+				C1E0AE18C7F468285DC6E46B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D279CF28833D41C435D2A979 /* XCLocalSwiftPackageReference "../../CampfireKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../CampfireKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EE95523F64E27799E40B676C /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = DAFE50E186BAAF7F451E83ED /* Project object */;
+}

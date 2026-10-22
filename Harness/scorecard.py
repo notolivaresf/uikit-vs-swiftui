@@ -29,6 +29,16 @@ CHECKS = [
     ("text_selection", "Long-press a message: select any range of its text and copy it. The harness recognises selection by the system's text-selection menu (Look Up, Translate, Select All...) appearing after a long press or a double tap on the text"),
 ]
 
+# Round 4 (Mac): the same 13 checks, worded for a window (summarize.py --mac stores resize under "resize").
+MAC_WORDING = {
+    "text_pinned": "The app's own text size (Text size +); changing it keeps the room pinned if it was",
+    "text_drift": "The app's own text size (Text size +); changing it keeps the row at the top in place (within 2 pt)",
+    "rotate_pinned": "Resizing the window (393 to 852 pt wide and back) keeps the room pinned if it was",
+    "rotate_drift": "Resizing the window keeps the row at the top in place (within 2 pt)",
+    "context_menu": "Right-click a message: a context menu with Copy and Reply; Copy puts the text on the clipboard",
+    "text_selection": "Double-click a word in a message and press Command-C: the word lands on the clipboard",
+}
+
 
 def g(d, *path):
     for p in path:
@@ -49,7 +59,7 @@ def ok_drift(stat):
 def evaluate(s, stack_ok):
     first = g(s, "time_to_40_rows_ms", "cold_app", "median")
     first_rep = g(s, "time_to_40_rows_ms", "repeated_app", "median")
-    rot = s.get("rotation", {})
+    rot = s.get("rotation") or s.get("resize") or {}
     r2500 = rot.get("at_2500", {})
     sel = s.get("text_selection_and_context_menu", {})
     res = {
@@ -67,6 +77,21 @@ def evaluate(s, stack_ok):
         "context_menu": sel.get("context_menu") == "yes",
         "text_selection": sel.get("text_selection") == "yes",
     }
+    if "resize" in s:
+        # Round 4 (Codex review, 21 Oct): every reading must hold, not only the median; the window must
+        # really have resized; text size must have changed the label each step; the boosts must have landed.
+        worst = lambda stat: bool(stat) and stat.get("max") is not None and not stat.get("missing") and stat["max"] <= 2.0
+        ts = g(s, "text_size") or {}
+        res.update({
+            "jump_drift": worst(g(s, "jump", "drift_pt")),
+            "older_drift": worst(g(s, "load_older", "drift_pt")),
+            "text_pinned": res["text_pinned"] and g(ts, "at_bottom", "label_changed_every_step") == "yes",
+            "text_drift": worst(g(ts, "mid_scroll", "drift_pt")) and g(ts, "mid_scroll", "label_changed_every_step") == "yes",
+            "rotate_pinned": res["rotate_pinned"] and rot.get("window_really_resized") == "yes",
+            "rotate_drift": worst(r2500.get("drift_pt")) and worst(r2500.get("round_trip_drift_pt"))
+                            and rot.get("window_really_resized") == "yes",
+            "boost_pinned": res["boost_pinned"] and g(s, "boost_burst", "room_moved_so_boosts_landed") == "yes",
+        })
     return res
 
 
@@ -87,8 +112,9 @@ def measures(s, size_mb):
         ("text_bottom", "Text size, at the bottom", "ms", g(s, "text_size", "at_bottom", "relayout_ms", "median"), "low", False),
         ("text_mid", "Text size, mid-list", "ms", g(s, "text_size", "mid_scroll", "relayout_ms", "median"), "low", False),
         ("memory", "Peak memory", "MB", g(s, "memory_mb", "peak_footprint"), "low", False),
-        ("app_size", "App size", "MB", size_mb, "low", False),
-    ]
+        ("app_size", "App size", "MB", size_mb if size_mb is not None else s.get("app_size_mb"), "low", False),
+    ] + ([("resize_hitch_ms", "Window resize hitch time", "ms", (g(s, "resize", "instruments") or {}).get("hitch_ms"), "low", True)]
+         if "resize" in s else [])
 
 
 SIM_KEYS = ["first40_cold", "first40_repeated", "stream_cpu", "jump", "older", "text_bottom", "text_mid", "memory", "app_size"]
@@ -178,8 +204,13 @@ def main():
     if sim:
         bl = json.load(open(a.baseline)) if a.baseline else {"measures": {k: {"value": None} for k in SIM_KEYS}}
         best = {"measures": {k: {"best": v["value"]} for k, v in bl["measures"].items()}}
-    else:
+    elif a.best:
         best = json.load(open(a.best))
+    else:
+        # Round 4 (Mac): no earlier Mac numbers, so no best seen yet
+        best = {"measures": {}}
+    if "resize" in s:
+        CHECKS[:] = [(k, MAC_WORDING.get(k, t)) for k, t in CHECKS]
     if a.only:
         return only_row(a, s, bl, sim)
     locks = json.load(open(a.locks)) if a.locks else {"ok": True, "changed": []}
@@ -198,7 +229,7 @@ def main():
     if sim:
         rows = [r for r in rows if r[0] in SIM_KEYS]
     for key, label, unit, val, direction, full_only in rows:
-        b = best["measures"][key]["best"]
+        b = best["measures"].get(key, {}).get("best")
         skipped = a.quick and full_only and not sim
         hit = None if skipped else met(val, b, direction)
         shown = "full pass only" if skipped else (fmt(val, unit) + " " + unit if val is not None else "not measured")

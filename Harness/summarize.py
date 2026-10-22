@@ -88,6 +88,47 @@ def launch_ms(trace):
     return None
 
 
+def launch_ms_mac(trace):
+    """Mac cold launch: from process creation to the end of the app's launch, which is where the last
+    "Launching" period of the App Launch template's life-cycle-period table ends (macOS has no "Foreground -
+    Active" period). None while that period is still open (nothing drew: a locked screen)."""
+    best = None
+    for row in table(trace, "life-cycle-period"):
+        start = dur = None
+        name = ""
+        for tag, text, fmt in row:
+            if tag == "start-time":
+                start = _num(text)
+            elif tag == "duration":
+                dur = _num(text)
+            elif tag == "app-period" and fmt:
+                name = fmt
+        # an open period's duration is exported as the largest unsigned 64-bit number
+        if name.startswith("Launching") and start is not None and dur is not None:
+            # a launch period still open at the end of the recording means the launch never finished:
+            # no number, even if an earlier period closed (Codex review, 21 Oct)
+            if dur >= 2**62:
+                return None
+            end = (start + dur) / 1e6
+            best = end if best is None else max(best, end)
+    return round(best, 1) if best is not None else None
+
+
+def app_size_mb(app):
+    """Size on disk of the .app bundle, in MB (1,000,000 bytes)."""
+    total = 0
+    for f in Path(app).rglob("*"):
+        if f.is_file() and not f.is_symlink():
+            total += f.stat().st_size
+    return round(total / 1e6, 2)
+
+
+def mac_device():
+    model = run(["sysctl", "-n", "hw.model"]).strip()
+    os_v = run(["sw_vers", "-productVersion"]).strip()
+    return f"Mac {model}, macOS {os_v}"
+
+
 def _num(v):
     try:
         return float(v)
@@ -209,7 +250,7 @@ def hitches(trace, log, scroll):
         # 20 fast swipes keep the list moving about 19 s (smoke rounds 7 and 8: 80 swipes, 74.5 s moving,
         # about 0.93 s a swipe); under 5 s means the swipes did not scroll the traced app (or its frames were
         # not recorded), so the numbers would be about nothing. Was 20 s for 80 swipes (Fernando, 18 Oct).
-        if active_s < MIN_MOVING_S:
+        if active_s < (MIN_MOVING_S_MAC if MAC else MIN_MOVING_S):
             out["missing"] = f"the list moved only {active_s:.1f} s in the trace"
             out["fps"] = None
     else:
@@ -277,6 +318,10 @@ def to_ms(metrics, test, *needles):
 
 ITERATIONS = 3
 MIN_MOVING_S = 5  # fling trace guard for 10 + 10 swipes
+# Mac: 20 scroll-wheel events without momentum move the list for much less time than 20 swipes; 1 s is a
+# first guess, to be checked on the first real Round 4 pass (logs say "the list moved only N s").
+MIN_MOVING_S_MAC = 1
+MAC = False
 ITERATIONS_BY_TEST = {"testFling": 1, "testMemory": 1}  # Fernando 18 Oct: 1 iteration for these two
 
 
@@ -346,12 +391,18 @@ def cmd_summary(args):
     get = lambda test, key: [x.get(key) for x in r.get(test, [])]
     tr = lambda name, scroll: (hitches(d / f"{name}.trace", d / "logs" / f"{name}.test.log", scroll)
                                if (d / f"{name}.trace").exists() else None)
-    launches = [launch_ms(t) for t in sorted(d.glob("launch.*.trace"))]
+    mac = getattr(args, "mac", False)
+    global MAC
+    MAC = mac
+    launches = [(launch_ms_mac if mac else launch_ms)(t) for t in sorted(d.glob("launch.*.trace"))]
+    # Mac pass (record-mac.sh): window resize replaces rotation, and the same keys carry it.
+    turn, t_bottom, t_2500 = ("resize", "testResizeAtBottom", "testResizeAt2500") if mac else ("rotation", "testRotationAtBottom", "testRotationAt2500")
+    k_a, k_b = ("wide", "narrow") if mac else ("landscape", "portrait")
     # The simulator pass (UVS_FAST) has no testMemory: the stream test's own memory metric is the peak memory.
     mem_test = "testMemory" if "testMemory" in m else "testLiveStream"
     mem = lambda needle: pick(m, mem_test, needle, convert=1/1000)
     s = {
-        "device": "iPhone 12, iOS 26.0",
+        "device": mac_device() if mac else "iPhone 12, iOS 26.0",
         "iterations_per_test": {"default": ITERATIONS, **ITERATIONS_BY_TEST},
         "launch_ms": {
             "cold_instruments_app_launch": stats(launches),
@@ -394,14 +445,14 @@ def cmd_summary(args):
                            "label_changed_every_step": all_true(steps(r.get("testTextSizeMidScroll", []), "label_changed")),
                            "xctest_hitch_metrics": hitch_metrics(m, "testTextSizeMidScroll")},
         },
-        "rotation": {
-            "at_bottom": {"stays_pinned": all_true(get("testRotationAtBottom", "pinned_landscape") +
-                                                   get("testRotationAtBottom", "pinned_portrait")),
-                          "xctest_hitch_metrics": hitch_metrics(m, "testRotationAtBottom")},
-            "at_2500": {"drift_pt": stats(get("testRotationAt2500", "drift_landscape_pt") +
-                                          get("testRotationAt2500", "drift_portrait_pt")),
-                        "round_trip_drift_pt": stats(get("testRotationAt2500", "drift_round_trip_pt")),
-                        "xctest_hitch_metrics": hitch_metrics(m, "testRotationAt2500")},
+        turn: {
+            "at_bottom": {"stays_pinned": all_true(get(t_bottom, f"pinned_{k_a}") + get(t_bottom, f"pinned_{k_b}")),
+                          "xctest_hitch_metrics": hitch_metrics(m, t_bottom)},
+            "at_2500": {"drift_pt": stats(get(t_2500, f"drift_{k_a}_pt") + get(t_2500, f"drift_{k_b}_pt")),
+                        "round_trip_drift_pt": stats(get(t_2500, "drift_round_trip_pt")),
+                        "xctest_hitch_metrics": hitch_metrics(m, t_2500)},
+            **({"instruments": tr("resize", False),
+                "window_really_resized": all_true(get(t_bottom, "resized") + get(t_2500, "resized"))} if mac else {}),
         },
         "boost_burst": {"stays_pinned": all_true(get("testBoostBurst", "pinned")),
                         "room_moved_so_boosts_landed": all_true(get("testBoostBurst", "room_moved")),
@@ -410,6 +461,7 @@ def cmd_summary(args):
             "context_menu": all_true(get("testTextSelectionAndContextMenu", "context_menu")),
             "text_selection": all_true(get("testTextSelectionAndContextMenu", "text_selection")),
             "selection_on_long_press": all_true(get("testTextSelectionAndContextMenu", "selection_on_long_press")),
+            **({"menu_shown": all_true(get("testTextSelectionAndContextMenu", "menu_shown"))} if mac else {}),
         },
         "memory_mb": {
             "peak_footprint": mem("memory peak physical"),
@@ -437,13 +489,17 @@ def cmd_summary(args):
         "stream cpu": s["stream"]["cpu_s"],
         "text size relayout ms": s["text_size"]["at_bottom"]["relayout_ms"]["median"],
         "text size mid-scroll relayout ms": s["text_size"]["mid_scroll"]["relayout_ms"]["median"],
-        "rotation pinned": s["rotation"]["at_bottom"]["stays_pinned"],
-        "rotation readings": s["rotation"]["at_2500"]["round_trip_drift_pt"]["n"] + s["rotation"]["at_2500"]["round_trip_drift_pt"]["missing"] or None,
+        f"{turn} pinned": s[turn]["at_bottom"]["stays_pinned"],
+        f"{turn} readings": s[turn]["at_2500"]["round_trip_drift_pt"]["n"] + s[turn]["at_2500"]["round_trip_drift_pt"]["missing"] or None,
         "boost burst pinned": s["boost_burst"]["stays_pinned"],
         "context menu reading": s["text_selection_and_context_menu"]["context_menu"],
         "memory peak": s["memory_mb"]["peak_footprint"],
         "memory growth": s["memory_mb"]["growth_over_scenario"],
     }
+    if mac:
+        app = getattr(args, "app", None)
+        s["app_size_mb"] = app_size_mb(app) if app and Path(app).is_dir() else None
+        need["app size"] = s["app_size_mb"]
     s["missing"] = [k for k, v in need.items() if v is None]
     Path(args.out).write_text(json.dumps(s, indent=2) + "\n")
     if s["missing"]:
@@ -453,7 +509,7 @@ def cmd_summary(args):
 
 def cmd_launchms(a):
     """Prints the cold launch (ms) read from one trace; exit 1 when the trace has no "Foreground - Active" period."""
-    v = launch_ms(a.trace)
+    v = (launch_ms_mac if a.mac else launch_ms)(a.trace)
     if v is None:
         return 1
     print(v)
@@ -464,8 +520,10 @@ def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pid"); p.add_argument("--procs"); p.add_argument("--device"); p.add_argument("--bundle")
-    l = sub.add_parser("launchms"); l.add_argument("--trace")
+    l = sub.add_parser("launchms"); l.add_argument("--trace"); l.add_argument("--mac", action="store_true")
     s = sub.add_parser("summary"); s.add_argument("--dir"); s.add_argument("--out")
+    s.add_argument("--mac", action="store_true", help="Mac pass (record-mac.sh): resize instead of rotation")
+    s.add_argument("--app", help="Mac pass: the measured .app, for its size")
     a = ap.parse_args()
     return {"pid": cmd_pid, "summary": cmd_summary, "launchms": cmd_launchms}[a.cmd](a)
 
