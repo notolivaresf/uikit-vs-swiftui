@@ -33,21 +33,24 @@ All other checks pass in all four: first content, jump and load-older drift, the
 
 The first pass ran with the stack rule wrongly passing (the scoring copies had no git repo, so `check-stack.sh` saw no files; fixed in `l2-score-setup.sh` before pass 2). Its measures are unaffected; the stack rule was re-checked by hand on all four and fails in all four, as in pass 2. The Apple builds' numbers agree with their Round 3 simulator baselines of 20 Oct (opus: 785 ms repeated, 30.7 s stream CPU, 133 ms jump, 200.5 MB; sol: within a few percent), apart from the noisy cold launch.
 
-## The Apple-skill builds on the iPhone 12 (Round 2)
+## On the iPhone 12: Apple skills (Round 2) against third-party skills (AvdLee)
 
-From `docs/results-round2.md` (iPhone 12, iOS 26.0, full Instruments pass). The third-party builds have not been on the phone yet; that pass is Fernando's, afterwards.
+iPhone 12, iOS 26.0, Release builds, the same full pass as Round 2 (`Harness/record.sh`, one pass per build, 21 Oct, 20:30 to 22:00 CST; the Apple-skill columns are from `docs/results-round2.md`). Medians of 3 iterations; fling and memory 1; cold time to 40 rows from 3 fresh installs. Raw data: `runs/<build>/1/summary.json` (not committed).
 
-| | round2-swiftui-opus (opus-swiftui-apple) | round2-swiftui-sol (sol-swiftui-apple) |
-|---|---|---|
-| First content | 326 ms cold, 329 ms repeated | 314 ms cold, 408 ms repeated |
-| Fling | 57.9 fps, 5 hitches | 58.0 fps, 0 hitches |
-| Jump to 2500 | 154 ms, drift 0.0 pt | 191 ms, drift 0.1 pt |
-| Load older | 86 ms, drift 0.2 pt | 143 ms, drift 0.1 pt |
-| Stream | 600, pinned; 425 hitches (13.9 s); CPU 34.8 s | 600, pinned; 242 hitches (4.9 s); CPU 22.1 s |
-| Text size | 76 / 108 ms | 123 / 139 ms |
-| Peak memory (heavy session) | 215.4 MB | 103.4 MB |
-| App size (Release device .app) | 1.50 MB | 1.20 MB |
-| Fails | stack rule, text selection | stack rule, text selection |
+| | opus-swiftui-apple (Round 2) | opus-swiftui-avdlee | sol-swiftui-apple (Round 2) | sol-swiftui-avdlee |
+|---|---|---|---|---|
+| First content (time to 40 rows) | 326 ms cold, 329 ms repeated | 387 ms cold, 313 ms repeated | 314 ms cold, 408 ms repeated | 216 ms cold, 302 ms repeated |
+| Cold launch (Instruments) | not measured | 959 ms (1 of 3 samples) | not measured | not measured (0 of 3) |
+| Fling | 57.9 fps, 5 hitches (150 ms) | 57.3 fps, 2 hitches (67 ms in 57 s) | 58.0 fps, 0 hitches | 57.7 fps, 1 hitch (17 ms in 77 s window; the swipes moved the list for 50 s) |
+| Jump to 2500 | 154 ms, drift 0.0 pt | 72 ms, drift 0.1 pt | 191 ms, drift 0.1 pt | 140 ms, drift 0.1 pt |
+| Load older | 86 ms, drift 0.2 pt | 91 ms, drift 0.1 pt | 143 ms, drift 0.1 pt | 86 ms, drift 0.1 pt |
+| Stream, 600 messages, pinned | 425 hitches (13.9 s); CPU 34.8 s | 220 hitches (3.7 s), 49.2 fps; CPU 12.4 s | 242 hitches (4.9 s); CPU 22.1 s | 73 hitches (1.2 s), 24.9 fps; CPU 13.3 s |
+| Text size, at the bottom / mid-list | 76 / 108 ms | 55 / 106 ms | 123 / 139 ms | 68 / 89 ms |
+| Peak memory (heavy session) | 215.4 MB | 57.2 MB | 103.4 MB | 117.5 MB |
+| App size (Release device .app) | 1.50 MB | 1.54 MB | 1.20 MB | 2.63 MB |
+| Fails | stack rule, text selection | stack rule, text selection | stack rule, text selection | stack rule, text selection |
+
+Every suite test passed in both passes (13 of 13). The opus pass is exactly as the harness ran it. The sol pass had one interruption: a system notification banner covered the screen during `StressBenchmarks/testBoostBurst` and the test timed out (`logs/suite.log`: "Failed to get matching snapshot ... timed out after 60.0 s", after an unhandled SpringBoard interruption). The table's sol boost-burst result comes from the three iterations of that same pass that did run (pinned, the row grows), and one rerun of that test alone passed (`runs/sol-swiftui-avdlee/1/logs/boostburst-rerun.log`). Cold launch (Instruments): the traces did not save within the 300 s cap (`xctrace exit 142`) for 2 of 3 opus launches and all 3 sol launches, as in 13 of 18 Round 2 traces; the cold time to 40 rows is complete for both.
 
 ## Agent cost
 
@@ -70,7 +73,7 @@ Read from each run's transcript and `meta.json`, the same way for both arms. Opu
 - The third-party skill fixed none of the two failures: all four builds use UIKit's UIPasteboard for Copy and none gives the system text-selection menu. Both third-party builds tried harder at selection (a Select Text sheet, a TextEditor overlay), and both still fail the check.
 - On the numbers it is the better skill for both models. Opus with it: stream CPU 31 → 10 s, peak memory 201 → 65 MB, jump 132 → 48 ms, text size at the bottom 57 → 40 ms; load older is slower (61 → 76 ms) and mid-list text size about the same. Sol with it: every timing row is better (cold 464 → 248 ms on average, stream CPU 20 → 14 s, jump 174 → 113 ms, load older 108 → 60 ms, text size 90/111 → 38/56 ms) and memory 96 → 75 MB; its app is bigger (2.28 → 3.99 MB).
 - It costs more agent time: Opus ran 4.3 times as long (5 h 7 min, $30 against $19, 1.4 times the output tokens) and Sol 4.8 times as long (3.9 times the output tokens, most of it reasoning); both ran about twice as many builds.
-- Whether the stream stutter of the Apple builds (425 and 242 hitches on the phone) is gone can only be seen on the iPhone 12: the simulator does not measure hitches or frame rate.
+- On the phone the stream stutter of the Apple builds (425 and 242 hitches) is smaller but not gone: 220 hitches (3.7 s) for Opus and 73 (1.2 s) for Sol, against 1 to 9 for the UIKit builds in Round 2. Opus's CPU for the stream falls from 34.8 to 12.4 s and its memory from 215 to 57 MB; Sol's CPU from 22.1 to 13.3 s, but its peak memory rises from 103 to 118 MB.
 
 ## Audit
 
