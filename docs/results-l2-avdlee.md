@@ -9,6 +9,31 @@ Fernando, 21 Oct: run the two Level 2 SwiftUI builds again, Opus and Sol, with o
 
 Setup, hashes and the isolation probe: `docs/harness.md` ("Level 2, third-party skills: AvdLee") and `skills/README.md`. In short: the Opus init event listed `swiftui-expert-skill` and nothing else (no MCP servers), Sol's Codex config is the same file as Level 2's (24 host skills off) and Sol named only `swiftui-expert-skill`. Inputs are tag `v2-inputs`, as for the Apple arm; tag `v2-avdlee-inputs` marks the harness commit.
 
+## Charts (iPhone 12)
+
+The third-party skill set is by Antoine van der Lee (@twannl on X); the charts call it "@twannl's skills". Each SwiftUI column takes the better of its Opus and Sol builds per row. Made by `Harness/tools/results_table.py` (`--swiftui-3way`, `--swiftui-skills`, `--uikit-vs-swiftui-skills`).
+
+**SwiftUI, three ways.** Round 1 (no skills), Round 2 with Apple's skills and Round 2 with @twannl's skills, best build per row: @twannl's skills win 4 of 9 rows, no skills 3, Apple's skills 3 (one row is a tie).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/results-swiftui-3way-dark.png">
+  <img src="images/results-swiftui-3way.png" alt="Best SwiftUI build per row across Round 1 (no skills), Round 2 with Apple's skills and Round 2 with @twannl's skills. @twannl's skills win 4 of 9 rows, no skills 3, Apple's skills 3.">
+</picture>
+
+**Apple's skills against @twannl's skills.** @twannl's skills beat Apple's on 6 of 9 rows (cold start, jump, stream hitches, stream CPU, text size, peak memory), Apple's on 2 (fling, app size), and load older ties at 86 ms.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/results-swiftui-skills-dark.png">
+  <img src="images/results-swiftui-skills.png" alt="Round 2 SwiftUI with Apple's skills against @twannl's skills, best build per row. @twannl's skills beat Apple's on 6 of 9 rows, Apple's on 2, 1 tie.">
+</picture>
+
+**UIKit against both SwiftUI skill sets.** The best UIKit build wins all 9 rows; SwiftUI with either skill set wins none outright (Apple's skills only tie UIKit on fling, at 0 hitches).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/results-uikit-vs-swiftui-skills-dark.png">
+  <img src="images/results-uikit-vs-swiftui-skills.png" alt="Best UIKit build against SwiftUI with Apple's skills and SwiftUI with @twannl's skills, per row. Best UIKit wins all 9 rows; SwiftUI with either skill set wins none outright.">
+</picture>
+
 ## Simulator scorecard
 
 The full `./bench` pass of Round 3 (Release build, iPhone 17 simulator, iOS 26.4, nothing else booted): nine measures, app size and the 13 checks. All four builds were scored the same evening, one at a time, twice (the second pass in reverse order), from a copy of each build's working folder as its model left it (`Harness/l2-score-setup.sh`). Cells read "pass 1 / pass 2". Lower is better in every row. Simulator times are not phone times: compare builds with each other here, not with the iPhone 12 numbers below.
