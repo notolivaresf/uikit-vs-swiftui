@@ -78,6 +78,23 @@ bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app_path/C
 echo "$app_path" >"$out/logs/app-source.txt"
 [ "$bundle_id" = "campfire.bench" ] || fail "app id is $bundle_id, not campfire.bench"
 
+
+# Instruments leaves a temporary instruments*.ktrace (4-8 GB) in the user temp dir after every recording.
+# Baseline = the ones there before this run; after each recording, ktrace_after logs the size of every new one
+# (and of the saved .trace) in logs/ktrace-sizes.txt and, only when UVS_REMOVE_KTRACE=1, removes exactly those
+# new files. Files that were already there are never touched.
+ktrace_dir="$(getconf DARWIN_USER_TEMP_DIR)"
+ls "$ktrace_dir" 2>/dev/null | grep '\.ktrace$' | sort >"$out/logs/ktrace-baseline.txt"
+ktrace_after() {
+  local name="$1" f
+  [ -d "$out/$name.trace" ] && echo "$name saved trace: $(du -sk "$out/$name.trace" | cut -f1) KB" >>"$out/logs/ktrace-sizes.txt"
+  while read -r f; do
+    [ -n "$f" ] || continue
+    echo "$name ktrace temp $f: $(du -sk "$ktrace_dir/$f" | cut -f1) KB (new in this run)" >>"$out/logs/ktrace-sizes.txt"
+    if [ "${UVS_REMOVE_KTRACE:-0}" = "1" ]; then rm -rf "$ktrace_dir/$f"; fi
+  done < <(ls "$ktrace_dir" 2>/dev/null | grep '\.ktrace$' | sort | comm -13 "$out/logs/ktrace-baseline.txt" -)
+}
+
 # Stops any other running app with the benchmark's bundle id (a build or stand-in left running, or one that
 # Instruments launched and left suspended). XCUITest finds the app under test by bundle id: with a stray
 # instance alive, every test fails with "Application 'campfire.bench' does not have a process ID".
@@ -175,6 +192,7 @@ trace_scenario() {
   kill -INT "$trace_pid" 2>/dev/null
   wait "$trace_pid"
   check_trace "$name" $?
+  ktrace_after "$name"
   stop_app
 }
 
@@ -196,6 +214,7 @@ if [ $traces -eq 1 ]; then
         || fail "launch $n: time to 40 rows (logs/launch.$n.test.log)"
       wait "$trace_pid"; status=$?
       check_trace "launch.$n" $status
+      ktrace_after "launch.$n"
       if [ -d "$out/launch.$n.trace" ] && ! python3 "$here/summarize.py" launchms --mac --trace "$out/launch.$n.trace" >"$out/logs/launch.$n.launchms.txt" 2>&1; then
         fail "launch.$n trace saved but its launch period never ended (did the window draw?)"
       fi
