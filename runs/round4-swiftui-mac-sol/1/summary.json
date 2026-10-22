@@ -1,0 +1,539 @@
+{
+  "device": "Mac MacBookPro18,4, macOS 27.0.1",
+  "iterations_per_test": {
+    "default": 3,
+    "testFling": 1,
+    "testMemory": 1
+  },
+  "launch_ms": {
+    "cold_instruments_app_launch": {
+      "median": 919.1,
+      "max": 950.0,
+      "n": 3,
+      "missing": 0
+    },
+    "freshly_installed": true,
+    "launch_trace_mode": "template",
+    "repeated_xctest_launch": null
+  },
+  "time_to_40_rows_ms": {
+    "cold_app": {
+      "median": 520.0,
+      "max": 547.0,
+      "n": 3,
+      "missing": 0
+    },
+    "repeated_app": {
+      "median": 493.0,
+      "max": 493.0,
+      "n": 1,
+      "missing": 0
+    },
+    "repeated_xctest_clock_upper_bound": 5390.5
+  },
+  "fling": {
+    "instruments": {
+      "window_s": 26.89,
+      "hitches": 176,
+      "hitch_ms": 1733.3,
+      "hitch_time_ratio_ms_per_s": 64.45,
+      "frames_in_window": 879,
+      "fps_over": "drawing time (union of frame lifetimes)",
+      "moving_s": 12.86,
+      "fps": 68.4
+    },
+    "xctest_fps_deceleration": null,
+    "xctest_fps_dragging": null,
+    "xctest_hitch_metrics": {
+      "Number of Hitches (bench) (hitches)": 0.0,
+      "Hitch Time Ratio (bench) (ms per s)": 0.0,
+      "Hitches Total Duration (bench) (s)": 0.0
+    },
+    "cpu_s": 10.06
+  },
+  "jump": {
+    "app_ms": {
+      "median": 407.0,
+      "max": 407.0,
+      "n": 1,
+      "missing": 0
+    },
+    "drift_pt": {
+      "median": null,
+      "max": null,
+      "n": 0,
+      "missing": 1
+    },
+    "xctest_clock_upper_bound_ms": 961.5
+  },
+  "load_older": {
+    "app_ms": {
+      "median": 170.0,
+      "max": 170.0,
+      "n": 1,
+      "missing": 0
+    },
+    "drift_pt": {
+      "median": null,
+      "max": null,
+      "n": 0,
+      "missing": 1
+    },
+    "xctest_clock_upper_bound_ms": 705.2
+  },
+  "stream": {
+    "instruments_tap_to_stream_done": {
+      "window_s": 30.59,
+      "hitches": 246,
+      "hitch_ms": 9983.4,
+      "hitch_time_ratio_ms_per_s": 326.38,
+      "frames_in_window": 1028,
+      "fps": 33.6
+    },
+    "messages_added": {
+      "median": 260.0,
+      "max": 260.0,
+      "n": 1,
+      "missing": 0
+    },
+    "xctest_hitch_metrics": {},
+    "ends_pinned": "yes",
+    "cpu_s": null
+  },
+  "text_size": {
+    "at_bottom": {
+      "relayout_ms": {
+        "median": 112.0,
+        "max": 119.0,
+        "n": 3,
+        "missing": 0
+      },
+      "stays_pinned": "yes",
+      "label_changed_every_step": "yes",
+      "xctest_hitch_metrics": {
+        "Hitches Total Duration (bench) (s)": 0.0,
+        "Number of Hitches (bench) (hitches)": 0.0,
+        "Hitch Time Ratio (bench) (ms per s)": 0.0
+      }
+    },
+    "mid_scroll": {
+      "relayout_ms": {
+        "median": 152.0,
+        "max": 159.0,
+        "n": 3,
+        "missing": 0
+      },
+      "drift_pt": {
+        "median": 0.0,
+        "max": 0.0,
+        "n": 3,
+        "missing": 0
+      },
+      "label_changed_every_step": "yes",
+      "xctest_hitch_metrics": {
+        "Hitches Total Duration (bench) (s)": 0.0,
+        "Number of Hitches (bench) (hitches)": 0.0,
+        "Hitch Time Ratio (bench) (ms per s)": 0.0
+      }
+    }
+  },
+  "resize": {
+    "at_bottom": {
+      "stays_pinned": null,
+      "xctest_hitch_metrics": {}
+    },
+    "at_2500": {
+      "drift_pt": {
+        "median": null,
+        "max": null,
+        "n": 0,
+        "missing": 0
+      },
+      "round_trip_drift_pt": {
+        "median": null,
+        "max": null,
+        "n": 0,
+        "missing": 0
+      },
+      "xctest_hitch_metrics": {}
+    },
+    "instruments": {
+      "missing": "no frames, no start/end marks or no trace start date"
+    },
+    "window_really_resized": null
+  },
+  "boost_burst": {
+    "stays_pinned": "yes",
+    "room_moved_so_boosts_landed": "no",
+    "xctest_hitch_metrics": {
+      "Hitches Total Duration (bench) (s)": 0.0,
+      "Number of Hitches (bench) (hitches)": 0.0,
+      "Hitch Time Ratio (bench) (ms per s)": 0.0
+    }
+  },
+  "text_selection_and_context_menu": {
+    "context_menu": null,
+    "text_selection": null,
+    "selection_on_long_press": null,
+    "menu_shown": null
+  },
+  "memory_mb": {
+    "peak_footprint": null,
+    "growth_over_scenario": null,
+    "footprint_at_end": null,
+    "instruments_allocations_from_launch": null
+  },
+  "drift_note": "drift_pt missing = a different row ended up at the top (moved by at least a row)",
+  "all_xctest_metrics": {
+    "testFling": {
+      "Number of Hitches (bench) (hitches)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Clock Monotonic Time (s)": {
+        "median": 21.541764449000002,
+        "min": 21.541764449000002,
+        "max": 21.541764449000002,
+        "n": 1
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 80806294.047,
+        "min": 80806294.047,
+        "max": 80806294.047,
+        "n": 1
+      },
+      "CPU Time (bench) (s)": {
+        "median": 10.059581322000001,
+        "min": 10.059581322000001,
+        "max": 10.059581322000001,
+        "n": 1
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 77546.552,
+        "min": 77546.552,
+        "max": 77546.552,
+        "n": 1
+      },
+      "Hitch Time Ratio (bench) (ms per s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 31538394.767,
+        "min": 31538394.767,
+        "max": 31538394.767,
+        "n": 1
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 77235.256,
+        "min": 77235.256,
+        "max": 77235.256,
+        "n": 1
+      },
+      "Hitches Total Duration (bench) (s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": 5111.808,
+        "min": 5111.808,
+        "max": 5111.808,
+        "n": 1
+      }
+    },
+    "testJumpTo2500": {
+      "Clock Monotonic Time (s)": {
+        "median": 0.9614859160000001,
+        "min": 0.9614859160000001,
+        "max": 0.9614859160000001,
+        "n": 1
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 3630722.8,
+        "min": 3630722.8,
+        "max": 3630722.8,
+        "n": 1
+      },
+      "CPU Time (bench) (s)": {
+        "median": 0.44131518500000005,
+        "min": 0.44131518500000005,
+        "max": 0.44131518500000005,
+        "n": 1
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 114394.216,
+        "min": 114394.216,
+        "max": 114394.216,
+        "n": 1
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 1387237.651,
+        "min": 1387237.651,
+        "max": 1387237.651,
+        "n": 1
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 106071.144,
+        "min": 106071.144,
+        "max": 106071.144,
+        "n": 1
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": 34029.592,
+        "min": 34029.592,
+        "max": 34029.592,
+        "n": 1
+      }
+    },
+    "testLoadOlder": {
+      "Clock Monotonic Time (s)": {
+        "median": 0.705191513,
+        "min": 0.705191513,
+        "max": 0.705191513,
+        "n": 1
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 1230358.976,
+        "min": 1230358.976,
+        "max": 1230358.976,
+        "n": 1
+      },
+      "CPU Time (bench) (s)": {
+        "median": 0.205115087,
+        "min": 0.205115087,
+        "max": 0.205115087,
+        "n": 1
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 100746.32,
+        "min": 100746.32,
+        "max": 100746.32,
+        "n": 1
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 600790.548,
+        "min": 600790.548,
+        "max": 600790.548,
+        "n": 1
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 99370.064,
+        "min": 99370.064,
+        "max": 99370.064,
+        "n": 1
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": 27328.512,
+        "min": 27328.512,
+        "max": 27328.512,
+        "n": 1
+      }
+    },
+    "testTimeTo40Rows": {
+      "Duration (ApplicationLaunch) (s)": {
+        "median": 0.49643375,
+        "min": 0.49643375,
+        "max": 0.49643375,
+        "n": 1
+      },
+      "Clock Monotonic Time (s)": {
+        "median": 5.390536664000001,
+        "min": 5.390536664000001,
+        "max": 5.390536664000001,
+        "n": 1
+      }
+    },
+    "testBoostBurst": {
+      "Clock Monotonic Time (s)": {
+        "median": 2.708117527,
+        "min": 2.708117527,
+        "max": 2.708117527,
+        "n": 1
+      },
+      "Hitches Total Duration (bench) (s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Number of Hitches (bench) (hitches)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Hitch Time Ratio (bench) (ms per s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      }
+    },
+    "testTextSizeAtBottom": {
+      "Clock Monotonic Time (s)": {
+        "median": 4.058584752000001,
+        "min": 4.058584752000001,
+        "max": 4.058584752000001,
+        "n": 1
+      },
+      "Hitches Total Duration (bench) (s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Number of Hitches (bench) (hitches)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Hitch Time Ratio (bench) (ms per s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      }
+    },
+    "testTextSizeMidScroll": {
+      "Clock Monotonic Time (s)": {
+        "median": 4.1806774220000005,
+        "min": 4.1806774220000005,
+        "max": 4.1806774220000005,
+        "n": 1
+      },
+      "Hitches Total Duration (bench) (s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Number of Hitches (bench) (hitches)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      },
+      "Hitch Time Ratio (bench) (ms per s)": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "n": 1
+      }
+    }
+  },
+  "all_results": {
+    "testJumpTo2500": [
+      {
+        "app_ms": 407,
+        "drift_pt": null,
+        "top": 2460,
+        "y": 21.3
+      }
+    ],
+    "testLiveStream": [
+      {
+        "added": 260,
+        "loaded": 300,
+        "pinned": true
+      }
+    ],
+    "testLoadOlder": [
+      {
+        "app_ms": 170,
+        "drift_pt": null,
+        "top_after": 49921,
+        "top_before": 49961
+      }
+    ],
+    "testTimeTo40Rows": [
+      {
+        "app_ms": 493,
+        "loaded": 40
+      }
+    ],
+    "testBoostBurst": [
+      {
+        "pinned": true,
+        "room_moved": false
+      }
+    ],
+    "testTextSizeAtBottom": [
+      {
+        "steps": [
+          {
+            "app_ms": 110,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 119,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 112,
+            "label_changed": true,
+            "pinned": true
+          }
+        ]
+      }
+    ],
+    "testTextSizeMidScroll": [
+      {
+        "steps": [
+          {
+            "app_ms": 159,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2460,
+            "top_before": 2460
+          },
+          {
+            "app_ms": 151,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2460,
+            "top_before": 2460
+          },
+          {
+            "app_ms": 152,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2460,
+            "top_before": 2460
+          }
+        ]
+      }
+    ],
+    "testLaunchState": [
+      {
+        "app_ms": 520,
+        "loaded": 40
+      },
+      {
+        "app_ms": 517,
+        "loaded": 40
+      },
+      {
+        "app_ms": 547,
+        "loaded": 40
+      }
+    ]
+  },
+  "app_size_mb": 3.08,
+  "missing": [
+    "stream cpu",
+    "resize pinned",
+    "resize readings",
+    "context menu reading",
+    "memory peak",
+    "memory growth"
+  ]
+}
