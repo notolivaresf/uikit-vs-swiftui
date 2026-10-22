@@ -243,7 +243,7 @@ for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
       || fail "install before launch $n (logs/install.$n.log)"
   fi
   sleep 30
-  if [ "$launch_mode" = "template" ]; then launch_args=(--template "App Launch"); else launch_args=(--template Blank --instrument "dyld Activity"); fi
+  if [ "$launch_mode" = "template" ]; then launch_args=(--template "App Launch"); else launch_args=(--instrument "dyld Activity"); fi
   if FINALISE_OVERRIDE=$LAUNCH_FINALISE_S start_recording "launch.$n" 25 "${launch_args[@]}"; then
     sleep 10
     "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
