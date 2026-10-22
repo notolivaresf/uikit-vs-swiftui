@@ -356,6 +356,9 @@ def cmd_summary(args):
         "launch_ms": {
             "cold_instruments_app_launch": stats(launches),
             "freshly_installed": not (d / "logs" / "launch-not-fresh.txt").exists(),
+            # which Instruments recording made the launch traces: "light" (dyld Activity only, from Round 3 fix
+            # of the 300 s save hang) or "template" (the App Launch template, Rounds 1 and 2)
+            "launch_trace_mode": (d / "logs" / "launch-mode.txt").read_text().strip() if (d / "logs" / "launch-mode.txt").exists() else "template",
             "repeated_xctest_launch": to_ms(m, "testLaunch", "duration") or to_ms(m, "testLaunch", "launch"),
         },
         "time_to_40_rows_ms": {"cold_app": stats(get("testLaunchState", "app_ms")),
@@ -448,13 +451,23 @@ def cmd_summary(args):
         return 1
 
 
+def cmd_launchms(a):
+    """Prints the cold launch (ms) read from one trace; exit 1 when the trace has no "Foreground - Active" period."""
+    v = launch_ms(a.trace)
+    if v is None:
+        return 1
+    print(v)
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pid"); p.add_argument("--procs"); p.add_argument("--device"); p.add_argument("--bundle")
+    l = sub.add_parser("launchms"); l.add_argument("--trace")
     s = sub.add_parser("summary"); s.add_argument("--dir"); s.add_argument("--out")
     a = ap.parse_args()
-    return {"pid": cmd_pid, "summary": cmd_summary}[a.cmd](a)
+    return {"pid": cmd_pid, "summary": cmd_summary, "launchms": cmd_launchms}[a.cmd](a)
 
 
 if __name__ == "__main__":

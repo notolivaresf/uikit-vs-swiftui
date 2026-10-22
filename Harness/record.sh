@@ -31,6 +31,8 @@ device_core="${UVS_DEVICE_CORE:-}"
 device_udid="${UVS_DEVICE_UDID:-}"
 out_dir=""; derived_dir=""; quick=0; sim=""; only=""
 FINALISE_S=300                                       # longest we wait for xctrace to save after it stops
+LAUNCH_FINALISE_S=120                                # same for a cold-launch trace, which is small (a hang here is a stall, not slowness)
+launch_mode="light"                                  # light = dyld Activity only; template = the App Launch template (Rounds 1-2)
 while [ $# -gt 0 ]; do
   case "$1" in
     --build) build="$2"; shift 2;;
@@ -40,6 +42,11 @@ while [ $# -gt 0 ]; do
     --app) app="$2"; shift 2;;
     --app-path) app_path="$2"; shift 2;;
     --heap-trace) heap_trace=1; shift;;
+    # --launch-mode light|template: what records the cold launch. light (default since the 21 Oct save-hang fix)
+    # records only the dyld Activity instrument, which carries the app-lifecycle period the cold-launch number is
+    # read from; template is the old App Launch template (adds Time Profiler with waiting-thread sampling, thread
+    # state, syscalls...), whose traces often never finished saving. See docs/harness.md.
+    --launch-mode) launch_mode="$2"; shift 2;;
     # --stream-only: only the stream trace and ChatBenchmarks/testLiveStream (no launches, fling or other
     # tests). Used for the L1 stream reruns of opus-uikit and opus-swiftui, whose round 1 ran the stream test
     # before the relaunch fix (98b2d48); Fernando cut rounds 2 and 3, 18 Oct.
@@ -144,9 +151,10 @@ wake() {
 start_recording() {
   local name="$1" limit="$2"; shift 2
   local xlog="$out/logs/$name.xctrace.log" attempt
+  local finalise="${FINALISE_OVERRIDE:-$FINALISE_S}"
   for attempt in 1 2 3; do
     wake
-    capped_xctrace $((limit + FINALISE_S)) record --device "$device_udid" "$@" \
+    capped_xctrace $((limit + finalise)) record --device "$device_udid" "$@" \
       --time-limit "${limit}s" --no-prompt --output "$out/$name.trace" \
       --launch -- "$app" -uvsBenchmark YES >"$xlog" 2>&1 &
     trace_pid=$!
@@ -235,7 +243,8 @@ for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
       || fail "install before launch $n (logs/install.$n.log)"
   fi
   sleep 30
-  if start_recording "launch.$n" 25 --template "App Launch"; then
+  if [ "$launch_mode" = "template" ]; then launch_args=(--template "App Launch"); else launch_args=(--template Blank --instrument "dyld Activity"); fi
+  if FINALISE_OVERRIDE=$LAUNCH_FINALISE_S start_recording "launch.$n" 25 "${launch_args[@]}"; then
     sleep 10
     "${xct[@]}" -only-testing:CampfireBenchUITests/TraceScenarios/testLaunchState \
       -resultBundlePath "$out/logs/launch.$n.xcresult" >"$out/logs/launch.$n.test.log" 2>&1 \
@@ -243,12 +252,18 @@ for ((n = 1; n <= LAUNCH_SAMPLES; n++)); do
     wait "$trace_pid"; status=$?
     # The App Launch recording ends at its time limit; that is expected here, not a failure.
     check_trace "launch.$n" $status
+    # A saved trace must hold the number we read from it (the app-lifecycle period); a light recording that
+    # lacks it is a failure to say out loud, not a silent gap.
+    if [ -d "$out/launch.$n.trace" ] && ! python3 "$here/summarize.py" launchms --trace "$out/launch.$n.trace" >"$out/logs/launch.$n.launchms.txt" 2>&1; then
+      fail "launch.$n trace saved but has no Foreground - Active period ($launch_mode mode)"
+    fi
   else
     fail "launch $n trace: recording never started"
   fi
 done
 [ $stream_only -eq 1 ] && [ -n "$app_path" ] && { xcrun devicectl device install app --device "$device_core" "$app_path" >"$out/logs/install.log" 2>&1 || fail "install (logs/install.log)"; }
 [ $stream_only -eq 1 ] || [ -n "$app_path" ] || echo "launch samples ran on the installed copy (no --app-path), not freshly installed" | tee "$out/logs/launch-not-fresh.txt"
+[ $LAUNCH_SAMPLES -gt 0 ] && echo "$launch_mode" >"$out/logs/launch-mode.txt"
 echo "launch traces done"
 
 # 2. Scenario traces, before the suites (after the suites, in smoke round 6, the fling trace's swipes
