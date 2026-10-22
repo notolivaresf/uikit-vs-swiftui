@@ -45,10 +45,12 @@ THEMES = {
     "light": dict(bg=(255, 255, 255), text=(28, 28, 30), muted=(110, 110, 115), line=(225, 225, 228),
                   ok=((214, 240, 220), (46, 125, 66)), bad=((250, 214, 214), (176, 46, 46)),
                   warn=((253, 240, 196), (160, 118, 10)), none=((255, 255, 255), (150, 150, 155)),
+                  second=((255, 243, 176), (176, 132, 0)), last=((255, 218, 184), (200, 90, 10)),
                   head=(243, 243, 246)),
     "dark": dict(bg=(24, 24, 27), text=(240, 240, 243), muted=(160, 160, 168), line=(58, 58, 64),
                  ok=((30, 70, 42), (110, 200, 135)), bad=((84, 34, 34), (240, 130, 130)),
                  warn=((82, 68, 22), (235, 195, 85)), none=((24, 24, 27), (120, 120, 128)),
+                 second=((88, 74, 18), (240, 205, 70)), last=((100, 52, 16), (245, 150, 70)),
                  head=(38, 38, 43)),
 }
 
@@ -448,7 +450,10 @@ def uk_rows():
         idx = [i for i, c in enumerate(cells) if c[0] == best]
         for i in idx:
             wins[i] += 1
-        rows.append((label, [("ok" if i in idx else "none", m.rstrip(" *"), ("tie \u00b7 " + sb) if i in idx and len(idx) > 1 else sb, i in idx)
+        # competition ranking (ties share a rank): 1 green, 2 yellow, 3 orange
+        rank = [1 + sum(1 for o in cells if o[0] < c[0]) for c in cells]
+        st = {1: "ok", 2: "second", 3: "last"}
+        rows.append((label, [(st[rank[i]], m.rstrip(" *"), ("tie \u00b7 " + sb) if i in idx and len(idx) > 1 else sb, i in idx)
                              for i, (k, m, sb) in enumerate(cells)]))
     return rows, wins
 
@@ -460,7 +465,7 @@ UKSW = dict(title="Best UIKit wins all 9 rows; SwiftUI with either skill set win
             builds=[("Best UIKit", "%d wins" % UK_WINS[0]), ("SwiftUI, Apple's skills", "%d win (a tie)" % UK_WINS[1]),
                     ("SwiftUI, @twannl's skills", "%d wins" % UK_WINS[2])],
             rows=_UK_ROWS, col_w=260, label_w=210, file="results-uikit-vs-swiftui-skills", groups=None, aspect=4 / 5,
-            legend=SW3["legend"],
+            legend=[("ok", "Best in row (ties share it)"), ("second", "Second place"), ("last", "Last place")],
             note="iPhone 12, iOS 26, one pass per build. Fling: Best UIKit and Apple's skills tie at 0 hitches. Cold start = app's own time to 40 rows.",
             footer=SW3["footer"])
 
@@ -647,6 +652,8 @@ def render(name, spec=None):
                 d.rounded_rectangle(r, 8 * S, outline=fg, width=2 * S)
             elif state == "none":
                 d.rounded_rectangle(r, 8 * S, outline=th["line"], width=S)
+            elif state in ("second", "last"):
+                d.rounded_rectangle(r, 8 * S, outline=fg, width=S)
             cx = cx0 + (COL_W - 8) / 2
             mf = font(17, best)
             lines = wrap(d, main, mf, COL_W - 28)
