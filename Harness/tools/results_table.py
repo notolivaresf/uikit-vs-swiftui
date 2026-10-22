@@ -8,8 +8,9 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2-best3   (best of each stack's two builds, three columns: results-round2-best3.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
-       python3 Harness/tools/results_table.py --swiftui-3way   (best SwiftUI build per row: Round 1, Apple skills, AvdLee skills; 16:9: results-swiftui-3way.png and -dark.png)
-       python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against AvdLee skills: results-swiftui-skills.png and -dark.png, 4:5 portrait)
+       python3 Harness/tools/results_table.py --swiftui-3way   (best SwiftUI build per row: Round 1, Apple skills, @twannl's skills; 16:9: results-swiftui-3way.png and -dark.png)
+       python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against @twannl's skills: results-swiftui-skills.png and -dark.png, 4:5 portrait)
+       python3 Harness/tools/results_table.py --uikit-vs-swiftui-skills   (Best UIKit against the two SwiftUI skill sets, 4:5: results-uikit-vs-swiftui-skills.png and -dark.png)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
 """
 import os
@@ -398,28 +399,69 @@ def sw3_rows(cols=(0, 1, 2)):
 
 _SW3_ROWS, SW3_WINS = sw3_rows()
 assert SW3_WINS == [3, 3, 4], SW3_WINS
-SW3 = dict(title="Best SwiftUI build per row: AvdLee's skills win 4 of 9, no skills 3",
+SW3 = dict(title="Best SwiftUI build per row: @twannl's skills win 4 of 9, no skills 3",
            subtitle="Apple's skills win 3. Each column takes the better of its Opus and Sol builds per row. Small text names the model.",
            builds=[("Round 1", "no skills \u00b7 %d wins" % SW3_WINS[0]), ("Round 2, Apple skills", "%d wins" % SW3_WINS[1]),
-                   ("Round 2, AvdLee skills", "%d wins" % SW3_WINS[2])],
+                   ("Round 2, @twannl's skills", "%d wins" % SW3_WINS[2])],
            rows=_SW3_ROWS, col_w=370, label_w=230, file="results-swiftui-3way", groups=None, aspect=16 / 9,
            legend=[("ok", "Best in row (ties share it)"), ("none", "Not the best")],
            note="* Round 1 Sol's stream test failed, so these cells are Opus only. iPhone 12, iOS 26, one pass per build. Cold start = app's own time to 40 rows.",
            footer="UIKit vs SwiftUI \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
 
-# Same data, only the two Round 2 columns (Apple skills against AvdLee skills), rendered with --swiftui-skills. Wins recomputed, ties share.
+# Same data, only the two Round 2 columns (Apple skills against @twannl's skills), rendered with --swiftui-skills. Wins recomputed, ties share.
 _SK_ROWS, SK_WINS = sw3_rows((1, 2))
 _SK_ONLY = sum(1 for _, c in _SK_ROWS if c[0][3] and not c[1][3])
 _SK_ONLY_AVD = sum(1 for _, c in _SK_ROWS if c[1][3] and not c[0][3])
 _SK_TIES = sum(1 for _, c in _SK_ROWS if c[0][3] and c[1][3])
 assert (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES) == (6, 2, 1), (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES)
-SWSK = dict(title="AvdLee's skills beat Apple's on %d of 9 rows, Apple's on %d, %d tie" % (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES),
+SWSK = dict(title="@twannl's skills beat Apple's on %d of 9 rows, Apple's on %d, %d tie" % (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES),
             subtitle="Best SwiftUI build of each, per row. Small text names the model the value came from.",
-            builds=[("Round 2, Apple skills", "%d wins (with the tie)" % SK_WINS[0]), ("Round 2, AvdLee skills", "%d wins (with the tie)" % SK_WINS[1])],
+            builds=[("Round 2, Apple skills", "%d wins (with the tie)" % SK_WINS[0]), ("Round 2, @twannl's skills", "%d wins (with the tie)" % SK_WINS[1])],
             rows=[(l, [(st, m.rstrip(" *"), sb, b) for st, m, sb, b in c]) for l, c in _SK_ROWS],
             col_w=240, label_w=220, file="results-swiftui-skills", groups=None, aspect=4 / 5,
             legend=SW3["legend"],
             note="iPhone 12, iOS 26, one pass per build. Each column takes the better of its Opus and Sol builds. Cold start = app's own time to 40 rows.",
+            footer=SW3["footer"])
+
+# --- Best UIKit against the two SwiftUI skill sets (docs/results-round2.md, results-l2-avdlee.md), rendered with --uikit-vs-swiftui-skills ---
+# Best UIKit = best value per row across the four Round 2 UIKit builds (Swift and Objective-C, Opus and Sol), iPhone 12; none of those
+# cells is a bent-rules one. The two SwiftUI columns are SW3_ROWS columns 1 and 2. Winners computed, ties share.
+UK_ROWS = [
+    ("Cold start, 40 rows", (158, "158 ms", "Opus \u00b7 ObjC")),
+    ("Fling", (0, "0 hitches", "58.2 fps \u00b7 Sol \u00b7 Swift")),
+    ("Jump to message 2,500", (67, "67 ms", "Opus \u00b7 ObjC")),
+    ("Load older", (34, "34 ms", "Opus \u00b7 ObjC")),
+    ("Stream hitches", (1, "1 hitch", "Opus \u00b7 Swift")),
+    ("Stream CPU", (11.9, "11.9 s", "Opus \u00b7 ObjC")),
+    ("Text size, bottom / mid", (53, "53 / 70 ms", "Sol \u00b7 Swift")),
+    ("Peak memory", (35.0, "35.0 MB", "Sol \u00b7 ObjC")),
+    ("App size", (0.64, "0.64 MB", "Sol \u00b7 Swift")),
+]
+
+
+def uk_rows():
+    rows, wins = [], [0, 0, 0]
+    for (label, uk), (l2, sw) in zip(UK_ROWS, SW3_ROWS):
+        assert label == l2
+        cells = [uk, sw[1], sw[2]]
+        best = min(c[0] for c in cells)
+        idx = [i for i, c in enumerate(cells) if c[0] == best]
+        for i in idx:
+            wins[i] += 1
+        rows.append((label, [("ok" if i in idx else "none", m.rstrip(" *"), ("tie \u00b7 " + sb) if i in idx and len(idx) > 1 else sb, i in idx)
+                             for i, (k, m, sb) in enumerate(cells)]))
+    return rows, wins
+
+
+_UK_ROWS, UK_WINS = uk_rows()
+assert UK_WINS == [9, 1, 0], UK_WINS
+UKSW = dict(title="Best UIKit wins all 9 rows; SwiftUI with either skill set wins none outright",
+            subtitle="Best UIKit is the best value per row of the four Round 2 UIKit builds (Swift and Objective-C, Opus and Sol). The SwiftUI columns are the better of their Opus and Sol builds. Small text names the model and language.",
+            builds=[("Best UIKit", "%d wins" % UK_WINS[0]), ("SwiftUI, Apple's skills", "%d win (a tie)" % UK_WINS[1]),
+                    ("SwiftUI, @twannl's skills", "%d wins" % UK_WINS[2])],
+            rows=_UK_ROWS, col_w=260, label_w=210, file="results-uikit-vs-swiftui-skills", groups=None, aspect=4 / 5,
+            legend=SW3["legend"],
+            note="iPhone 12, iOS 26, one pass per build. Fling: Best UIKit and Apple's skills tie at 0 hitches. Cold start = app's own time to 40 rows.",
             footer=SW3["footer"])
 
 # --- Round 2 distance from optimal (docs/optimal-gap-round2.md), rendered only with --round2-gap ---
@@ -556,6 +598,8 @@ def render(name, spec=None):
     _md = ImageDraw.Draw(_m)
     tlines = wrap(_md, spec["title"], font(26, True), W - 2 * PAD)  # a narrow chart wraps its headline and note
     title_h += 32 * (len(tlines) - 1)
+    slines = wrap(_md, spec["subtitle"], font(15), W - 2 * PAD)
+    title_h += 20 * (len(slines) - 1)
     nlines = wrap(_md, spec["note"], font(13), W - 2 * PAD) if spec.get("note") else []
     note_h = 18 * max(len(nlines), 1) + 6 if nlines else 0
     fixed = PAD + title_h + group_h + HEAD_H + 56 + PAD + note_h
@@ -570,8 +614,8 @@ def render(name, spec=None):
     y = PAD
     for k, tl in enumerate(tlines):
         d.text((x0 * S, (y + 14 + 32 * k) * S), tl, font=font(26, True), fill=th["text"], anchor="lm")
-    d.text((x0 * S, (y + 46 + 32 * (len(tlines) - 1)) * S), spec["subtitle"],
-           font=font(15), fill=th["muted"], anchor="lm")
+    for k, sl in enumerate(slines):
+        d.text((x0 * S, (y + 46 + 32 * (len(tlines) - 1) + 20 * k) * S), sl, font=font(15), fill=th["muted"], anchor="lm")
     y += title_h
     # group header
     for g, (a, b) in groups or []:
@@ -648,7 +692,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--swiftui-skills" in sys.argv:
+        if "--uikit-vs-swiftui-skills" in sys.argv:
+            render(n, UKSW)
+        elif "--swiftui-skills" in sys.argv:
             render(n, SWSK)
         elif "--swiftui-3way" in sys.argv:
             render(n, SW3)
