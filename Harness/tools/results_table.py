@@ -9,6 +9,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round2-gap   (Round 2 distance from optimal: optimal-gap-round2.png and -dark.png)
        python3 Harness/tools/results_table.py --round2-best   (best UIKit vs best SwiftUI of Round 2: results-round2-best.png and -dark.png)
        python3 Harness/tools/results_table.py --swiftui-3way   (best SwiftUI build per row: Round 1, Apple skills, AvdLee skills; 16:9: results-swiftui-3way.png and -dark.png)
+       python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against AvdLee skills: results-swiftui-skills.png and -dark.png)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
 """
 import os
@@ -379,9 +380,10 @@ SW3_ROWS = [
 ]
 
 
-def sw3_rows():
-    rows, wins = [], [0, 0, 0]
-    for label, cells in SW3_ROWS:
+def sw3_rows(cols=(0, 1, 2)):
+    rows, wins = [], [0] * len(cols)
+    for label, allcells in SW3_ROWS:
+        cells = [allcells[c] for c in cols]
         best = min(c[0] for c in cells)
         idx = [i for i, c in enumerate(cells) if c[0] == best]
         for i in idx:
@@ -404,6 +406,21 @@ SW3 = dict(title="Best SwiftUI build per row: AvdLee's skills win 4 of 9, no ski
            legend=[("ok", "Best in row (ties share it)"), ("none", "Not the best")],
            note="* Round 1 Sol's stream test failed, so these cells are Opus only. iPhone 12, iOS 26, one pass per build. Cold start = app's own time to 40 rows.",
            footer="UIKit vs SwiftUI \u00b7 github.com/notolivaresf/uikit-vs-swiftui")
+
+# Same data, only the two Round 2 columns (Apple skills against AvdLee skills), rendered with --swiftui-skills. Wins recomputed, ties share.
+_SK_ROWS, SK_WINS = sw3_rows((1, 2))
+_SK_ONLY = sum(1 for _, c in _SK_ROWS if c[0][3] and not c[1][3])
+_SK_ONLY_AVD = sum(1 for _, c in _SK_ROWS if c[1][3] and not c[0][3])
+_SK_TIES = sum(1 for _, c in _SK_ROWS if c[0][3] and c[1][3])
+assert (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES) == (6, 2, 1), (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES)
+SWSK = dict(title="AvdLee's skills beat Apple's on %d of 9 rows, Apple's on %d, %d tie" % (_SK_ONLY_AVD, _SK_ONLY, _SK_TIES),
+            subtitle="Best SwiftUI build of each, per row. Small text names the model the value came from.",
+            builds=[("Round 2, Apple skills", "%d wins (with the tie)" % SK_WINS[0]), ("Round 2, AvdLee skills", "%d wins (with the tie)" % SK_WINS[1])],
+            rows=[(l, [(st, m.rstrip(" *"), sb, b) for st, m, sb, b in c]) for l, c in _SK_ROWS],
+            col_w=520, label_w=260, file="results-swiftui-skills", groups=None, aspect=16 / 9,
+            legend=SW3["legend"],
+            note="iPhone 12, iOS 26, one pass per build. Each column takes the better of its Opus and Sol builds. Cold start = app's own time to 40 rows.",
+            footer=SW3["footer"])
 
 # --- Round 2 distance from optimal (docs/optimal-gap-round2.md), rendered only with --round2-gap ---
 # Each row: label, kind, optimal value, source of the optimal, unit, and per build (L2_HEAD order) the measured value.
@@ -623,7 +640,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--swiftui-3way" in sys.argv:
+        if "--swiftui-skills" in sys.argv:
+            render(n, SWSK)
+        elif "--swiftui-3way" in sys.argv:
             render(n, SW3)
         elif "--round2-gap" in sys.argv:
             render(n, L2GAP)
