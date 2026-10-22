@@ -34,3 +34,9 @@ Most likely the guest itself (headless display, an app started by a raw launch n
 2. If the guest proof is still wanted: run only `MacTraceScenarios/testLaunchState` after `open`, and collect `log show --last 5m --predicate 'process == "testmanagerd" OR process == "launchservicesd"'` to see why the launch never gets a process id.
 
 The six builds do not need the passes to work: they can be launched now (`Harness/launch-build.sh <sol|opus> <stack>`, order in the plan). Only the passes need the unlocked Max.
+
+## 22 Oct, later: the Mac harness runs on the Max
+
+Root cause of "does not have a process ID": (1) stray running copies with bundle id campfire.bench (stand-in or build apps left running, one left suspended by Instruments) made XCUITest lose the app; `record-mac.sh` now stops them first (`stop_strays`, also inside `stop_app`). (2) `xctrace --launch <app bundle>` on macOS 27 with Xcode 26.4.1 starts two copies and traces the suspended one, so the launch period never closed, exit 54 and tests saw no app; the script now hands xctrace the executable inside the .app. Exit 54 with a saved trace is how this xctrace ends a launched process, so it counts as normal. The trace tests accept a launched app in the background, then activate it.
+Instruments 16 never closes the Mac "Launching" periods: the cold launch is read from the start of the "Foreground" period (no Foreground period still gives no number).
+Smoke pass on the stand-in (round dry5): suites and cold launch work, about 8.8 minutes. Still not measured: fling/stream/resize frames and hitches from Instruments (Frame Lifetimes and Animation Hitches record no frames on this toolchain; only Xcode 26.x is installed, no Xcode 27). Stand-in checks that fail by design: boosts, context menu, text selection; window resize reaches only 1 of 2 sizes.

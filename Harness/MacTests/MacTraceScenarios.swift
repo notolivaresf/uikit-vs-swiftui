@@ -6,8 +6,18 @@ import XCTest
 final class MacTraceScenarios: MacBenchCase {
     static let idle: TimeInterval = 3
 
+    /// The app xctrace launched is running but not frontmost (state runningBackground), and XCUITest needs it
+    /// active before it can see the window: take it over, then insist on the foreground.
+    private func assertRunning() {
+        let ok: [XCUIApplication.State] = [.runningForeground, .runningBackground]
+        XCTAssertTrue(ok.contains(app.state),
+                      "the app Instruments launched is not running (state \(app.state.rawValue))")
+        app.activate()
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15), "the app Instruments launched never came to the front")
+    }
+
     private func takeOver() {
-        XCTAssertEqual(app.state, .runningForeground, "the app Instruments launched is not running")
+        assertRunning()
         app.activate()
         waitForBar()
         reset()
@@ -22,7 +32,7 @@ final class MacTraceScenarios: MacBenchCase {
 
     /// The cold launch Instruments just made: the app's own time to the first 40 rows, before any click.
     func testLaunchState() {
-        XCTAssertEqual(app.state, .runningForeground, "the app Instruments launched is not running")
+        assertRunning()
         XCTAssertTrue(stateLabel.waitForExistence(timeout: 30), "state label missing")
         XCTAssertTrue(waitUntil(timeout: 30) { self.state().loaded >= 40 }, "fewer than 40 rows")
         let s = settled()

@@ -65,6 +65,21 @@ bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$bench_app/
 echo "$app_path" >"$out/logs/app-source.txt"
 [ "$bundle_id" = "campfire.bench" ] || fail "app id is $bundle_id, not campfire.bench"
 
+# Stops any other running app with the benchmark's bundle id (a build or stand-in left running, or one that
+# Instruments launched and left suspended). XCUITest finds the app under test by bundle id: with a stray
+# instance alive, every test fails with "Application 'campfire.bench' does not have a process ID".
+stop_strays() {
+  local line pid cmd app id
+  while read -r line; do
+    pid="${line%% *}"; cmd="${line#* }"
+    case "$cmd" in *.app/Contents/MacOS/*) ;; *) continue;; esac
+    app="${cmd%%.app/Contents/MacOS/*}.app"
+    id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist" 2>/dev/null)"
+    if [ "$id" = "campfire.bench" ]; then echo "stopping stray campfire.bench (pid $pid): $app" | tee -a "$out/logs/strays.txt"; kill -9 "$pid" 2>/dev/null; fi
+  done < <(ps -axo pid=,command=)
+}
+stop_strays
+
 # 0. Build the Mac tests once (ad-hoc signed, no team).
 if [ -n "$prebuilt" ]; then
   xctestrun="$prebuilt"
@@ -79,9 +94,12 @@ xct=(xcodebuild test-without-building -xctestrun "$xctestrun" -destination platf
 T=CampfireBenchMacUITests
 
 # Stops every running copy of the app under test (by its executable path inside this round's folder).
-stop_app() { pkill -f "$out/apps/.*/Contents/MacOS/$exe_name" 2>/dev/null; true; }
+stop_app() { pkill -9 -f "$out/apps/.*/Contents/MacOS/$exe_name" 2>/dev/null; stop_strays >/dev/null; true; }
 app_pid() { pgrep -f "$1/Contents/MacOS/$exe_name" | head -1; }
 
+# Instruments is given the executable inside the .app, not the .app: handed the bundle, xctrace on macOS 27
+# (Xcode 26.4) starts two copies, traces a suspended one that never runs and leaves the real one untraced
+# (the launch period never closes, exit 54, and UI tests see "no process ID").
 # xctrace with a hard wall-clock cap (same as record.sh): call only with `&`.
 capped_xctrace() {
   local cap="$1"; shift
@@ -98,6 +116,9 @@ wait_recording() {
 
 check_trace() {
   local name="$1" status="$2"
+  # Exit 54 is how this xctrace reports that it ended the process it launched (SIGKILL at the end of the
+  # recording); with the trace saved and "Recording completed" in the log it is a normal end.
+  if [ "$status" -eq 54 ] && [ -d "$out/$name.trace" ] && grep -q "Recording completed" "$out/logs/$name.xctrace.log"; then status=0; fi
   if [ "$status" -ne 0 ]; then fail "$name trace: xctrace exit $status (142 = killed after the cap; logs/$name.xctrace.log)"; fi
   if [ ! -d "$out/$name.trace" ]; then fail "$name trace: no trace file"; fi
 }
@@ -108,7 +129,7 @@ start_recording() {
   local xlog="$out/logs/$name.xctrace.log"
   local finalise="${FINALISE_OVERRIDE:-$FINALISE_S}"
   capped_xctrace $((limit + finalise)) record "$@" --time-limit "${limit}s" --no-prompt \
-    --output "$out/$name.trace" --launch -- "$target" -uvsBenchmark YES -ApplePersistenceIgnoreState YES >"$xlog" 2>&1 &
+    --output "$out/$name.trace" --launch -- "$target/Contents/MacOS/$exe_name" -uvsBenchmark YES -ApplePersistenceIgnoreState YES >"$xlog" 2>&1 &
   trace_pid=$!
   wait_recording "$xlog" "$trace_pid" && return 0
   kill -INT "$trace_pid" 2>/dev/null; wait "$trace_pid"

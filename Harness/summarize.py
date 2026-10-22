@@ -93,6 +93,8 @@ def launch_ms_mac(trace):
     "Launching" period of the App Launch template's life-cycle-period table ends (macOS has no "Foreground -
     Active" period). None while that period is still open (nothing drew: a locked screen)."""
     best = None
+    open_launch = False
+    foreground_start = None
     for row in table(trace, "life-cycle-period"):
         start = dur = None
         name = ""
@@ -108,9 +110,17 @@ def launch_ms_mac(trace):
             # a launch period still open at the end of the recording means the launch never finished:
             # no number, even if an earlier period closed (Codex review, 21 Oct)
             if dur >= 2**62:
-                return None
+                open_launch = True
+                continue
             end = (start + dur) / 1e6
             best = end if best is None else max(best, end)
+        elif name == "Foreground" and start is not None:
+            foreground_start = start / 1e6 if foreground_start is None else min(foreground_start, start / 1e6)
+    if open_launch:
+        # Instruments 16 (Xcode 26.4) on macOS 27 never closes the "Launching" periods, even for an app that drew
+        # and took the front. The app's "Foreground" period then starts when the launch is done: use that start.
+        # No Foreground period at all (nothing came to the front: a locked screen) gives no number.
+        return round(foreground_start, 1) if foreground_start is not None else None
     return round(best, 1) if best is not None else None
 
 
