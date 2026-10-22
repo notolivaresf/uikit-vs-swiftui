@@ -55,13 +55,26 @@ mkdir -p "$out/logs" "$out/apps"
 derived="${derived_dir:-$repo/build/MacBenchDD}"
 failed=0
 fail() { echo "FAILED: $1" | tee -a "$out/logs/failures.txt" >&2; failed=1; }
-[ $fast -eq 1 ] && LAUNCH_SAMPLES=1 && export TEST_RUNNER_UVS_FAST=1
+[ $fast -eq 1 ] && LAUNCH_SAMPLES="${UVS_LAUNCH_SAMPLES:-1}" && export TEST_RUNNER_UVS_FAST=1
 
 # The measured copy: the suites and scenario traces run this one; each cold launch gets its own copy.
 cp -R "$app_path" "$out/apps/bench.app" || { fail "copy the app"; exit 1; }
 bench_app="$out/apps/bench.app"
+LSREG=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+# xctrace --launch given the executable of a copy starts, when other apps with the same executable name exist
+# (every build's Debug and Release products), one of those instead and traces a suspended wrong app (found
+# 22 Oct on Xcode 27.1: it picked a Debug build of another lane). So each measured copy gets its own
+# executable name ("CampfireM<tag>") and is signed again ad hoc; the code is untouched. XCUITest finds the app
+# by its URL, so the tests still work.
+retag() {
+  local exe; exe="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$1/Contents/Info.plist")"
+  mv "$1/Contents/MacOS/$exe" "$1/Contents/MacOS/CampfireM$2" \
+    && /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable CampfireM$2" "$1/Contents/Info.plist" \
+    && codesign --force --deep -s - "$1" >>"$out/logs/retag.log" 2>&1
+}
+retag "$bench_app" "$$" || { fail "retag the app"; exit 1; }
 exe_name="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$bench_app/Contents/Info.plist")"
-bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$bench_app/Contents/Info.plist")"
+bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app_path/Contents/Info.plist")"
 echo "$app_path" >"$out/logs/app-source.txt"
 [ "$bundle_id" = "campfire.bench" ] || fail "app id is $bundle_id, not campfire.bench"
 
@@ -172,8 +185,11 @@ if [ $traces -eq 1 ]; then
     stop_app
     mkdir -p "$out/apps/launch.$n"
     cp -R "$app_path" "$out/apps/launch.$n/Campfire.app" || fail "copy the app for launch $n"
+    # Register the copy with Launch Services first: xctrace resolves the executable by bundle id, and for an
+    # unregistered copy it starts some other build with the same id (e.g. a Debug build) instead.
+    retag "$out/apps/launch.$n/Campfire.app" "$$" || fail "retag the app for launch $n"
     sleep 30
-    if FINALISE_OVERRIDE=$LAUNCH_FINALISE_S start_recording "launch.$n" 20 "$out/apps/launch.$n/Campfire.app" --template "App Launch"; then
+    if FINALISE_OVERRIDE=$LAUNCH_FINALISE_S start_recording "launch.$n" 30 "$out/apps/launch.$n/Campfire.app" --template "App Launch"; then
       sleep 10
       TEST_RUNNER_UVS_APP_PATH="$out/apps/launch.$n/Campfire.app" "${xct[@]}" -only-testing:$T/MacTraceScenarios/testLaunchState \
         -resultBundlePath "$out/logs/launch.$n.xcresult" >"$out/logs/launch.$n.test.log" 2>&1 \
