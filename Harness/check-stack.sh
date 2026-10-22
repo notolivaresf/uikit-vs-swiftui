@@ -44,10 +44,24 @@ case "$SIDE" in
     if git status --porcelain -- CampfireKit | grep -q .; then out="$out"$'\n'"CampfireKit was modified (not allowed)"; fi
     ;;
   swiftui-mac)
-    # Like the iPhone rule: no AppKit import, no wrapped or hosted AppKit views, no reaching into the AppKit
-    # objects underneath. Plain data types that SwiftUI itself hands over (NSImage, NSColor, NSFont, the
-    # pasteboard) stay allowed, as UIImage and the pasteboard were on the iPhone.
-    out="$(hits '(^|[^A-Za-z])import[[:space:]]+(AppKit|Cocoa)|NSViewRepresentable|NSViewControllerRepresentable|NSHosting[A-Za-z]*|NSApplicationDelegateAdaptor|NSClassFromString|objc_getClass|objc_lookUpClass|dlopen|dlsym|(^|[^A-Za-z])NSApp([^A-Za-z]|$)|(^|[^A-Za-z])NS(View|ViewController|Window|WindowController|Event|Menu|MenuItem|TextView|TextField|TableView|OutlineView|CollectionView|ScrollView|ClipView|Application|Responder|StackView|Button|Screen|Control|Cell|LayoutManager|TextStorage|TextContainer|Animation|Gesture|TrackingArea)([^A-Za-z]|$)' '\.swift$')" ;;
+    # Like the iPhone rule: no wrapped or hosted AppKit views, no reaching into the AppKit objects underneath.
+    # Plain data types that SwiftUI itself hands over (NSImage, NSColor, NSFont, the pasteboard) stay allowed, as
+    # UIImage and the pasteboard were on the iPhone, and so does the `import AppKit` that names them, but only
+    # when every AppKit name the app sources use is one of those (checked below). Files of the agent's own test
+    # targets (a folder ending in Tests) don't count for this rule; the binary check covers the app itself.
+    FILES="$(printf '%s\n' "$FILES" | grep -vE '(^|/)[^/]*Tests/' || true)"
+    out="$(hits 'NSViewRepresentable|NSViewControllerRepresentable|NSHosting[A-Za-z]*|NSApplicationDelegateAdaptor|NSClassFromString|objc_getClass|objc_lookUpClass|dlopen|dlsym|(^|[^A-Za-z])NSApp([^A-Za-z]|$)|(^|[^A-Za-z])NS(View|ViewController|Window|WindowController|Event|Menu|MenuItem|TextView|TextField|TableView|OutlineView|CollectionView|ScrollView|ClipView|Application|Responder|StackView|Button|Screen|Control|Cell|LayoutManager|TextStorage|TextContainer|Animation|Gesture|TrackingArea)([^A-Za-z]|$)' '\.swift$')"
+    imports="$(hits '(^|[^A-Za-z])import[[:space:]]+(AppKit|Cocoa)' '\.swift$')"
+    if [ -n "$imports" ]; then
+      # Every NS name in the app sources must be Foundation's (looked up in the SDK headers) or an allowed data type.
+      sdk="$(xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)"
+      fnd="$(grep -rhoE '\bNS[A-Z][A-Za-z0-9]*' "$sdk/System/Library/Frameworks/Foundation.framework/Versions/Current/Headers" 2>/dev/null | sort -u || true)"
+      used="$(printf '%s\n' "$FILES" | grep -E '\.swift$' | tr '\n' '\0' | xargs -0 grep -ohE '(^|[^A-Za-z0-9_])NS[A-Z][A-Za-z0-9]*' 2>/dev/null | grep -oE 'NS[A-Z][A-Za-z0-9]*' | sort -u || true)"
+      other="$(printf '%s\n' "$used" | grep -vE '^NS(Image|Color|Font|Pasteboard|PasteboardType[A-Za-z]*)$' | grep -vxF -f <(printf '%s\n' "$fnd") || true)"
+      if [ -z "$fnd" ]; then out="$out"$'\n'"import AppKit found but the Foundation headers could not be read to check the names"
+      elif [ -n "$other" ]; then out="$out"$'\n'"$imports"$'\n'"AppKit names beyond NSImage/NSColor/NSFont/NSPasteboard: "$(printf '%s' "$other" | tr '\n' ' ')
+      else appkit_ok="$(printf '%s\n' "$imports" | cut -d: -f1 | sort -u | tr '\n' ' ')"; fi
+    fi ;;
 esac
 # Round 4: CampfireKit as we gave it (against the build's first commit and the working tree), any stack.
 case "$SIDE" in appkit-swift|swiftui-mac)
@@ -74,4 +88,4 @@ if [ -n "$APP" ]; then
 fi
 out="$(printf '%s' "$out" | sed '/^$/d')"
 if [ -n "$out" ]; then echo "Stack rule ($SIDE): FAIL"; echo "$out"; exit 1; fi
-echo "Stack rule ($SIDE): ok"
+if [ -n "${appkit_ok:-}" ]; then echo "Stack rule ($SIDE): ok (AppKit import for allowed data types only: ${appkit_ok% })"; else echo "Stack rule ($SIDE): ok"; fi
