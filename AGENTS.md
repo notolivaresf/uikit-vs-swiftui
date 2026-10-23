@@ -29,4 +29,5 @@ All experiment source is in `builds/` (source, Xcode project and `project.yml`, 
 - Mac builds (AppKit and SwiftUI for Mac, round 4 onward): `builds/mac/round<N>-<stack>-<model>/`. Never put a Mac build in the iPhone list.
 - New builds are copied with `rsync -a` excluding `.git`, `.agents`, `.claude`, `.bench*`, `build/`, `DerivedData`, `.build`, `xcuserdata`, `*.xcresult`, `*.trace`, `*.log`, `runs/`. Add a row to `builds/README.md`.
 - Never copy a Codex or Claude `-config` folder (it holds login files). Transcripts are not kept.
+- `runs/mac-screens-round4/`: real in-app renders of the six built Round 4 Mac apps (not the prompt's reference images in `builds/*/screenshots`).
 - Recordings, traces, logs and transcripts stay local (`.gitignore` covers them under `runs/`). Before committing, scan for home paths, emails, team ids, signing identities, keys.
