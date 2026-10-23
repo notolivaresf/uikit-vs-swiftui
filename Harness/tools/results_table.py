@@ -14,6 +14,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
        python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui   (Round 4, Mac: two columns: best of 4 AppKit builds vs best of 2 SwiftUI builds: results-round4-appkit-vs-swiftui.png and -dark.png)
        python3 Harness/tools/results_table.py --round4-all   (Round 4, Mac: all six builds: results-round4-all.png and -dark.png)
+       python3 Harness/tools/results_table.py --best-rounds   (best build per arm in Rounds 1, 2 and 3, six columns: results-best-rounds.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -677,6 +678,78 @@ R4AK = dict(title="AppKit beats SwiftUI on %d of %d rows, SwiftUI on %d, %d tie"
             rows=_R4A_ROWS, col_w=330, label_w=240, file="results-round4-appkit-vs-swiftui", row_h=58, groups=None,
             legend=[("ok", "Best in row (ties share it)"), ("none", "Not the best")], note=R4_NOTE, footer=R4_FOOT)
 
+# --- Best build of each arm in Rounds 1, 2 and 3, rendered with --best-rounds ---
+# One whole build per cell (no mixing rows). "Best" = most checks passed of 13, then least agent output tokens (the one cost figure every
+# run has; Claude's dollar figure is shown where it exists, Codex reports none), then fling fps. The pick is computed below from BR_CANDIDATES.
+# Sources: docs/results-round1.md, results-round2.md, results-round3.md, results-l2-avdlee.md (Round 2 SwiftUI with the third-party skills: 11 of 13 and more agent tokens than the Apple-skills Sol build, so never the pick; left out); agent tokens and cost from each run's transcript final line (runs/<build>/transcript.jsonl, not committed).
+# Candidate: (round, arm, build, model, checks, out_tokens, usd or None, wall s, fling fps or None, hitches, cold ms, peak MB or None)
+BR_CANDIDATES = [
+    (1, "UIKit", "round1-uikit-swift-opus", "Opus", 12, 143314, 7.57, 2633, 58.5, 2, 172, 43.9),
+    (1, "UIKit", "round1-uikit-swift-sol", "Sol", 13, 69263, None, 1200, 58.3, 2, 201, 39.7),
+    (1, "SwiftUI", "round1-swiftui-opus", "Opus", 10, 258350, 20.85, 8070, 57.9, 24, 174, 69.7),
+    (1, "SwiftUI", "round1-swiftui-sol", "Sol", 10, 101293, None, 1972, 58.3, 2, 354, None),
+    (2, "UIKit", "round2-uikit-swift-opus", "Opus", 13, 169371, 9.31, 2231, 58.0, 2, 252, 107.9),
+    (2, "UIKit", "round2-uikit-swift-sol", "Sol", 12, 61759, None, 1233, 58.2, 0, 196, 44.5),
+    (2, "UIKit", "round2-uikit-objc-opus", "Opus", 12, 196322, 10.91, 2884, 58.7, 2, 158, 52.0),
+    (2, "UIKit", "round2-uikit-objc-sol", "Sol", 12, 76591, None, 1297, 58.3, 1, 198, 35.0),
+    (2, "SwiftUI", "round2-swiftui-opus", "Opus", 11, 222327, 18.93, 4301, 57.9, 5, 326, 215.4),
+    (2, "SwiftUI", "round2-swiftui-sol", "Sol", 11, 57387, None, 1209, 58.0, 0, 314, 103.4),
+    (3, "UIKit", "round3-uikit-swift-opus", "Opus", 13, 152236, 10.70, 7572, None, None, 175, 53.9),
+    (3, "UIKit", "round3-uikit-swift-sol", "Sol", 13, 215352, None, 6192, None, None, 130, 57.9),
+    (3, "UIKit", "round3-uikit-objc-opus", "Opus", 13, 176661, 12.56, 6060, None, None, 135, 52.8),
+    (3, "UIKit", "round3-uikit-objc-sol", "Sol", 13, 110020, None, 4396, None, None, 161, 44.4),
+    (3, "SwiftUI", "round3-swiftui-opus", "Opus", 13, 178444, 11.59, 6628, None, None, 181, 127.4),
+    (3, "SwiftUI", "round3-swiftui-sol", "Sol", 12, 284766, None, 10273, None, None, 278, 77.2),
+]
+
+
+def br_pick(rnd, arm):
+    c = [x for x in BR_CANDIDATES if x[0] == rnd and x[1] == arm]
+    return min(c, key=lambda x: (-x[4], x[5], -(x[8] or 0)))
+
+
+def br_rows():
+    picks = [br_pick(r, a) for r in (1, 2, 3) for a in ("UIKit", "SwiftUI")]
+    # row: (label, per pick (key, main, sub); lower key wins; key None = no ranking / not measured)
+    def row(label, fn, pair_rank=True):
+        cells = [fn(p) for p in picks]
+        out = []
+        for g in range(3):
+            pair = cells[2 * g:2 * g + 2]
+            ks = [c[0] for c in pair]
+            for i, c in enumerate(pair):
+                if c[0] is None and c[1] == "Not measured":
+                    out.append(("warn", c[1], c[2], False))
+                elif not pair_rank or None in ks:
+                    out.append(("none", c[1], c[2], False))
+                elif ks[0] == ks[1]:
+                    out.append(("none", c[1], ("tie · " + c[2]) if c[2] else "tie", False))
+                else:
+                    win = c[0] == min(ks)
+                    out.append(("ok" if win else "none", c[1], c[2], win))
+        return (label, out)
+    NMc = (None, "Not measured", "")
+    rows = [
+        row("Build", lambda p: (None, p[3], p[2].replace("level2-", "").replace("round%d-" % p[0], "")), pair_rank=False),
+        row("Checks passed", lambda p: (-p[4], "%d of 13" % p[4], "")),
+        row("Agent output tokens", lambda p: (p[5], "{:,}".format(p[5]), ("$%.2f" % p[6]) if p[6] else "no dollar figure (Codex)")),
+        row("Agent wall time", lambda p: (p[7], "%d s" % p[7], "%d min" % round(p[7] / 60))),
+        row("Fling", lambda p: (-p[8], "%.1f fps" % p[8], "%d hitch%s" % (p[9], "" if p[9] == 1 else "es")) if p[8] else NMc),
+        row("First 40 rows (cold)", lambda p: (p[10], "%d ms" % p[10], "")),
+        row("Peak memory", lambda p: (p[11], "%.1f MB" % p[11], "") if p[11] else NMc),
+    ]
+    return rows
+
+
+BEST_ROUNDS = dict(title="Best of Round 1, Round 2 and Round 3",
+                   subtitle="The best whole build of each stack in each round: most checks passed, then least agent cost, then fling fps. Green marks the better of the pair.",
+                   builds=[("UIKit", ""), ("SwiftUI", "")] * 3, rows=br_rows(), col_w=190, label_w=200, file="results-best-rounds", row_h=58,
+                   groups=[("Round 1 · no skills", (0, 1)), ("Round 2 · with skills", (2, 3)), ("Round 3 · 3 h of fixes", (4, 5))],
+                   legend=[("ok", "Better of the pair"), ("none", "Other, or tie"), ("warn", "Not measured")],
+                   note="Rounds 1 and 2: iPhone 12. Round 3: iPhone 17 simulator, so fling is not measured and its times are not comparable. Cost is the output tokens "
+                        "of the agent run (Round 3: the fix run only); Codex runs report no dollar figure. Each round has one run per build.",
+                   footer="UIKit vs SwiftUI · github.com/notolivaresf/uikit-vs-swiftui")
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -812,7 +885,9 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--round4-all" in sys.argv:
+        if "--best-rounds" in sys.argv:
+            render(n, BEST_ROUNDS)
+        elif "--round4-all" in sys.argv:
             render(n, R4ALL)
         elif "--round4-appkit-vs-swiftui" in sys.argv:
             render(n, R4AK)
