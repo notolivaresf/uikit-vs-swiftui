@@ -18,6 +18,7 @@ Every shareable results image is made with `Harness/tools/results_table.py`, nev
 | `results-round4-appkit-vs-swiftui` (Mac, two columns: best of the four AppKit builds vs best of the two SwiftUI builds) | `python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui` |
 | `results-round4-all` (Mac: all six builds) | `python3 Harness/tools/results_table.py --round4-all` |
 | `results-best-rounds` (best whole build per arm in Rounds 1, 2 and 3: checks, then agent tokens, then fling fps) | `python3 Harness/tools/results_table.py --best-rounds` |
+| `results-best-rounds-uikit` (UIKit only, three columns: best UIKit of Rounds 1, 2, 3) | `python3 Harness/tools/results_table.py --best-rounds --uikit-only` |
 
 For a new round or comparison, add a mode to the script (data, a spec dict, a flag, a line in its docstring) and a row in this table, then look at both PNGs before committing.
 

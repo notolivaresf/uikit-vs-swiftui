@@ -15,6 +15,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui   (Round 4, Mac: two columns: best of 4 AppKit builds vs best of 2 SwiftUI builds: results-round4-appkit-vs-swiftui.png and -dark.png)
        python3 Harness/tools/results_table.py --round4-all   (Round 4, Mac: all six builds: results-round4-all.png and -dark.png)
        python3 Harness/tools/results_table.py --best-rounds   (best build per arm in Rounds 1, 2 and 3, six columns: results-best-rounds.png and -dark.png)
+       python3 Harness/tools/results_table.py --best-rounds --uikit-only   (same, UIKit only, three columns: results-best-rounds-uikit.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -708,37 +709,42 @@ def br_pick(rnd, arm):
     return min(c, key=lambda x: (-x[4], x[5], -(x[8] or 0)))
 
 
-def br_rows():
-    picks = [br_pick(r, a) for r in (1, 2, 3) for a in ("UIKit", "SwiftUI")]
-    # row: (label, per pick (key, main, sub); lower key wins; key None = no ranking / not measured)
-    def row(label, fn, pair_rank=True):
-        cells = [fn(p) for p in picks]
-        out = []
-        for g in range(3):
-            pair = cells[2 * g:2 * g + 2]
-            ks = [c[0] for c in pair]
-            for i, c in enumerate(pair):
-                if c[0] is None and c[1] == "Not measured":
-                    out.append(("warn", c[1], c[2], False))
-                elif not pair_rank or None in ks:
-                    out.append(("none", c[1], c[2], False))
-                elif ks[0] == ks[1]:
-                    out.append(("none", c[1], ("tie · " + c[2]) if c[2] else "tie", False))
-                else:
-                    win = c[0] == min(ks)
-                    out.append(("ok" if win else "none", c[1], c[2], win))
-        return (label, out)
+def br_rows(uikit_only=False):
+    """Six columns (UIKit and SwiftUI per round) ranked within each round's pair, or with uikit_only three UIKit columns ranked across
+    rounds. Rows that are not comparable with the simulator round (times, fling, memory) rank only Rounds 1 and 2."""
+    arms = ("UIKit",) if uikit_only else ("UIKit", "SwiftUI")
+    picks = [br_pick(r, a) for r in (1, 2, 3) for a in arms]
+    n = len(arms)
     NMc = (None, "Not measured", "")
-    rows = [
+
+    def row(label, fn, pair_rank=True, sim_ok=True):
+        cells = [fn(p) for p in picks]
+        groups = [list(range(3))] if uikit_only else [[2 * g, 2 * g + 1] for g in range(3)]
+        out = [None] * len(cells)
+        for grp in groups:
+            rankable = [i for i in grp if cells[i][0] is not None and pair_rank and (sim_ok or not uikit_only or picks[i][0] != 3)]
+            ks = [cells[i][0] for i in rankable]
+            for i in grp:
+                key, main, sub = cells[i]
+                if key is None and main == "Not measured":
+                    out[i] = ("warn", main, sub, False)
+                elif i not in rankable or len(rankable) < 2:
+                    out[i] = ("none", main, sub, False)
+                elif len(set(ks)) == 1:
+                    out[i] = ("none", main, ("tie \u00b7 " + sub) if sub else "tie", False)
+                else:
+                    win = key == min(ks)
+                    out[i] = ("ok" if win else "none", main, sub, win)
+        return (label, out)
+    return [
         row("Build", lambda p: (None, p[3], p[2].replace("level2-", "").replace("round%d-" % p[0], "")), pair_rank=False),
         row("Checks passed", lambda p: (-p[4], "%d of 13" % p[4], "")),
         row("Agent output tokens", lambda p: (p[5], "{:,}".format(p[5]), ("$%.2f" % p[6]) if p[6] else "no dollar figure (Codex)")),
         row("Agent wall time", lambda p: (p[7], "%d s" % p[7], "%d min" % round(p[7] / 60))),
         row("Fling", lambda p: (-p[8], "%.1f fps" % p[8], "%d hitch%s" % (p[9], "" if p[9] == 1 else "es")) if p[8] else NMc),
-        row("First 40 rows (cold)", lambda p: (p[10], "%d ms" % p[10], "")),
-        row("Peak memory", lambda p: (p[11], "%.1f MB" % p[11], "") if p[11] else NMc),
+        row("First 40 rows (cold)", lambda p: (p[10], "%d ms" % p[10], ""), sim_ok=False),
+        row("Peak memory", lambda p: (p[11], "%.1f MB" % p[11], "") if p[11] else NMc, sim_ok=False),
     ]
-    return rows
 
 
 BEST_ROUNDS = dict(title="Best of Round 1, Round 2 and Round 3",
@@ -749,6 +755,14 @@ BEST_ROUNDS = dict(title="Best of Round 1, Round 2 and Round 3",
                    note="Rounds 1 and 2: iPhone 12. Round 3: iPhone 17 simulator, so fling is not measured and its times are not comparable. Cost is the output tokens "
                         "of the agent run (Round 3: the fix run only); Codex runs report no dollar figure. Each round has one run per build.",
                    footer="UIKit vs SwiftUI · github.com/notolivaresf/uikit-vs-swiftui")
+
+BEST_ROUNDS_UIKIT = dict(BEST_ROUNDS, title="Best UIKit of Round 1, Round 2 and Round 3",
+                         subtitle="The best whole UIKit build of each round: most checks passed, then least agent cost, then fling fps. Green marks the best of the three where the rounds compare.",
+                         builds=[("Round 1", "no skills"), ("Round 2", "with skills"), ("Round 3", "3 h of fixes")], rows=br_rows(True), groups=None,
+                         col_w=300, file="results-best-rounds-uikit",
+                         legend=[("ok", "Best of the three"), ("none", "Other, tie, or not comparable"), ("warn", "Not measured")],
+                         note="Rounds 1 and 2: iPhone 12. Round 3: iPhone 17 simulator, so fling is not measured and its times and memory are not comparable and are not ranked. "
+                              "Cost is the output tokens of the agent run (Round 3: the fix run only); Codex runs report no dollar figure. Each round has one run per build.")
 
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
@@ -886,7 +900,7 @@ if __name__ == "__main__":
     import sys
     for n in THEMES:
         if "--best-rounds" in sys.argv:
-            render(n, BEST_ROUNDS)
+            render(n, BEST_ROUNDS_UIKIT if "--uikit-only" in sys.argv else BEST_ROUNDS)
         elif "--round4-all" in sys.argv:
             render(n, R4ALL)
         elif "--round4-appkit-vs-swiftui" in sys.argv:
