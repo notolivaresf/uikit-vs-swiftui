@@ -1,0 +1,375 @@
+{
+  "source": "Measured from ONCE Campfire (MIT, 37signals, LLC) rendered at 393x852 CSS px, device scale 3, mobile UA, UTC, Chrome headless. Units: CSS px = iOS pt (1:1). Campfire sizes are rem/ch based; values here are the computed px at a 16 px root.",
+  "viewport": {
+    "width": 393,
+    "height": 852,
+    "scale": 3
+  },
+  "fonts": {
+    "family": "-apple-system (SF Pro on iOS); emoji Apple Color Emoji",
+    "mono": "ui-monospace / SF Mono / Menlo",
+    "body": {
+      "size": 16,
+      "weight": 400,
+      "lineHeight": 22.4
+    },
+    "author": {
+      "size": 12.8,
+      "weight": 700,
+      "lineHeight": 19.2,
+      "note": "span is 400, the inner strong is bold"
+    },
+    "timestamp": {
+      "size": 12.8,
+      "weight": 400,
+      "lineHeight": 19.2,
+      "opacity": 0.5,
+      "format": "h:mm AM/PM in Campfire; spec says 24 h"
+    },
+    "daySeparator": {
+      "size": 12.8,
+      "weight": 600,
+      "lineHeight": 17.92,
+      "uppercase": true,
+      "format": "OCTOBER 16, 2026"
+    },
+    "emojiOnly": {
+      "size": 38.4,
+      "lineHeight": 53.76,
+      "note": "spec says 40"
+    },
+    "code": {
+      "size": 12.8,
+      "lineHeight": 17.92
+    },
+    "mention": {
+      "size": 16,
+      "weight": 600
+    },
+    "boostEmoji": {
+      "size": "about 17.6 (1.1em of 16)"
+    }
+  },
+  "spacing": {
+    "screenPaddingX": 14.01,
+    "avatar": {
+      "size": 35.27,
+      "radius": "50%",
+      "note": "spec says 36 pt"
+    },
+    "columnGap": 6.65,
+    "rowGapInsideRow": 1.6,
+    "gapBetweenRows": 21.28,
+    "note": "rows sit 21.28 apart (grid row gap); a threaded row has margin-top -22.48, so its bubble starts about 1.2 above the previous row bottom edge, which is the 1.6 bubble bottom margin: visually about 0 gap",
+    "bubble": {
+      "radius": 10.56,
+      "paddingY": 10.56,
+      "paddingX": 15.12,
+      "bottomMargin": 1.6,
+      "textColumnLeftOfAvatar": 40.8,
+      "bubbleLeft": 40.8,
+      "bubbleRightInset": 14.0,
+      "maxWidth": "fills the row to the right padding; fit-to-content for short text"
+    },
+    "metaOffset": {
+      "nameX": 55.91,
+      "nameTop": 12
+    },
+    "mineBubble": {
+      "avatarOnRight": true,
+      "bubbleRightEdge": 352.2,
+      "avatarX": 343.73,
+      "headerReversed": true,
+      "maxWidth": 287.97
+    },
+    "daySeparator": {
+      "pillPaddingY": 8.5,
+      "pillPaddingX": "2.33ch (about 23.5)",
+      "pillRadius": "fully round",
+      "lineThickness": 2,
+      "marginY": 17.02
+    },
+    "image": {
+      "maxWidth": 300,
+      "note": "Campfire fills the bubble (up to 300 wide here); spec caps at 240",
+      "bubblePadding": 0,
+      "inBubbleRadius": 10.56
+    },
+    "code": {
+      "boxRadius": 6.4,
+      "padding": 12.8,
+      "bubbleBackground": "message bg, code box is bg color"
+    },
+    "boost": {
+      "radius": "fully round",
+      "height": 28.64,
+      "paddingLeft": 1.6,
+      "paddingRight": 3.2,
+      "border": 1,
+      "marginTop": 4,
+      "avatar": "about 22 pt circle with initial",
+      "gap": "about 8 between pills"
+    },
+    "emojiOnly": {
+      "bubble": "none: transparent, no radius",
+      "paddingLeft": 15.12
+    },
+    "file": {
+      "bubble": "standard bubble with file icon, name 16 pt, download and share icons",
+      "height": 77
+    },
+    "threadedRowMarginTop": -22.48
+  },
+  "colors": {
+    "light": {
+      "background": "#FFFFFF",
+      "text": "#000000",
+      "bubble": "#F3F2EE",
+      "border": "#F3F2EE",
+      "borderDark": "#E5E4E1",
+      "borderDarker": "#AFAEAA",
+      "selected": "#E1F0FF",
+      "selectedDark": "#9BC1F1",
+      "link": "#0066EF",
+      "negative": "#BE1600",
+      "boostPillBackground": "#FFFFFF",
+      "codeBoxBackground": "#FFFFFF",
+      "codeKeyword": "#D73A49",
+      "codeEntity": "#6F42C1",
+      "codeConstant": "#005CC5",
+      "codeString": "#032F62",
+      "codeComment": "#6A737D",
+      "mentionedBubble": "rgba(190,22,0,0.10) (Campfire red at 10%)"
+    },
+    "dark": {
+      "background": "#000000",
+      "text": "#FFFFFF",
+      "bubble": "#222222",
+      "border": "#222222",
+      "borderDark": "#2E2E2E",
+      "borderDarker": "#555555",
+      "selected": "#112B42",
+      "selectedDark": "#2C5172",
+      "link": "#43ABFF",
+      "negative": "#FF7563",
+      "boostPillBackground": "#000000",
+      "codeBoxBackground": "#000000",
+      "codeKeyword": "#FF7B72",
+      "codeEntity": "#D2A8FF",
+      "codeConstant": "#79C0FF",
+      "codeString": "#79C0FF",
+      "codeComment": "#8B949E",
+      "mentionedBubble": "rgba(255,117,99,0.20) (Campfire red at 20%)"
+    },
+    "avatarPalette": [
+      "#AF2E1B",
+      "#CC6324",
+      "#3B4B59",
+      "#BFA07A",
+      "#ED8008",
+      "#ED3F1C",
+      "#BF1B1B",
+      "#736B1E",
+      "#D07B53",
+      "#736356",
+      "#AD1D1D",
+      "#BF7C2A",
+      "#C09C6F",
+      "#698F9C",
+      "#7C956B",
+      "#5D618F",
+      "#3B3633",
+      "#67695E"
+    ],
+    "avatarNote": "Campfire picks crc32(user id) % 18; the avatar shows the white bold initial, about 16 px / 600",
+    "specTintsNote": "Campfire's own look is used: grey bubble for my own messages, right-aligned, and the red mention tint (10% light, 20% dark). No blue and no yellow."
+  },
+  "rows": [
+    {
+      "name": "day-separator",
+      "screenshot": "reference/screens/row-day-separator.png",
+      "author": "Ana",
+      "timeUTC": "09:00",
+      "text": "Morning everyone, kicking off the week.",
+      "rowHeight": 137.48,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 70.4,
+        "width": 318.83,
+        "height": 65.48
+      },
+      "dayFirst": true
+    },
+    {
+      "name": "threaded",
+      "screenshot": "reference/screens/row-threaded.png",
+      "author": "Ana",
+      "timeUTC": "09:02",
+      "text": "First thing: the new designs are in the shared folder.",
+      "rowHeight": 91.06,
+      "rowTopMargin": "-22.48px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 338.2,
+        "height": 87.88
+      },
+      "threaded": true
+    },
+    {
+      "name": "long-text",
+      "screenshot": "reference/screens/row-long-text.png",
+      "author": "Ben",
+      "timeUTC": "09:10",
+      "text": "Thanks Ana. I read through them twice and I have a lot of th",
+      "rowHeight": 225.41,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 338.2,
+        "height": 222.22
+      }
+    },
+    {
+      "name": "mine",
+      "screenshot": "reference/screens/row-mine.png",
+      "author": "Fernando",
+      "timeUTC": "09:12",
+      "text": "Sounds good, let's do it after lunch.",
+      "rowHeight": 68.67,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 64.23,
+        "yFromRowTop": 1.59,
+        "width": 287.97,
+        "height": 65.48
+      },
+      "mine": true
+    },
+    {
+      "name": "mention",
+      "screenshot": "reference/screens/row-mention.png",
+      "author": "Cleo",
+      "timeUTC": "09:20",
+      "text": "Fernando can you review the PR before then?",
+      "rowHeight": 91.06,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 338.2,
+        "height": 87.88
+      },
+      "mentionsMe": true
+    },
+    {
+      "name": "image-boosts",
+      "screenshot": "reference/screens/row-image-boosts.png",
+      "author": "Dan",
+      "timeUTC": "10:00",
+      "text": "",
+      "rowHeight": 359.41,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 70.41,
+        "width": 300,
+        "height": 283.73
+      },
+      "dayFirst": true,
+      "image": {
+        "width": 600,
+        "height": 400
+      },
+      "boosts": [
+        [
+          "Ana",
+          "👍"
+        ],
+        [
+          "Ben",
+          "🔥"
+        ],
+        [
+          "Cleo",
+          "❤️"
+        ]
+      ]
+    },
+    {
+      "name": "code",
+      "screenshot": "reference/screens/row-code.png",
+      "author": "Dan",
+      "timeUTC": "10:01",
+      "text": "def greet(name)\n  puts \"Hello, #{name}!\"\nend",
+      "rowHeight": 127.59,
+      "rowTopMargin": "-22.48px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 242.8,
+        "height": 124.41
+      },
+      "threaded": true,
+      "code": "def greet(name)\n  puts \"Hello, #{name}!\"\nend"
+    },
+    {
+      "name": "file",
+      "screenshot": "reference/screens/row-file.png",
+      "author": "Eve",
+      "timeUTC": "10:05",
+      "text": "Quarterly-report.pdf\nDownload Quarterly-report.pdf\nShare Qua",
+      "rowHeight": 80.19,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 283.11,
+        "height": 77
+      },
+      "file": {
+        "name": "Quarterly-report.pdf",
+        "size": "245 KB"
+      }
+    },
+    {
+      "name": "emoji-only",
+      "screenshot": "reference/screens/row-emoji-only.png",
+      "author": "Frank",
+      "timeUTC": "10:10",
+      "text": "🎉🔥",
+      "rowHeight": 98.45,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 168.53,
+        "height": 96.86
+      },
+      "emojiOnly": true
+    },
+    {
+      "name": "long-boosts",
+      "screenshot": "reference/screens/row-long-boosts.png",
+      "author": "Eve",
+      "timeUTC": "10:14",
+      "text": "One more thing worth saying: the release notes are drafted a",
+      "rowHeight": 190.88,
+      "rowTopMargin": "0px",
+      "bubble": {
+        "x": 40.8,
+        "yFromRowTop": 1.59,
+        "width": 338.2,
+        "height": 187.69
+      },
+      "boosts": [
+        [
+          "Fernando",
+          "Agreed!"
+        ]
+      ]
+    }
+  ]
+}

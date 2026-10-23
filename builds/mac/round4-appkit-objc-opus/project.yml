@@ -1,0 +1,51 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+targets:
+  Campfire:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKitObjC
+    settings:
+      base:
+        PRODUCT_NAME: Campfire
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.social-networking
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        DEVELOPMENT_TEAM: ""
+        ENABLE_HARDENED_RUNTIME: NO
+        CLANG_ENABLE_OBJC_ARC: YES
+        CLANG_ENABLE_MODULES: YES
+        GCC_PREFIX_HEADER: ""
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        CLANG_WARN_DOCUMENTATION_COMMENTS: NO
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+    run:
+      config: Release
+    profile:
+      config: Release
+    archive:
+      config: Release

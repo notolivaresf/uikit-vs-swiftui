@@ -29,3 +29,28 @@ Apple's skills used by the two Round 2 SwiftUI builds are not included in this r
 
 - `round2-uikit-objc-sol/Campfire/Assets.xcassets/AppIcon.appiconset/AppIcon.png` (1.3 MB) is left out to keep files under 1 MB; the icon is a plain image and does not affect the measurements.
 - Transcripts are not kept in this repo.
+
+## Later rounds and Level 2
+
+Added after the first ten. Same rule: the app source as the model left it, no code changed; each build's `.git`, `build/`, `.bench-work/`, agent skill folders, logs and `runs/` are left out. The locked copy of the harness (`.bench/`) is not copied either (the repo's `Harness/` is the source; the `bench` script in each Round 3 build points at it).
+
+Layout: iPhone builds sit directly in `builds/`, named `round<N>-<stack>-<model>`. Mac builds sit in [`mac/`](mac), because they are AppKit or SwiftUI-for-Mac and not UIKit. Level 2 builds (SwiftUI rerun with the AvdLee skill set) are named `level2-<stack>-<skills>-<model>`.
+
+| Folder | Round | Model | Stack | What it is | Run name |
+|---|---|---|---|---|---|
+| [`round3-uikit-swift-opus`](round3-uikit-swift-opus) | 3 | Opus | UIKit (Swift) | Round 2 build after a three-hour speed and size pass | `round3-uikit-swift-opus` |
+| [`round3-uikit-swift-sol`](round3-uikit-swift-sol) | 3 | Sol | UIKit (Swift) | same | `round3-uikit-swift-sol` |
+| [`round3-uikit-objc-opus`](round3-uikit-objc-opus) | 3 | Opus | UIKit (Objective-C) | same | `round3-uikit-objc-opus` |
+| [`round3-uikit-objc-sol`](round3-uikit-objc-sol) | 3 | Sol | UIKit (Objective-C) | same | `round3-uikit-objc-sol` |
+| [`round3-swiftui-opus`](round3-swiftui-opus) | 3 | Opus | SwiftUI | same | `round3-swiftui-opus` |
+| [`round3-swiftui-sol`](round3-swiftui-sol) | 3 | Sol | SwiftUI | same | `round3-swiftui-sol` |
+| [`level2-swiftui-avdlee-opus`](level2-swiftui-avdlee-opus) | Level 2 | Opus | SwiftUI | With the AvdLee skill set | `opus-swiftui-avdlee` |
+| [`level2-swiftui-avdlee-sol`](level2-swiftui-avdlee-sol) | Level 2 | Sol | SwiftUI | With the AvdLee skill set | `sol-swiftui-avdlee` |
+| [`mac/round4-appkit-swift-opus`](mac/round4-appkit-swift-opus) | 4 (Mac) | Opus | AppKit (Swift) | Mac Campfire, no skills | `round4-appkit-swift-opus` |
+| [`mac/round4-appkit-swift-sol`](mac/round4-appkit-swift-sol) | 4 (Mac) | Sol | AppKit (Swift) | same | `round4-appkit-swift-sol` |
+| [`mac/round4-appkit-objc-opus`](mac/round4-appkit-objc-opus) | 4 (Mac) | Opus | AppKit (Objective-C) | same | `round4-appkit-objc-opus` |
+| [`mac/round4-appkit-objc-sol`](mac/round4-appkit-objc-sol) | 4 (Mac) | Sol | AppKit (Objective-C) | same | `round4-appkit-objc-sol` |
+| [`mac/round4-swiftui-mac-opus`](mac/round4-swiftui-mac-opus) | 4 (Mac) | Opus | SwiftUI for Mac | same | `round4-swiftui-mac-opus` |
+| [`mac/round4-swiftui-mac-sol`](mac/round4-swiftui-mac-sol) | 4 (Mac) | Sol | SwiftUI for Mac | same | `round4-swiftui-mac-sol` |
+
+Round 3 and Level 2 results: [`docs/results-round3.md`](../docs/results-round3.md), [`docs/results-l2-avdlee.md`](../docs/results-l2-avdlee.md). Round 4: [`docs/round4-results.md`](../docs/round4-results.md). Prompts are in [`prompts/`](../prompts).

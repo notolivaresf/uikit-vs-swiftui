@@ -1,0 +1,55 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: '18.0'
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: '6.0'
+    SWIFT_OPTIMIZATION_LEVEL: '-O'
+    IPHONEOS_DEPLOYMENT_TARGET: '18.0'
+    TARGETED_DEVICE_FAMILY: '1'
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources: [Campfire]
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: 'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance: YES
+        CODE_SIGNING_ALLOWED: NO
+  CampfireUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [CampfireUITests]
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+        CampfireUITests: [test]
+    run:
+      config: Release
+    test:
+      config: Release
+      targets: [CampfireUITests]

@@ -1,0 +1,66 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: CampfireKit
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources:
+      - path: Campfire
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKitObjC
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: Campfire
+        INFOPLIST_FILE: Campfire/Info.plist
+        TARGETED_DEVICE_FAMILY: "1"
+        CLANG_ENABLE_MODULES: YES
+        CLANG_ENABLE_OBJC_ARC: YES
+        GCC_C_LANGUAGE_STANDARD: gnu17
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "1.0"
+      configs:
+        Release:
+          DEAD_CODE_STRIPPING: YES
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+  CampfireUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CampfireUITests
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Campfire
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+    test:
+      config: Debug
+      targets:
+        - CampfireUITests
+    run:
+      config: Release
+      commandLineArguments:
+        "-uvsBenchmark YES": false

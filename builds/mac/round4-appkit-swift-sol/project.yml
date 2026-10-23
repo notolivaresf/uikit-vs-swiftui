@@ -1,0 +1,30 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    macOS: '15.0'
+packages:
+  CampfireKit:
+    path: CampfireKit
+targets:
+  Campfire:
+    type: application
+    platform: macOS
+    sources: [Campfire]
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: Campfire
+        SWIFT_VERSION: '5.0'
+        CODE_SIGN_IDENTITY: '-'
+        CODE_SIGN_STYLE: Manual
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.social-networking
+        INFOPLIST_KEY_NSHighResolutionCapable: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        MACOSX_DEPLOYMENT_TARGET: '15.0'
+    scheme:
+      gatherCoverageData: false

@@ -1,0 +1,34 @@
+name: Campfire
+options:
+  deploymentTarget:
+    macOS: '15.0'
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: '15.0'
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    CODE_SIGN_IDENTITY: '-'
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: NO
+    PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.social-networking
+    INFOPLIST_KEY_NSHighResolutionCapable: YES
+targets:
+  Campfire:
+    type: application
+    platform: macOS
+    sources: [Sources]
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKitObjC
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+    run:
+      config: Debug

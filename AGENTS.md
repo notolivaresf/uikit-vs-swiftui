@@ -19,3 +19,14 @@ Every shareable results image is made with `Harness/tools/results_table.py`, nev
 | `results-round4-all` (Mac: all six builds) | `python3 Harness/tools/results_table.py --round4-all` |
 
 For a new round or comparison, add a mode to the script (data, a spec dict, a flag, a line in its docstring) and a row in this table, then look at both PNGs before committing.
+
+## Where build source lives
+
+All experiment source is in `builds/` (source, Xcode project and `project.yml`, assets, fixtures, the build's own notes and screenshots). Nothing else is copied.
+
+- iPhone builds: `builds/round<N>-<stack>-<model>/` (rounds 1 to 3).
+- Level 2 SwiftUI with the AvdLee skills: `builds/level2-swiftui-avdlee-<model>/`.
+- Mac builds (AppKit and SwiftUI for Mac, round 4 onward): `builds/mac/round<N>-<stack>-<model>/`. Never put a Mac build in the iPhone list.
+- New builds are copied with `rsync -a` excluding `.git`, `.agents`, `.claude`, `.bench*`, `build/`, `DerivedData`, `.build`, `xcuserdata`, `*.xcresult`, `*.trace`, `*.log`, `runs/`. Add a row to `builds/README.md`.
+- Never copy a Codex or Claude `-config` folder (it holds login files). Transcripts are not kept.
+- Recordings, traces, logs and transcripts stay local (`.gitignore` covers them under `runs/`). Before committing, scan for home paths, emails, team ids, signing identities, keys.

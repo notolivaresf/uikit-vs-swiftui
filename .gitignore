@@ -8,3 +8,11 @@ __pycache__/
 *.pyc
 runs/smoke/
 Harness/local.env
+# Locked copy of the harness inside each Round 3 build (the repo's Harness/ is the source)
+builds/*/.bench/
+# Recordings, traces and logs stay local; runs/ keeps only small records
+runs/**/*.trace
+runs/**/*.mov
+runs/**/*.mp4
+runs/**/stderr.log
+runs/**/transcript.jsonl
