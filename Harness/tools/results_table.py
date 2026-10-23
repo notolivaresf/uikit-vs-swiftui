@@ -16,6 +16,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --round4-all   (Round 4, Mac: all six builds: results-round4-all.png and -dark.png)
        python3 Harness/tools/results_table.py --best-rounds   (best build per arm in Rounds 1, 2 and 3, six columns: results-best-rounds.png and -dark.png)
        python3 Harness/tools/results_table.py --best-rounds --uikit-only   (same, UIKit only, three columns: results-best-rounds-uikit.png and -dark.png)
+       python3 Harness/tools/results_table.py --best-rounds --uikit-only --app   (UIKit only, app benchmark rows only: results-best-rounds-uikit-app.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -764,6 +765,54 @@ BEST_ROUNDS_UIKIT = dict(BEST_ROUNDS, title="Best UIKit of Round 1, Round 2 and 
                          note="Rounds 1 and 2: iPhone 12. Round 3: iPhone 17 simulator, so fling is not measured and its times and memory are not comparable and are not ranked. "
                               "Cost is the output tokens of the agent run (Round 3: the fix run only); Codex runs report no dollar figure. Each round has one run per build.")
 
+# --- App benchmarks only, best UIKit build of Rounds 1, 2 and 3, rendered with --best-rounds --uikit-only --app ---
+# Same three builds as the UIKit-only table above (picked by the rule in BR_CANDIDATES). Rounds 1 and 2: iPhone 12, numbers from
+# docs/results-round1.md and docs/results-round2.md. Round 3 has simulator numbers only (docs/results-round3.md, runs/round3-uikit-objc-sol/verify.md):
+# no iPhone 12 run of any Round 3 build exists, so those cells are shown but never ranked. Per row: (key or None, main, sub) x 3; lower key wins.
+_NM = (None, "Not measured", "")
+BR_APP = [
+    ("First 40 rows (cold)", [(201, "201 ms", ""), (252, "252 ms", ""), (None, "161 ms", "simulator")]),
+    ("First 40 rows (repeated)", [(272, "272 ms", ""), (256, "256 ms", ""), (None, "636 ms", "simulator")]),
+    ("Cold launch (Instruments)", [(606, "606 ms", ""), (843, "843 ms", "1 of 3 traces"), _NM]),
+    ("Fling", [(-58.3, "58.3 fps", "2 hitches"), (-58.0, "58.0 fps", "2 hitches"), _NM]),
+    ("Live stream, 600 messages", [(2, "2 hitches", "27.8 fps, 67 ms"), (1, "1 hitch", "15.2 fps, 17 ms"), _NM]),
+    ("Stream CPU", [(11.7, "11.7 s", ""), (12.2, "12.2 s", ""), (None, "8.8 s", "simulator")]),
+    ("Jump to message 2,500", [(73, "73 ms", ""), (90, "90 ms", ""), (None, "40 ms", "simulator")]),
+    ("Load older", [(61, "61 ms", ""), (93, "93 ms", ""), (None, "4 ms", "simulator, times part of it")]),
+    ("Text size, bottom", [(51, "51 ms", ""), (83, "83 ms", ""), (None, "12 ms", "simulator")]),
+    ("Peak memory", [(39.7, "39.7 MB", ""), (107.9, "107.9 MB", ""), (None, "44.4 MB", "simulator")]),
+    ("App size", [(0.62, "0.62 MB", ""), (0.71, "0.71 MB", ""), (None, "2.77 MB", "simulator build")]),
+]
+
+
+def br_app_rows():
+    rows = [("Build", [("none", "Sol", "uikit-swift-sol", False), ("none", "Opus", "uikit-swift-opus", False),
+                       ("none", "Sol", "uikit-objc-sol", False)])]
+    for label, cells in BR_APP:
+        k0, k1 = cells[0][0], cells[1][0]
+        out = []
+        for i, (k, main, sub) in enumerate(cells):
+            if k is None and main == "Not measured":
+                out.append(("warn", main, sub, False))
+            elif i == 2:
+                out.append(("none", main, sub, False))
+            elif k0 == k1:
+                out.append(("none", main, ("tie \u00b7 " + sub) if sub else "tie", False))
+            else:
+                win = k == min(k0, k1)
+                out.append(("ok" if win else "none", main, sub, win))
+        rows.append((label, out))
+    return rows
+
+
+BEST_ROUNDS_UIKIT_APP = dict(BEST_ROUNDS_UIKIT, title="UIKit app benchmarks, best build of Round 1, 2 and 3",
+                             subtitle="What the running app measures, for the best UIKit build of each round. Green marks the better of Round 1 and Round 2 (both on the iPhone 12).",
+                             rows=br_app_rows(), file="results-best-rounds-uikit-app", row_h=52, label_w=270,
+                             legend=[("ok", "Better of Round 1 and Round 2"), ("none", "Other, tie, or simulator (not ranked)"), ("warn", "Not measured")],
+                             note="Round 3 was measured on the iPhone 17 simulator only; no iPhone 12 run of a Round 3 build exists, so its numbers are shown but not ranked and "
+                                  "are not comparable with the phone. Fling, cold launch and live stream need a real screen and were not measured in Round 3. "
+                                  "Each round has one run per build.")
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -900,7 +949,7 @@ if __name__ == "__main__":
     import sys
     for n in THEMES:
         if "--best-rounds" in sys.argv:
-            render(n, BEST_ROUNDS_UIKIT if "--uikit-only" in sys.argv else BEST_ROUNDS)
+            render(n, (BEST_ROUNDS_UIKIT_APP if "--app" in sys.argv else BEST_ROUNDS_UIKIT) if "--uikit-only" in sys.argv else BEST_ROUNDS)
         elif "--round4-all" in sys.argv:
             render(n, R4ALL)
         elif "--round4-appkit-vs-swiftui" in sys.argv:
