@@ -22,7 +22,7 @@ Release apps were built with Xcode 26.4 (all six; Sol SwiftUI Mac had only a Deb
 | Resize hitch time (ms) | 8 | 8 | 8 | 8 | 8 | not measured |
 | Checks passed (of 13) | 9 | 9 | 9 | 9 | 9 | 5 |
 
-Shareable images (light and dark, made by `Harness/tools/results_table.py`): best AppKit against SwiftUI Opus and Sol `docs/images/results-round4-appkit-vs-swiftui.png`, and all six builds `docs/images/results-round4-all.png`.
+Shareable images (light and dark, made by `Harness/tools/results_table.py`): best AppKit against best SwiftUI `docs/images/results-round4-appkit-vs-swiftui.png`, and all six builds `docs/images/results-round4-all.png`.
 
 Hitch numbers are the Instruments-derived ones; the XCTest hitch counters read 0 and are not reported.
 

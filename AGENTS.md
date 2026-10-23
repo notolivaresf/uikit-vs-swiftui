@@ -15,7 +15,7 @@ Every shareable results image is made with `Harness/tools/results_table.py`, nev
 | `results-swiftui-3way` | `python3 Harness/tools/results_table.py --swiftui-3way` |
 | `results-swiftui-skills` | `python3 Harness/tools/results_table.py --swiftui-skills` |
 | `results-uikit-vs-swiftui-skills` | `python3 Harness/tools/results_table.py --uikit-vs-swiftui-skills` |
-| `results-round4-appkit-vs-swiftui` (Mac: best AppKit vs SwiftUI Opus vs SwiftUI Sol) | `python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui` |
+| `results-round4-appkit-vs-swiftui` (Mac, two columns: best of the four AppKit builds vs best of the two SwiftUI builds) | `python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui` |
 | `results-round4-all` (Mac: all six builds) | `python3 Harness/tools/results_table.py --round4-all` |
 
 For a new round or comparison, add a mode to the script (data, a spec dict, a flag, a line in its docstring) and a row in this table, then look at both PNGs before committing.

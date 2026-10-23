@@ -12,7 +12,7 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against @twannl's skills: results-swiftui-skills.png and -dark.png, 4:5 portrait)
        python3 Harness/tools/results_table.py --uikit-vs-swiftui-skills   (Best UIKit against the two SwiftUI skill sets, 4:5: results-uikit-vs-swiftui-skills.png and -dark.png)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
-       python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui   (Round 4, Mac: best AppKit vs SwiftUI Opus vs SwiftUI Sol: results-round4-appkit-vs-swiftui.png and -dark.png)
+       python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui   (Round 4, Mac: two columns: best of 4 AppKit builds vs best of 2 SwiftUI builds: results-round4-appkit-vs-swiftui.png and -dark.png)
        python3 Harness/tools/results_table.py --round4-all   (Round 4, Mac: all six builds: results-round4-all.png and -dark.png)
 """
 import os
@@ -630,29 +630,37 @@ def r4_six_rows():
 
 
 def r4_appkit_rows():
-    """AppKit column = best of its four builds per row (source named); SwiftUI Opus and Sol as measured."""
-    rows, wins = [], [0, 0, 0]
+    """Two columns. AppKit = best of its four builds per row (source build named); SwiftUI = best of its two (Opus or Sol named).
+    A not-measured SwiftUI value is skipped when the other build has a real one; a starred (failed check) value keeps its star."""
+    rows, wins = [], [0, 0]
+    ties = 0
     for label, cells in R4_DATA:
-        ak = [(k, c) for k, c in enumerate(cells[:4])]
-        bk = min(c[0] for _, c in ak)
-        who = [k for k, c in ak if c[0] == bk]
-        main = cells[who[0]][1]
-        src = "all four builds" if len(who) == 4 else " · ".join(R4_SHORT[k] for k in who) if len(who) <= 2 else "%d builds" % len(who)
-        sub = cells[who[0]][2]
-        if len(who) == 1 and sub:
-            src = sub + " · " + src
-        trio = [(bk, main, src), cells[4], cells[5]]
-        idx, _ = _winners([c[0] for c in trio])
-        for i in idx:
-            wins[i] += 1
+        bk = min(c[0] for c in cells[:4] if c[0] is not None)
+        who = [k for k in range(4) if cells[k][0] == bk]
+        src = "all four builds" if len(who) == 4 else " · ".join(R4_SHORT[k] for k in who)
+        if len(who) == 1 and cells[who[0]][2]:
+            src = cells[who[0]][2] + " · " + src
+        ak = (bk, cells[who[0]][1], src)
+        sw = [(k, cells[k]) for k in (4, 5) if cells[k][0] is not None]
+        sk = min(c[0] for _, c in sw)
+        sw_who = [k for k, c in sw if c[0] == sk]
+        model = "Opus and Sol" if len(sw_who) == 2 else ("Opus" if sw_who[0] == 4 else "Sol")
+        c0 = cells[sw_who[0]]
+        sub = (c0[2] + " · " + model) if c0[2] else model
+        pair = [ak, (sk, c0[1], sub)]
+        idx, _ = _winners([c[0] for c in pair])
+        if len(idx) == 2:
+            ties += 1
+        else:
+            wins[idx[0]] += 1
         out = []
-        for i, c in enumerate(trio):
+        for i, c in enumerate(pair):
             e = _cell(c, i in idx, False)
-            if len(idx) > 1 and i in idx:
-                e = (e[0], e[1], ("tie · " + e[2]) if e[2] else "tie", e[3])
+            if len(idx) == 2:
+                e = (e[0], e[1], "tie · " + e[2], e[3])
             out.append(e)
         rows.append((label, out))
-    return rows, wins
+    return rows, wins, ties
 
 
 R4ALL = dict(title="Round 4: AppKit Swift and Objective-C against SwiftUI on the Mac",
@@ -662,13 +670,12 @@ R4ALL = dict(title="Round 4: AppKit Swift and Objective-C against SwiftUI on the
              groups=[("AppKit Swift", (0, 1)), ("AppKit Objective-C", (2, 3)), ("SwiftUI", (4, 5))],
              legend=R4_LEG, note=R4_NOTE, footer=R4_FOOT)
 
-_R4A_ROWS, R4A_WINS = r4_appkit_rows()
-R4AK = dict(title="Round 4: best AppKit build against SwiftUI by Opus and by Sol",
-            subtitle="AppKit column: best value per row of its four builds (Swift and Objective-C, Opus and Sol); small text names the source.",
-            builds=[("AppKit", "best of 4 builds · %d wins" % R4A_WINS[0]), ("SwiftUI, Opus", "%d wins" % R4A_WINS[1]),
-                    ("SwiftUI, Sol", "%d wins" % R4A_WINS[2])],
-            rows=_R4A_ROWS, col_w=280, label_w=230, file="results-round4-appkit-vs-swiftui", row_h=58, groups=None,
-            legend=R4_LEG, note=R4_NOTE, footer=R4_FOOT)
+_R4A_ROWS, R4A_WINS, R4A_TIES = r4_appkit_rows()
+R4AK = dict(title="AppKit beats SwiftUI on %d of %d rows, SwiftUI on %d, %d tie" % (R4A_WINS[0], len(_R4A_ROWS), R4A_WINS[1], R4A_TIES),
+            subtitle="Best value per row. AppKit: any of its four builds (Swift and Objective-C, Opus and Sol); SwiftUI: its two builds. Small text names the source build.",
+            builds=[("AppKit", "best of 4 builds \u00b7 %d wins" % R4A_WINS[0]), ("SwiftUI", "best of 2 builds \u00b7 %d wins" % R4A_WINS[1])],
+            rows=_R4A_ROWS, col_w=330, label_w=240, file="results-round4-appkit-vs-swiftui", row_h=58, groups=None,
+            legend=[("ok", "Best in row (ties share it)"), ("none", "Not the best")], note=R4_NOTE, footer=R4_FOOT)
 
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
