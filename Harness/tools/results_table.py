@@ -12,6 +12,8 @@ Usage: python3 Harness/tools/results_table.py
        python3 Harness/tools/results_table.py --swiftui-skills   (same, only Apple skills against @twannl's skills: results-swiftui-skills.png and -dark.png, 4:5 portrait)
        python3 Harness/tools/results_table.py --uikit-vs-swiftui-skills   (Best UIKit against the two SwiftUI skill sets, 4:5: results-uikit-vs-swiftui-skills.png and -dark.png)
        python3 Harness/tools/results_table.py --round3-best   (best UIKit vs best SwiftUI of Round 3: results-round3-best.png and -dark.png)
+       python3 Harness/tools/results_table.py --round4-appkit-vs-swiftui   (Round 4, Mac: best AppKit vs SwiftUI Opus vs SwiftUI Sol: results-round4-appkit-vs-swiftui.png and -dark.png)
+       python3 Harness/tools/results_table.py --round4-all   (Round 4, Mac: all six builds: results-round4-all.png and -dark.png)
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -564,6 +566,110 @@ L2GAP = dict(title="How far from optimal, Round 2",
              note="Optimal: 60 fps and no hitches where the phone sets a ceiling, otherwise the best value any of the 10 builds reached. See docs/optimal-gap-round2.md.",
              footer=_FOOT)
 
+# --- Round 4, Mac (docs/round4-results.md): --round4-all (six builds) and --round4-appkit-vs-swiftui ---
+# Xcode 27.1, macOS 27, MacBook Pro M1 Max, one fast pass per build (differences under about 10 to 15 % are noise).
+# Per row: label, then six (key, main, sub) in R4_ORDER; lower key wins, key None = not measured; "*" = that check failed.
+# Winners are computed, ties share. All numbers are copied from docs/round4-results.md.
+R4_ORDER = ["AppKit Swift Opus", "AppKit Swift Sol", "AppKit ObjC Opus", "AppKit ObjC Sol", "SwiftUI Opus", "SwiftUI Sol"]
+R4_SHORT = ["Swift Opus", "Swift Sol", "ObjC Opus", "ObjC Sol"]
+R4_NM = (None, "Not measured", "")
+CF = "check fails"
+
+
+def _ms(v):
+    return "{:,} ms".format(v)
+
+
+def _r4(label, vals, fmt, higher=False, subs=None, fails=()):
+    cells = []
+    for i, v in enumerate(vals):
+        if v is None:
+            cells.append(R4_NM)
+            continue
+        main = fmt(v) + (" *" if i in fails else "")
+        sub = (subs or {}).get(i, "") or (CF if i in fails else "")
+        cells.append((-v if higher else v, main, sub))
+    return (label, cells)
+
+
+R4_DATA = [
+    _r4("Checks passed", [9, 9, 9, 9, 9, 5], lambda v: "%d of 13" % v, higher=True),
+    _r4("Cold launch, median of 3", [699, 753, 688, 803, 763, 919], _ms, subs={3: "one sample 5,132 ms"}),
+    _r4("First 40 rows, cold", [270, 279, 209, 312, 345, 520], _ms),
+    _r4("First 40 rows, repeated", [244, 265, 202, 263, 407, 493], _ms),
+    _r4("Jump to message 2,500", [32, 33, 15, 22, 66, 407], _ms, fails=(5,)),
+    _r4("Load older", [23, 13, 9, 8, 8, 170], _ms, fails=(5,)),
+    _r4("Text size, bottom", [25, 16, 9, 10, 24, 112], _ms),
+    _r4("Text size, mid-list", [25, 26, 10, 22, 67, 152], _ms),
+    _r4("Peak memory", [107.5, 132.9, 102.9, 122.1, 216.9, None], lambda v: "%.1f MB" % v),
+    _r4("Stream CPU", [7.2, 8.9, 6.1, 8.7, 9.2, None], lambda v: "%.1f s" % v),
+    _r4("App size", [1.26, 0.99, 1.16, 1.01, 1.68, 3.08], lambda v: "%.2f MB" % v),
+    _r4("Fling speed (Instruments)", [91.0, 82.9, 97.9, 87.8, 57.3, 68.4], lambda v: "%.1f fps" % v, higher=True),
+    _r4("Fling hitch time", [1758, 1150, 1108, 1800, 3142, 1733], _ms),
+    _r4("Stream hitch time", [242, 492, 308, 3533, 3800, 9983], _ms, subs={5: "stream run failed"}),
+    _r4("Resize hitch time", [8, 8, 8, 8, 8, None], _ms),
+]
+R4_NOTE = ("One fast pass per build: differences under about 10 to 15 % are noise. * = check failed. Not measured: SwiftUI Sol's stream run "
+           "failed (260 of 600 messages arrived), so its stream hitch time is not trustworthy. Hitch times come from Instruments.")
+R4_FOOT = "MacBook Pro M1 Max, macOS 27, Xcode 27.1 · Round 4 · github.com/notolivaresf/uikit-vs-swiftui"
+R4_LEG = [("ok", "Best in row (ties share it)"), ("none", "Not the best"), ("warn", "Not measured")]
+
+
+def r4_six_rows():
+    rows = []
+    for label, cells in R4_DATA:
+        idx, _ = _winners([c[0] for c in cells])
+        out = []
+        for i, c in enumerate(cells):
+            e = _cell(c, i in idx, False)
+            if len(idx) > 1 and i in idx:
+                e = (e[0], e[1], ("tie · " + e[2]) if e[2] else "tie", e[3])
+            out.append(e)
+        rows.append((label, out))
+    return rows
+
+
+def r4_appkit_rows():
+    """AppKit column = best of its four builds per row (source named); SwiftUI Opus and Sol as measured."""
+    rows, wins = [], [0, 0, 0]
+    for label, cells in R4_DATA:
+        ak = [(k, c) for k, c in enumerate(cells[:4])]
+        bk = min(c[0] for _, c in ak)
+        who = [k for k, c in ak if c[0] == bk]
+        main = cells[who[0]][1]
+        src = "all four builds" if len(who) == 4 else " · ".join(R4_SHORT[k] for k in who) if len(who) <= 2 else "%d builds" % len(who)
+        sub = cells[who[0]][2]
+        if len(who) == 1 and sub:
+            src = sub + " · " + src
+        trio = [(bk, main, src), cells[4], cells[5]]
+        idx, _ = _winners([c[0] for c in trio])
+        for i in idx:
+            wins[i] += 1
+        out = []
+        for i, c in enumerate(trio):
+            e = _cell(c, i in idx, False)
+            if len(idx) > 1 and i in idx:
+                e = (e[0], e[1], ("tie · " + e[2]) if e[2] else "tie", e[3])
+            out.append(e)
+        rows.append((label, out))
+    return rows, wins
+
+
+R4ALL = dict(title="Round 4: AppKit Swift and Objective-C against SwiftUI on the Mac",
+             subtitle="Six builds, one column each, Opus and Sol. The best value in each row is outlined in green; ties share it.",
+             builds=[("Opus", ""), ("Sol", ""), ("Opus", ""), ("Sol", ""), ("Opus", ""), ("Sol", "")],
+             rows=r4_six_rows(), col_w=170, label_w=230, file="results-round4-all", row_h=58,
+             groups=[("AppKit Swift", (0, 1)), ("AppKit Objective-C", (2, 3)), ("SwiftUI", (4, 5))],
+             legend=R4_LEG, note=R4_NOTE, footer=R4_FOOT)
+
+_R4A_ROWS, R4A_WINS = r4_appkit_rows()
+R4AK = dict(title="Round 4: best AppKit build against SwiftUI by Opus and by Sol",
+            subtitle="AppKit column: best value per row of its four builds (Swift and Objective-C, Opus and Sol); small text names the source.",
+            builds=[("AppKit", "best of 4 builds · %d wins" % R4A_WINS[0]), ("SwiftUI, Opus", "%d wins" % R4A_WINS[1]),
+                    ("SwiftUI, Sol", "%d wins" % R4A_WINS[2])],
+            rows=_R4A_ROWS, col_w=280, label_w=230, file="results-round4-appkit-vs-swiftui", row_h=58, groups=None,
+            legend=R4_LEG, note=R4_NOTE, footer=R4_FOOT)
+
 S = 2  # scale
 LABEL_W, COL_W, ROW_H, HEAD_H, GROUP_H = 250, 220, 62, 44, 36  # ROW_H is the default; a spec can set row_h
 PAD = 28
@@ -699,7 +805,11 @@ def render(name, spec=None):
 if __name__ == "__main__":
     import sys
     for n in THEMES:
-        if "--uikit-vs-swiftui-skills" in sys.argv:
+        if "--round4-all" in sys.argv:
+            render(n, R4ALL)
+        elif "--round4-appkit-vs-swiftui" in sys.argv:
+            render(n, R4AK)
+        elif "--uikit-vs-swiftui-skills" in sys.argv:
             render(n, UKSW)
         elif "--swiftui-skills" in sys.argv:
             render(n, SWSK)
