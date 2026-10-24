@@ -22,7 +22,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HARNESS_FILES=(Tests record.sh summarize.py scorecard.py lockcheck.py withlock.py bench-client.py check-stack.sh)
 ROOT="${UVS_BUILDS_ROOT:-$HOME/uvs-builds}"
 SRC="$ROOT/$RUNNAME"; DEST="$ROOT/score-$RUNNAME"
-[ -d "$SRC/Campfire.xcodeproj" ] || { echo "no finished build folder at $SRC" >&2; exit 1; }
+ls -d "$SRC"/*.xcodeproj >/dev/null 2>&1 || { echo "no finished build folder at $SRC" >&2; exit 1; }
 [ -e "$DEST" ] && { echo "refusing: $DEST already exists" >&2; exit 1; }
 case "$DEST" in "$HOME/olivares-burgos"*) echo "the folder must be outside ~/olivares-burgos" >&2; exit 1 ;; esac
 

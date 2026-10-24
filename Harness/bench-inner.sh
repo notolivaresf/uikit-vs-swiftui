@@ -34,9 +34,14 @@ mkdir -p "$out"
 . "$H/local.env"
 shared="${UVS_BENCH_HOME:-$HOME/.uvs-bench}"; mkdir -p "$shared"
 
+# The project's name is the model's choice (Level 2 twostraws: CampfireBench.xcodeproj); every earlier build used Campfire.
+proj="Campfire"
+if [ ! -d Campfire.xcodeproj ]; then
+  cands=( *.xcodeproj ); [ "${#cands[@]}" = 1 ] && [ -d "${cands[0]}" ] && proj="${cands[0]%.xcodeproj}"
+fi
 # A project with a script build phase would run arbitrary commands outside any sandbox; refuse it.
-if grep -q "PBXShellScriptBuildPhase" Campfire.xcodeproj/project.pbxproj 2>/dev/null; then
-  echo "Refusing to build: Campfire.xcodeproj has a shell script build phase. Remove it."; exit 2
+if grep -q "PBXShellScriptBuildPhase" "$proj.xcodeproj/project.pbxproj" 2>/dev/null; then
+  echo "Refusing to build: $proj.xcodeproj has a shell script build phase. Remove it."; exit 2
 fi
 
 slot=()
@@ -57,15 +62,16 @@ else
 fi
 
 echo "building (Release) ..."
-${slot[@]+"${slot[@]}"} xcodebuild build -project Campfire.xcodeproj -scheme Campfire -configuration Release \
+${slot[@]+"${slot[@]}"} xcodebuild build -project "$proj.xcodeproj" -scheme "$proj" -configuration Release \
   -destination "$bdest" -derivedDataPath "$dd" "${sign[@]}" ${auth[@]+"${auth[@]}"} >"$out/app-build.log" 2>&1
 if [ $? -ne 0 ]; then
   echo "BUILD FAILED. Errors (full log: $out/app-build.log):"
   grep -E "error:" "$out/app-build.log" | sort -u | head -30
   exit 2
 fi
-app="$dd/Build/Products/$prod/Campfire.app"
-[ -d "$app" ] || { echo "no Campfire.app after the build"; exit 2; }
+app="$dd/Build/Products/$prod/$proj.app"
+[ -d "$app" ] || app="$(ls -d "$dd/Build/Products/$prod/"*.app 2>/dev/null | head -1)"
+[ -d "$app" ] || { echo "no .app after the build"; exit 2; }
 size_mb="$(du -sk "$app" | awk '{printf "%.2f", $1/1024}')"
 
 stack_detail="$("$H/check-stack.sh" "$stack" "$root" 2>&1)"; stack_ok=ok

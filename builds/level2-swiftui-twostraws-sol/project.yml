@@ -1,0 +1,65 @@
+name: Campfire
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+packages:
+  CampfireKit:
+    path: CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+targets:
+  Campfire:
+    type: application
+    platform: iOS
+    sources: [Campfire]
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  CampfireTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [CampfireTests]
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+  CampfireUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [CampfireUITests]
+    dependencies:
+      - target: Campfire
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Campfire:
+    build:
+      targets:
+        Campfire: all
+    run:
+      commandLineArguments:
+        "-uvsBenchmark": true
+        "YES": true
+    test:
+      targets: [CampfireTests, CampfireUITests]

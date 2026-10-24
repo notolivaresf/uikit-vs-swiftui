@@ -1,0 +1,72 @@
+name: CampfireBench
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+packages:
+  CampfireKit:
+    path: CampfireKit
+targets:
+  CampfireBench:
+    type: application
+    platform: iOS
+    sources:
+      - CampfireBench
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    info:
+      path: CampfireBench/Info.plist
+      properties:
+        CFBundleDisplayName: Campfire
+        UILaunchScreen: {}
+        UIApplicationSupportsIndirectInputEvents: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: CampfireBench
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_STRICT_CONCURRENCY: complete
+        GENERATE_INFOPLIST_FILE: YES
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "1.0"
+        ENABLE_PREVIEWS: YES
+  CampfireBenchUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - CampfireBenchUITests
+    dependencies:
+      - target: CampfireBench
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: CampfireBench
+schemes:
+  CampfireBench:
+    build:
+      targets:
+        CampfireBench: all
+        CampfireBenchUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - CampfireBenchUITests
