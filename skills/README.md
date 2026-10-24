@@ -49,3 +49,15 @@ Used by: SwiftUI builds, `--skills apple`.
 Same folder-hash formula as above (`python3 Harness/skillset.py --kind avdlee`).
 
 Used by: the Level 2 third-party arm, SwiftUI builds, `--skills avdlee` (Fernando, 21 Oct). See `docs/results-l2-avdlee.md`.
+
+## Third-party, twostraws (vendored here)
+
+`skills/twostraws/swiftui-pro/` is Paul Hudson's (@twostraws) SwiftUI skill from https://github.com/twostraws/SwiftUI-Agent-Skill (his own repo, not a fork), commit `1eac100257af9068d5f041c1a1540b1790233716` (23 Oct 2026, plugin version 2.0.0), MIT licence (`skills/twostraws/LICENSE`, copied unchanged). Taken with `git archive 1eac100 swiftui-pro LICENSE`, minus the plugin packaging inside the folder (`.claude-plugin/` and a nested `skills/swiftui-pro/` that only holds a copy of `SKILL.md` and a symlink to `references/`), so the build sees one skill, once. The repo ships this one skill.
+
+| Skill | Files | sha256 of the folder |
+|---|---|---|
+| `swiftui-pro` | 16 | `b87d8a9e98b1a83548b425ddbfb3bda4236106a86cce049ef28648cf2f14a589` |
+
+Same folder-hash formula as above (`python3 Harness/skillset.py --kind twostraws`).
+
+Used by: the Level 2 twostraws arm, SwiftUI builds, `--skills twostraws` (Fernando, 24 Oct). See `docs/results-l2-twostraws.md`.

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Set up and launch ONE isolated build. See docs/harness.md, "Launching a build".
 #
-#   Harness/launch-build.sh <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee] [--dry-run]
+#   Harness/launch-build.sh <opus|sol> <uikit|swiftui|objc> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee|twostraws] [--dry-run]
 #   Harness/launch-build.sh <opus|sol> <appkit-swift|appkit-objc|swiftui-mac> [--dry-run]      (Round 4, Mac)
 #
 # Round 4 (the three Mac stacks): the build is named round4-<stack>-<model>, the inputs come from tag
@@ -17,7 +17,7 @@
 # Without it, the build folder is made and the model starts working. Fernando starts those.
 set -euo pipefail
 
-usage() { echo "usage: $0 <opus|sol> <uikit|swiftui|objc|appkit-swift|appkit-objc|swiftui-mac> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee] [--dry-run]" >&2; exit 2; }
+usage() { echo "usage: $0 <opus|sol> <uikit|swiftui|objc|appkit-swift|appkit-objc|swiftui-mac> [--skills none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee|twostraws] [--dry-run]" >&2; exit 2; }
 
 MODEL="${1:-}"; SIDE="${2:-}"; shift 2 2>/dev/null || usage
 DRY=0; SKILLS=""
@@ -38,7 +38,7 @@ case "$SIDE" in appkit-swift|appkit-objc|swiftui-mac)
   SKILLS=none ;;
 esac
 if [ -n "$SKILLS" ]; then
-  case "$SKILLS" in none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee) ;; *) usage ;; esac
+  case "$SKILLS" in none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee|twostraws) ;; *) usage ;; esac
 fi
 L2=0
 if [ -n "$SKILLS" ] || [ "$SIDE" = objc ] || [ "$R4" = 1 ]; then L2=1; [ -n "$SKILLS" ] || SKILLS=none; fi
@@ -46,6 +46,7 @@ case "$SKILLS" in
   ours-slim|ours-full|ours-pair) [ "$SIDE" = uikit ] || { echo "our UIKit skill goes with the stack uikit only" >&2; exit 2; } ;;
   ours-objc-pair) [ "$SIDE" = objc ] || { echo "our Objective-C skills go with the stack objc only" >&2; exit 2; } ;;
   apple) [ "$SIDE" = swiftui ] || { echo "Apple's skills (swiftui-specialist, swiftui-whats-new-27) go with the stack swiftui only" >&2; exit 2; } ;;
+  twostraws) [ "$SIDE" = swiftui ] || { echo "the third-party twostraws skill (swiftui-pro) goes with the stack swiftui only" >&2; exit 2; } ;;
   avdlee) [ "$SIDE" = swiftui ] || { echo "the third-party AvdLee skill (swiftui-expert-skill) goes with the stack swiftui only" >&2; exit 2; } ;;
 esac
 

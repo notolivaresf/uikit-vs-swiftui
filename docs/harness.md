@@ -186,6 +186,24 @@ UVS_INPUTS_TAG=v2-inputs Harness/launch-build.sh sol swiftui --skills avdlee
 - File reads: Level 2 had no read fence (the builds must run `xcodebuild` and the simulator, which neither sandbox allows), so neither does this arm. What each build read outside its folder is checked after the run with `Harness/round3-audit.py` on its transcript.
 
 
+## Level 2, third-party skills: twostraws (24 Oct)
+
+Fernando, 24 Oct: "Can we start another round 2, this time with twostraws' swiftui skills?" Same as the AvdLee arm (prompt, stack line, skill sentence, inputs, model, effort, flags, Codex config) except the skill set.
+
+| Kind | Stack | Skills installed | Build names |
+|---|---|---|---|
+| SwiftUI + third-party skills (twostraws) | swiftui | `swiftui-pro` (vendored in `skills/twostraws/`, MIT, commit `1eac100`, plugin 2.0.0) | `opus-swiftui-twostraws`, `sol-swiftui-twostraws` |
+
+```
+UVS_INPUTS_TAG=v2-inputs Harness/launch-build.sh opus swiftui --skills twostraws
+UVS_INPUTS_TAG=v2-inputs Harness/launch-build.sh sol swiftui --skills twostraws
+```
+
+- Inputs: `v2-inputs` by name, as for the Apple and AvdLee arms. Tag `v2-twostraws-inputs` marks the commit of this harness and the vendored skill.
+- Isolation, probed 24 Oct (no build launched), skill installed with `skillset.py --kind twostraws --dest <scratch> --install`, clean environment (`env -i`). Claude Code 2.1.306, `--model claude-haiku-5-5`, the Level 2 flags and settings, prompt "List the names of the skills you have, nothing else.": init `skills` = `swiftui-pro` only, `mcp_servers` empty, plugins and agents the same built-ins as the other arms, answer "swiftui-pro". Codex 0.162.1, empty `CODEX_HOME` with `auth.json` and the generated `config.toml` (24 host skills off, sha256 `9f6364a6...d4a8`, the same file as Level 2): `swiftui-pro` (no leak).
+- File reads: no read fence, as in the other Level 2 arms; `Harness/round3-audit.py` on each transcript afterwards.
+
+
 ## Cold-launch traces that never saved (21 Oct)
 
 What happened: in 13 of 18 Round 2 launch traces `xctrace` was killed by our own cap (`FINALISE_S`, 300 s after the 25 s recording; the kill shows as exit 142, SIGALRM from the wrapper in `record.sh`). The cap is ours, not xctrace's.
