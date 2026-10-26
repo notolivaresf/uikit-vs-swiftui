@@ -21,8 +21,8 @@ final class ChatLayout: UICollectionViewLayout {
         guard let cv = collectionView, let idAt else { return }
         let n = cv.numberOfItems(inSection: 0)
         if cv.bounds.width != width { width = cv.bounds.width; known.removeAll(keepingCapacity: true); dirtyFrom = 0 }
-        if let d = dirtyFrom { offsets.removeSubrange(min(d, offsets.count - 1) + 1...); dirtyFrom = nil }
-        if offsets.count > n + 1 { offsets.removeSubrange((n + 1)...) }
+        if let d = dirtyFrom { offsets.removeSubrange((min(d, offsets.count - 1) + 1)..<offsets.count); dirtyFrom = nil }
+        if offsets.count > n + 1 { offsets.removeSubrange((n + 1)..<offsets.count) }
         var y = offsets[offsets.count - 1]
         for i in (offsets.count - 1)..<max(n, offsets.count - 1) {
             y += known[idAt(i)] ?? estimate

@@ -23,7 +23,9 @@ public final class HeightStore {
     public func invalidateAll() { heights.removeAll(keepingCapacity: true); style = nil }
 
     /// The measuring itself, with nothing saved: what a self-sizing row does every time the system asks.
+    nonisolated(unsafe) public static var measureCalls = 0
     public static func measure(_ item: RowItem, users: [UserID: User], style: RowStyle) -> CGFloat {
-        RowGeometry.make(item, users: users, style: style).height
+        measureCalls += 1
+        return RowGeometry.make(item, users: users, style: style).height
     }
 }

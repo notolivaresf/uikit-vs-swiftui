@@ -98,6 +98,55 @@ targets:
       base:
         PRODUCT_NAME: R5SelfContent
         SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREPEND_CONTENT"
+  R5CSavedTop:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Collection/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSavedTop
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION "
+  R5CSavedDelta:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Collection/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSavedDelta
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION PREPEND_DELTA"
+  R5CSavedContent:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Collection/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSavedContent
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION PREPEND_CONTENT"
+  R5CSavedAnchor:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/R5CollectionAnchor/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSavedAnchor
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION PREPEND_ANCHOR"
+  R5CSelfTop:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2CollectionSelf/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSelfTop
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION "
+  R5CSelfDelta:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2CollectionSelf/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSelfDelta
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION PREPEND_DELTA"
+  R5CSelfContent:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2CollectionSelf/CollectionAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5CSelfContent
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) VIEW_COLLECTION PREPEND_CONTENT"
 schemes:
   E1Table:
     build: { targets: { E1Table: all } }
@@ -128,4 +177,25 @@ schemes:
     run: { config: Release }
   R5SelfContent:
     build: { targets: { R5SelfContent: all } }
+    run: { config: Release }
+  R5CSavedTop:
+    build: { targets: { R5CSavedTop: all } }
+    run: { config: Release }
+  R5CSavedDelta:
+    build: { targets: { R5CSavedDelta: all } }
+    run: { config: Release }
+  R5CSavedContent:
+    build: { targets: { R5CSavedContent: all } }
+    run: { config: Release }
+  R5CSavedAnchor:
+    build: { targets: { R5CSavedAnchor: all } }
+    run: { config: Release }
+  R5CSelfTop:
+    build: { targets: { R5CSelfTop: all } }
+    run: { config: Release }
+  R5CSelfDelta:
+    build: { targets: { R5CSelfDelta: all } }
+    run: { config: Release }
+  R5CSelfContent:
+    build: { targets: { R5CSelfContent: all } }
     run: { config: Release }

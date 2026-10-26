@@ -201,12 +201,17 @@ public final class RoomViewController: UIViewController, RoomDataProviding {
     }
 
     private func bumpTextSize() {
+        let t0 = CACurrentMediaTime(); HeightStore.measureCalls = 0
+        defer { DebugBar.probes = [Int((CACurrentMediaTime() - t0) * 1000), HeightStore.measureCalls, DebugBar.probes[2], DebugBar.probes[3]] }
         let anchor = captureAnchor()
         let i = Self.categories.firstIndex(of: model.category) ?? 0
         model.category = Self.categories[(i + 1) % Self.categories.count]
         heights.invalidateAll()
+        let t1 = CACurrentMediaTime()
         adapter.heightsChanged()
+        let t2 = CACurrentMediaTime()
         restore(anchor)
+        DebugBar.probes[2] = Int((t2 - t1) * 1000); DebugBar.probes[3] = Int((CACurrentMediaTime() - t2) * 1000)
         bar.finishTap(); refreshLabel()
     }
 

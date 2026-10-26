@@ -5,14 +5,22 @@ import SpikeKit
 /// (saved heights or self-sizing) comes from the target's source list; the way the place is kept when older messages
 /// load comes from the flag: none = (a) top row, PREPEND_DELTA = (b) sum of the new rows' heights,
 /// PREPEND_CONTENT = (b') change in content height. The clock is touch up to the next frame.
+#if VIEW_COLLECTION
+typealias Adapter = CollectionAdapter
+#else
+typealias Adapter = TableAdapter
+#endif
+
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         DebugBar.nextFrameClock = true
         window = UIWindow(frame: UIScreen.main.bounds)
-        let vc = RoomViewController(adapter: TableAdapter())
+        let vc = RoomViewController(adapter: Adapter())
         #if PREPEND_DELTA
         vc.prependAnchor = .offsetDelta
+        #elseif PREPEND_ANCHOR
+        vc.prependAnchor = .layoutAnchor
         #elseif PREPEND_CONTENT
         vc.prependAnchor = .contentDelta
         #else
