@@ -23,11 +23,11 @@ Sources: `docs/results-round1.md`, `docs/results-round2.md`, `docs/optimal-gap-r
 Cited for the investigation and the skill; nothing is copied from Apple. Session numbers are Apple's WWDC session ids.
 
 - **Collection view as the modern list.** WWDC20 "Lists in UICollectionView" (10026) presents list layouts in collection views as a replacement for most table view uses; WWDC20 "Modern cell configuration" (10027) brings content and background configurations to both table view and collection view cells. Apple's "Implementing modern collection views" sample code shows both.
-- **Layouts.** WWDC19 "Advances in Collection View Layout" (215) introduces the compositional layout; Apple's article "Customizing collection view layouts" and WWDC18 "A Tour of UICollectionView" (225) cover writing a custom layout, including caching attributes and invalidating only what changed.
+- **Layouts.** WWDC19 "Advances in Collection View Layout" (215) introduces the compositional layout; Apple's article "Customizing collection view layouts" and WWDC18 "A Tour of UICollectionView" (225) cover writing a custom layout; the 2018 session shows caching computed attributes and invalidating only when the size changes.
 - **Data and updates.** WWDC19 "Advances in UI Data Sources" (220) and WWDC20 "Advances in diffable data sources" (10045) cover diffable data sources for both views; WWDC21 "Make blazing fast lists and collection views" (10252) covers reconfiguring items instead of reloading them, cell registrations, prefetching and preparing images off the main thread.
 - **Self-sizing.** WWDC22 "What's new in UIKit" (10068) adds automatic self-sizing invalidation for table view and collection view cells; the table view docs ("Estimating the height of a table's scrolling area") explain the cost of estimated heights.
 - **Text.** WWDC21 "Meet TextKit 2" (10061) and WWDC22 "What's new in TextKit and text views" (10090) cover text views and layout; the `UITextViewDelegate` edit menu methods (iOS 16, and the multi-range form in the iOS 26 SDK) cover adding actions to the system menu.
-- **Measuring.** WWDC21 "Explore UI animation hitches and the render loop" (10181) and WWDC23 "Analyze hangs with Instruments" (10248) define hitches and how to measure them, which is what our iPhone 12 pass reads.
+- **Measuring.** the Apple tech talk "Explore UI animation hitches and the render loop" (2020, 10855) defines hitches and the hitch time ratio, and WWDC23 "Analyze hangs with Instruments" (10248) covers finding main-thread hangs; the first is what our iPhone 12 pass reads.
 
 What the public record does not give: a measured table view against collection view comparison for a long, growing chat list with streaming rows and prepends. That is what the investigation is for.
 
@@ -82,8 +82,8 @@ Working name `uikit-chat-list` in `uikit-skill`, one `SKILL.md` with the screen'
 | Text size and rotation: remeasure only loaded rows, keep the top row's anchor | Round 3 text size rows (12 to 46 ms) |
 | Text selection and menus: a non-editable, selectable text view; add Copy and Reply to the system's suggested menu items, never replace them; do not let a whole-bubble long press take the press from the text | `optimal-gap-round2.md` (3 of 4 UIKit fails); WWDC22 10090 |
 | Memory: keep few rows alive, cache measurements not views or rendered text, no per-row images kept off screen | Round 1 to 3 peak memory (35 to 108 MB) |
-| Main thread: no formatter creation, text measuring loops or image decoding in cell configuration | WWDC21 10252, 10181; Round 3 cached timestamp formatting |
-| How to check the work: what to measure (hitches, stream CPU, drift) and the shortcuts that do not count | WWDC21 10181, WWDC23 10248; our harness |
+| Main thread: no formatter creation, text measuring loops or image decoding in cell configuration | WWDC21 10252; tech talk 10855; Round 3 cached timestamp formatting |
+| How to check the work: what to measure (hitches, stream CPU, drift) and the shortcuts that do not count | tech talk 10855, WWDC23 10248; our harness |
 
 The skill names APIs freely (that is its job). It says nothing about this benchmark, its numbers or its tests: it must be a general skill for this kind of screen.
 
