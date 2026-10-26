@@ -22,6 +22,9 @@ public final class DebugBar: UIView {
     /// the result is laid out. Off: from the action to the end of the layout, as in E1.
     nonisolated(unsafe) public static var nextFrameClock = false
     private var lastState = State()
+    private var actionStart: CFTimeInterval = 0
+    private var lastTitle = ""
+    private var syncMs = 0
     private var link: CADisplayLink?
     public struct State {
         public var first = 0, last = 0, loaded = 0
@@ -75,6 +78,7 @@ public final class DebugBar: UIView {
         // Boost burst and Start stream don't change `ms`.
         if title != "Start stream" && title != "Boost burst" {
             let now = CACurrentMediaTime()
+            actionStart = now; lastTitle = title
             tapStart = Self.nextFrameClock ? min(touchUp ?? now, now) : now
         }
         onTap?(title)
@@ -84,6 +88,7 @@ public final class DebugBar: UIView {
     public func finishTap() {
         let from = tapStart ?? SpikeClock.launch
         tapStart = nil
+        syncMs = Int((CACurrentMediaTime() - actionStart) * 1000)
         if Self.nextFrameClock && link == nil {
             let l = CADisplayLink(target: self, selector: #selector(frame(_:)))
             pendingFrom = from
@@ -95,9 +100,19 @@ public final class DebugBar: UIView {
     }
 
     private var pendingFrom: CFTimeInterval = 0
+
+    /// Spike-only side channel (E2, E3): the app's own work time for each tap, action to end of layout, next to the
+    /// touch-to-next-frame time, appended to a file in the app's temporary folder. The harness never reads it.
+    private func logWork() {
+        let line = "\(Date().timeIntervalSince1970) \(lastTitle) work_ms \(syncMs) frame_ms \(ms)\n"
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("uvs-work.log")
+        if let h = try? FileHandle(forWritingTo: url) { h.seekToEndOfFile(); h.write(Data(line.utf8)); try? h.close() }
+        else { try? Data(line.utf8).write(to: url) }
+    }
     @objc private func frame(_ l: CADisplayLink) {
         l.invalidate(); link = nil
         ms = Int((CACurrentMediaTime() - pendingFrom) * 1000)
+        logWork()
         show(lastState)
     }
 
