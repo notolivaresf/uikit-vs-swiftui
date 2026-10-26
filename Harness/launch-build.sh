@@ -60,6 +60,9 @@ if [ "$L2" = 1 ]; then
   # Level 2 inputs: a tag that holds CampfireKitObjC (set UVS_INPUTS_TAG); v2-inputs when it exists
   if [ -z "${UVS_INPUTS_TAG:-}" ] && git -C "$REPO" rev-parse -q --verify "v2-inputs^{commit}" >/dev/null; then TAG="v2-inputs"; fi
 fi
+# optional name suffix (UVS_NAME_SUFFIX, for example -v07) so a repeat build gets its own build and run folders
+case "${UVS_NAME_SUFFIX:-}" in ''|-[A-Za-z0-9._-]*) ;; *) echo "UVS_NAME_SUFFIX must start with - and use letters, digits, . _ -" >&2; exit 2 ;; esac
+NAME="$NAME${UVS_NAME_SUFFIX:-}"
 ROOT="${UVS_BUILDS_ROOT:-$HOME/uvs-builds}"
 BUILD="$ROOT/$NAME"
 CONFIG="$ROOT/$NAME-config"
