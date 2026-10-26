@@ -17,16 +17,13 @@ Control (not rebuilt): `round2-uikit-swift-opus` and `round2-uikit-swift-sol`, r
 
 ## Blockers before the launch lines work
 
-1. **The launcher has no kind for the new skill.** `Harness/skillset.py` and `Harness/launch-build.sh` know `none`, `ours-slim`, `ours-full`, `ours-pair`, `ours-objc-pair`, `apple`, `avdlee`, `twostraws`. Needed (small, for the lane that owns `Harness/`; this page does not edit it):
-   - `skillset.py`: kind `ours-chatlist`, the same shape as `ours-full`: `OURS["ours-chatlist"] = ("uikit-chat-list", "UVS_CHATLIST_TAG", "v0.6.0")`, added to the `--kind` choices. It reads `git archive <tag> skills/uikit-chat-list` of `~/olivares-burgos/uikit-skill` and checks the installed copy against the hash.
-   - `launch-build.sh`: `ours-chatlist` added to the three places that list kinds (the usage line, the allowed values, and the `ours-slim|ours-full|ours-pair` case that limits a kind to the stack `uikit`).
-   - A time cap. The plan says a 2-hour cap; the launcher passes none ("time limit: none", Fernando, 18 Oct), and `run_build.py` already takes `--time-limit-s`. Add an env var (for example `UVS_TIME_LIMIT_S=7200`) that appends `--time-limit-s` to the supervisor line. Without it, the builds run until the model stops, as in Round 2, and the 2-hour cap is applied by hand (stop the process at 2 hours; `meta.json` then has no `stopped_by_limit`).
-2. **The skill has no tag.** `uikit-skill` is at commit `5af9171` ("uikit-chat-list v0.2", plugin 0.6.0), clean, with no tag since `v0.4-objc-pair`. Cut `v0.6.0` on the commit that E6 signs off, before the launch; the run record keeps the tag, the commit and the folder hash. Today's folder (4 files: `SKILL.md`, `SOURCES.md`, `references/measuring-text.md`, `references/table-view.md`) hashes to `a65a1e85542a22c5dace2c4f9f52404951810e524f3da4a54b81cd2e0b73f646` (same formula as `skills/README.md`); any later edit changes it.
+1. **The skill tag.** The launcher now has the kind `ours-chatlist` (only `skills/uikit-chat-list` of `uikit-skill`, installed per build folder) and an optional `UVS_TIME_LIMIT_S` cap. The pinned tag is one constant, `CHATLIST_TAG = "v0.6.2"` in `Harness/skillset.py` (the env var `UVS_CHATLIST_TAG` overrides it for a test). **`v0.6.2` did not exist yet on 26 Oct** (latest tag `v0.6.1`): until it is cut, the real launch refuses and the dry run says the skill set is not available. Check with `git -C ~/olivares-burgos/uikit-skill tag`; the run record keeps the tag, the commit and the folder hash. The v0.6.1 folder (3 files: `SKILL.md`, `references/measuring-text.md`, `references/table-view.md`) hashes to `a26565be3b5b32f67f65fd22056f9ac933eae66294aab7c29e9a2c76927c8339`; v0.6.2 will differ.
+2. **Time cap.** Launch with `UVS_TIME_LIMIT_S=7200`: the launcher appends `--time-limit-s 7200` to the supervisor line (unset: no limit, as before), and `meta.json` then carries `time_limit_s` and `stopped_by_limit`.
 3. **Open points in the skill itself** (E6's business, noted because they bear on what E7 can prove):
    - The skill says the table-view stream tie "is being rechecked" (30.7 s in the later E2/E3 runs against 7.73 s in E1). An agent reading that may pick either view.
    - `SKILL.md` is about 2,080 words, a little over the plan's 2,000.
    - The plan says the skill names nothing about the benchmark. It currently carries evidence tags and text such as "S3 lost 14 minutes", "Round 5 spike" and measured stream seconds, and `SOURCES.md` points at the benchmark repo. The build folder has no repo, so nothing can be read from it, but the skill still tells the agent that a benchmark exists. Decide in E6 whether to strip these for the build copy; if the copy differs from the repo's, record it.
-4. **The Harness fix under way** (another lane): `Harness/record.sh` with `--only <tests>` and without `launch` did not install the app, so single-row runs measured whatever was installed before (`docs/round5-results-e2e3.md`; `bench-inner.sh` `./bench <number>` has the same flaw). The uncommitted edit in `record.sh` installs the target app in quick mode. **E7 scoring here does not depend on it**: the commands below run the full pass (no `--only`), which always installs. It matters only for re-running one row (for example `stream`) after a surprise: wait for that fix to land, or put `launch` in `--only`.
+4. **The Harness fix has landed** (`3da9ff2`): `Harness/record.sh --only <tests>` now always installs the target app, so single-row re-runs (for example `stream`) measure the right build. The full-pass commands below never depended on it.
 5. **Fernando's go**, and for the phone passes someone at the iPhone 12 (unlocked, awake, Settings > Developer > Enable UI Automation on, several GB free).
 6. **Quota.** `~/olivares-burgos/pacer/tools/codex-pace` on 26 Oct: `codex open · weekly 9% · resets Tue 27 Oct 19:37 · reading 6584 min old`. Under 50 % weekly, so Sol builds are free to run. The reading is 4.5 days old, so re-run `codex-pace` right before the Sol launch. A Sol build is one Codex session of about 20 to 40 minutes (control: 1233 s). Claude side (`pace`): push, maxAgents 8, hey.com 5 % of the week used, so Opus is fine too.
 
@@ -40,21 +37,21 @@ Check after launch that nothing slipped in: `diff builds/round2-uikit-swift-opus
 
 ## Launch lines (one at a time, Fernando starts them)
 
-From `~/olivares-burgos/uikit-vs-swiftui-repo`, after the launcher change above. First a dry run for each; it creates nothing and calls no model:
+From `~/olivares-burgos/uikit-vs-swiftui-repo`, (the launcher change is in). First a dry run for each; it creates nothing and calls no model:
 
 ```
-Harness/launch-build.sh opus uikit --skills ours-chatlist --dry-run
-Harness/launch-build.sh sol uikit --skills ours-chatlist --dry-run
+UVS_TIME_LIMIT_S=7200 Harness/launch-build.sh opus uikit --skills ours-chatlist --dry-run
+UVS_TIME_LIMIT_S=7200 Harness/launch-build.sh sol uikit --skills ours-chatlist --dry-run
 ```
 
-The dry run must show: skill set `uikit-chat-list` with the folder hash above (or the tag's, if it moved), `installed: into .claude/skills and .agents/skills`, and the right inputs tag (`v2-inputs`). Then the real launches, each in the background (`run_in_background`) and the second only after the first has stopped and been scored far enough that you know it ran:
+The dry run must show: skill set `uikit-chat-list` with the tag's folder hash, `time limit: 7200 s`, `installed: into .claude/skills and .agents/skills`, and the right inputs tag (`v2-inputs`). Then the real launches, each in the background (`run_in_background`) and the second only after the first has stopped and been scored far enough that you know it ran:
 
 ```
-Harness/launch-build.sh opus uikit --skills ours-chatlist
-Harness/launch-build.sh sol uikit --skills ours-chatlist
+UVS_TIME_LIMIT_S=7200 Harness/launch-build.sh opus uikit --skills ours-chatlist
+UVS_TIME_LIMIT_S=7200 Harness/launch-build.sh sol uikit --skills ours-chatlist
 ```
 
-(With the time cap env var from blocker 1, prefix `UVS_TIME_LIMIT_S=7200`.)
+Both launch lines are prefixed with `UVS_TIME_LIMIT_S=7200` (the 2-hour cap):
 
 What the launcher runs (from `launch-build.sh`, the same lines as the Round 2 pair builds):
 

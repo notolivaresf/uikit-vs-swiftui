@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skill sets for Level 2 builds (called by launch-build.sh, not by hand).
 
-  skillset.py --kind none|ours-slim|ours-full|ours-pair|ours-objc-pair|apple|avdlee|twostraws [--dest BUILD_DIR] [--install]
+  skillset.py --kind none|ours-slim|ours-full|ours-chatlist|ours-pair|ours-objc-pair|apple|avdlee|twostraws [--dest BUILD_DIR] [--install]
 
 Prints one JSON record on stdout: the kind, the skills (name, version, source,
 file count, hash of the folder) and the names a model should list. With --install the
@@ -16,6 +16,7 @@ Sources
   ours-slim  git archive of tag UVS_SLIM_TAG (default v0.2-slim) of UVS_SKILL_REPO
              (default ~/olivares-burgos/uikit-skill), folder skills/uikit-specialist-slim
   ours-full  same repo, tag UVS_FULL_TAG (default v0.1), folder skills/uikit-specialist
+  ours-chatlist  same repo, tag CHATLIST_TAG (v0.6.2; UVS_CHATLIST_TAG overrides), folder skills/uikit-chat-list only
   ours-pair  the two Swift skills vendored in this repo, skills/uikit/{uikit-specialist,
              uikit-whats-new-27} (copied from uikit-skill tag v0.3-pair, see skills/README.md)
   ours-objc-pair  skills/uikit-objc/{uikit-specialist-objc,uikit-whats-new-27-objc} of this repo
@@ -33,8 +34,11 @@ Sources
 import argparse, glob, hashlib, io, json, os, re, shutil, subprocess, sys, tarfile
 
 APPLE_SKILLS = ["swiftui-specialist", "swiftui-whats-new-27"]
+# The one place to change the pinned tag of the chat-list skill (UVS_CHATLIST_TAG overrides it for a test).
+CHATLIST_TAG = "v0.6.2"
 OURS = {"ours-slim": ("uikit-specialist-slim", "UVS_SLIM_TAG", "v0.2-slim"),
-        "ours-full": ("uikit-specialist", "UVS_FULL_TAG", "v0.1")}
+        "ours-full": ("uikit-specialist", "UVS_FULL_TAG", "v0.1"),
+        "ours-chatlist": ("uikit-chat-list", "UVS_CHATLIST_TAG", CHATLIST_TAG)}
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # vendored pairs: kind -> (folder under skills/, the names the two SKILL.md files must carry)
 VENDORED = {"ours-pair": ("uikit", ["uikit-specialist", "uikit-whats-new-27"],
@@ -175,7 +179,7 @@ def codex_config(out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--codex-config", metavar="OUT", help="write the Codex config.toml to OUT ('-' = only count)")
-    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "ours-pair", "ours-objc-pair", "apple", "avdlee", "twostraws"])
+    ap.add_argument("--kind", default="none", choices=["none", "ours-slim", "ours-full", "ours-chatlist", "ours-pair", "ours-objc-pair", "apple", "avdlee", "twostraws"])
     ap.add_argument("--dest")
     ap.add_argument("--install", action="store_true")
     a = ap.parse_args()
