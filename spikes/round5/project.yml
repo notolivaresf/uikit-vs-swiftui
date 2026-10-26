@@ -1,0 +1,73 @@
+name: Round5Spikes
+options:
+  bundleIdPrefix: campfire
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  SpikeKit:
+    path: SpikeKit
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+targetTemplates:
+  Spike:
+    type: application
+    platform: iOS
+    dependencies:
+      - package: SpikeKit
+        product: SpikeKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+targets:
+  E1Table:
+    templates: [Spike]
+    sources: [Apps/E1Table]
+    settings:
+      base:
+        PRODUCT_NAME: E1Table
+  E1Collection:
+    templates: [Spike]
+    sources: [Apps/E1Collection]
+    settings:
+      base:
+        PRODUCT_NAME: E1Collection
+  E2TableSelf:
+    templates: [Spike]
+    sources: [Apps/E2TableSelf]
+    settings:
+      base:
+        PRODUCT_NAME: E2TableSelf
+  E2CollectionSelf:
+    templates: [Spike]
+    sources: [Apps/E2CollectionSelf]
+    settings:
+      base:
+        PRODUCT_NAME: E2CollectionSelf
+schemes:
+  E1Table:
+    build: { targets: { E1Table: all } }
+    run: { config: Release }
+  E1Collection:
+    build: { targets: { E1Collection: all } }
+    run: { config: Release }
+  E2TableSelf:
+    build: { targets: { E2TableSelf: all } }
+    run: { config: Release }
+  E2CollectionSelf:
+    build: { targets: { E2CollectionSelf: all } }
+    run: { config: Release }
