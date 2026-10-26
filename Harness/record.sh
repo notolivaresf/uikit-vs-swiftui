@@ -212,7 +212,12 @@ if [ $quick -eq 1 ]; then
   # Quick: one fresh launch without Instruments, then the same state-label read as the traced launch.
   LAUNCH_SAMPLES=0
   if [ -n "$sim" ] && ! want launch; then
-    :
+    # Round 5 follow-up: --only without launch used to skip the install, so the tests measured whichever app was
+    # installed before. Always install the target app; only the cold-launch read is skipped.
+    xcrun simctl terminate "$sim" "$app" >/dev/null 2>&1
+    if [ -n "$app_path" ]; then
+      xcrun simctl install "$sim" "$app_path" >"$out/logs/install.1.log" 2>&1 || fail "install (logs/install.1.log)"
+    fi
   elif [ -n "$sim" ]; then
     xcrun simctl terminate "$sim" "$app" >/dev/null 2>&1
     if [ -n "$app_path" ]; then

@@ -121,13 +121,18 @@ final class CollectionAdapter: NSObject, ListAdapter, UICollectionViewDataSource
         UIView.performWithoutAnimation { collection.reloadItems(at: [IndexPath(item: index, section: 0)]) }
     }
 
+    /// True while UIKit calls scrollViewDidScroll. That call can come from inside the collection view's own layout pass
+    /// (when a cell's real height moves the offset), and a layoutIfNeeded there throws "Expected dequeued view to be
+    /// returned to the collection view". The layout is up to date at that point, so the reads just skip the flush.
+    private var inScrollCallback = false
+
     func rowFrame(_ index: Int) -> CGRect {
-        collection.layoutIfNeeded()
+        if !inScrollCallback { collection.layoutIfNeeded() }
         return CGRect(x: 0, y: layout.top(of: index), width: collection.bounds.width, height: layout.height(of: index))
     }
 
     func visibleTopRow() -> Int? {
-        collection.layoutIfNeeded()
+        if !inScrollCallback { collection.layoutIfNeeded() }
         guard layout.count > 0 else { return nil }
         return min(layout.row(at: max(0, collection.contentOffset.y)), layout.count - 1)
     }
@@ -140,5 +145,9 @@ final class CollectionAdapter: NSObject, ListAdapter, UICollectionViewDataSource
         return cell
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) { data?.listDidScroll() }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        inScrollCallback = true
+        data?.listDidScroll()
+        inScrollCallback = false
+    }
 }
