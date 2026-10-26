@@ -16,8 +16,8 @@ final class TableAdapter: NSObject, ListAdapter, UITableViewDataSource, UITableV
         table.register(TableRowCell.self, forCellReuseIdentifier: "row")
     }
 
-    func reloadAll() { table.reloadData() }
-    func heightsChanged() { table.reloadData() }
+    func reloadAll() { cache.removeAll(); table.reloadData() }
+    func heightsChanged() { cache.removeAll(); table.reloadData() }
 
     func rowsAppended(_ count: Int) {
         guard let n = data?.itemCount else { return }
@@ -39,6 +39,7 @@ final class TableAdapter: NSObject, ListAdapter, UITableViewDataSource, UITableV
     }
 
     func rowChanged(_ index: Int) {
+        if let id = data?.messageID(at: index) { cache[id] = nil }
         UIView.performWithoutAnimation { table.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none) }
     }
 
@@ -55,7 +56,18 @@ final class TableAdapter: NSObject, ListAdapter, UITableViewDataSource, UITableV
         return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { data?.savedHeight(at: indexPath.row) ?? 0 }
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat { data?.savedHeight(at: indexPath.row) ?? 0 }
+    /// Diagnosis (Round 5 follow-up): `defaults write -g uvsCache 1` in the simulator keeps the answer by message id, so
+    /// the table's repeated height questions (it asks for every row on each insert) do not rebuild a RowItem each time.
+    private let cacheOn = UserDefaults.standard.bool(forKey: "uvsCache")
+    private var cache: [Int: CGFloat] = [:]
+    private func rowHeight(_ row: Int) -> CGFloat {
+        guard let data else { return 0 }
+        guard cacheOn else { return data.savedHeight(at: row) }
+        let id = data.messageID(at: row)
+        if let h = cache[id] { return h }
+        let h = data.savedHeight(at: row); cache[id] = h; return h
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { rowHeight(indexPath.row) }
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat { rowHeight(indexPath.row) }
     func scrollViewDidScroll(_ scrollView: UIScrollView) { data?.listDidScroll() }
 }
