@@ -1,0 +1,140 @@
+name: E8Stream
+options:
+  deploymentTarget:
+    iOS: "18.0"
+  defaultConfig: Release
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: ../../../CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+targetTemplates:
+  E8:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        excludes: [Info.plist]
+      - path: Shared
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        INFOPLIST_FILE: App/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+          SWIFT_COMPILATION_MODE: wholemodule
+targets:
+  # The E8 Opus build as shipped: one batch update per message and per boost, chrome after each.
+  E8PerMessage:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8PerMessage
+  # Same, but messages and boosts are collected and applied as one batch every 0.1 s.
+  E8Timer:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8Timer
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COALESCE_TIMER"
+  # Same, but collected events are applied on the next main-queue turn.
+  E8RunLoop:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8RunLoop
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COALESCE_RUNLOOP"
+  # Per-message updates, but the chrome (jump button, state label) refreshed at most every 0.1 s.
+  E8ChromeThrottle:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8ChromeThrottle
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) CHROME_THROTTLE"
+  # Per-message, plus the jump sets the final offset before its one layout pass.
+  E8JumpFix:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8JumpFix
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) OFFSET_FIRST"
+  # 0.1 s coalescing, and jump and trim set the final offset before their one layout pass.
+  E8TimerOffsetFirst:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8TimerOffsetFirst
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COALESCE_TIMER OFFSET_FIRST"
+  E8TimerNoForce:
+    templates: [E8]
+    settings:
+      base:
+        PRODUCT_NAME: E8TimerNoForce
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COALESCE_TIMER NO_FORCED_LAYOUT"
+  # The Opus control (Round 2 tree), unchanged apart from the probe hooks.
+  E8Ctrl:
+    type: application
+    platform: iOS
+    sources:
+      - path: Control
+        excludes: [Info.plist]
+      - path: Shared
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        INFOPLIST_FILE: Control/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: E8Ctrl
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+schemes:
+  E8PerMessage:
+    build: { targets: { E8PerMessage: all } }
+    run: { config: Release }
+  E8Timer:
+    build: { targets: { E8Timer: all } }
+    run: { config: Release }
+  E8RunLoop:
+    build: { targets: { E8RunLoop: all } }
+    run: { config: Release }
+  E8ChromeThrottle:
+    build: { targets: { E8ChromeThrottle: all } }
+    run: { config: Release }
+  E8JumpFix:
+    build: { targets: { E8JumpFix: all } }
+    run: { config: Release }
+  E8TimerOffsetFirst:
+    build: { targets: { E8TimerOffsetFirst: all } }
+    run: { config: Release }
+  E8TimerNoForce:
+    build: { targets: { E8TimerNoForce: all } }
+    run: { config: Release }
+  E8Ctrl:
+    build: { targets: { E8Ctrl: all } }
+    run: { config: Release }
