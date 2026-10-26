@@ -58,6 +58,46 @@ targets:
     settings:
       base:
         PRODUCT_NAME: E2CollectionSelf
+  R5SavedTop:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Table/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SavedTop
+  R5SavedDelta:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Table/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SavedDelta
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREPEND_DELTA"
+  R5SavedContent:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E1Table/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SavedContent
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREPEND_CONTENT"
+  R5SelfTop:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2TableSelf/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SelfTop
+  R5SelfDelta:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2TableSelf/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SelfDelta
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREPEND_DELTA"
+  R5SelfContent:
+    templates: [Spike]
+    sources: [Apps/R5Shared, Apps/E2TableSelf/TableAdapter.swift]
+    settings:
+      base:
+        PRODUCT_NAME: R5SelfContent
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREPEND_CONTENT"
 schemes:
   E1Table:
     build: { targets: { E1Table: all } }
@@ -70,4 +110,22 @@ schemes:
     run: { config: Release }
   E2CollectionSelf:
     build: { targets: { E2CollectionSelf: all } }
+    run: { config: Release }
+  R5SavedTop:
+    build: { targets: { R5SavedTop: all } }
+    run: { config: Release }
+  R5SavedDelta:
+    build: { targets: { R5SavedDelta: all } }
+    run: { config: Release }
+  R5SavedContent:
+    build: { targets: { R5SavedContent: all } }
+    run: { config: Release }
+  R5SelfTop:
+    build: { targets: { R5SelfTop: all } }
+    run: { config: Release }
+  R5SelfDelta:
+    build: { targets: { R5SelfDelta: all } }
+    run: { config: Release }
+  R5SelfContent:
+    build: { targets: { R5SelfContent: all } }
     run: { config: Release }

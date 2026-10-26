@@ -8,6 +8,8 @@ public enum PrependAnchor: String {
     case offsetDelta
     /// (c) the layout keeps its own anchor while it inserts (custom collection layout only).
     case layoutAnchor
+    /// (b') add the change in the list's content height (what the system now reports) to the scroll offset.
+    case contentDelta
 }
 
 /// The room screen both spikes share: debug bar, state label, stream, jump, load older, text size. It owns the data
@@ -187,6 +189,13 @@ public final class RoomViewController: UIViewController, RoomDataProviding {
             sv.layoutIfNeeded()
         case .layoutAnchor:
             adapter.rowsPrepended(n)
+            sv.layoutIfNeeded()
+        case .contentDelta:
+            sv.layoutIfNeeded()
+            let h = sv.contentSize.height, before = sv.contentOffset.y
+            adapter.rowsPrepended(n)
+            sv.layoutIfNeeded()
+            sv.setContentOffset(CGPoint(x: 0, y: before + sv.contentSize.height - h), animated: false)
             sv.layoutIfNeeded()
         }
     }

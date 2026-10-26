@@ -8,7 +8,21 @@ public enum SpikeClock {
 /// The debug bar the harness reads (PROMPT.md): six buttons, a "Stream done" label and the state label
 /// `first 49961 last 50000 loaded 40 pinned yes top 49990 y -12.5 ms 8`. `ms` runs from the touch up of the last
 /// tapped button until `finishTap` (called once the rows are laid out), and at launch from the first line of code.
+/// A button that remembers when the finger came up (the touch's own timestamp, same clock as CACurrentMediaTime).
+final class TimedButton: UIButton {
+    var touchUp: CFTimeInterval?
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchUp = touches.first?.timestamp
+        super.touchesEnded(touches, with: event)
+    }
+}
+
 public final class DebugBar: UIView {
+    /// Opt-in (E2, E3): `ms` runs from the touch up (the touch's own timestamp) to the first display-link frame after
+    /// the result is laid out. Off: from the action to the end of the layout, as in E1.
+    nonisolated(unsafe) public static var nextFrameClock = false
+    private var lastState = State()
+    private var link: CADisplayLink?
     public struct State {
         public var first = 0, last = 0, loaded = 0
         public var pinned = false
@@ -18,7 +32,7 @@ public final class DebugBar: UIView {
 
     public let stateLabel = UILabel()
     public let streamDone = UILabel()
-    private var buttons: [String: UIButton] = [:]
+    private var buttons: [String: TimedButton] = [:]
     private var tapStart: CFTimeInterval?
     private var ms = 0
     private var lastText = ""
@@ -34,8 +48,8 @@ public final class DebugBar: UIView {
             c.title = t
             c.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { var a = $0; a.font = .systemFont(ofSize: 12); return a }
             c.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6)
-            let b = UIButton(configuration: c)
-            b.addAction(UIAction { [weak self] _ in self?.tapped(t) }, for: .touchUpInside)
+            let b = TimedButton(configuration: c)
+            b.addAction(UIAction { [weak self, weak b] _ in self?.tapped(t, touchUp: b?.touchUp) }, for: .touchUpInside)
             addSubview(b); buttons[t] = b
         }
         stateLabel.font = .monospacedSystemFont(ofSize: 10, weight: .regular)
@@ -57,20 +71,38 @@ public final class DebugBar: UIView {
         streamDone.frame = CGRect(x: 8, y: 94, width: 100, height: 14)
     }
 
-    private func tapped(_ title: String) {
+    private func tapped(_ title: String, touchUp: CFTimeInterval?) {
         // Boost burst and Start stream don't change `ms`.
-        if title != "Start stream" && title != "Boost burst" { tapStart = CACurrentMediaTime() }
+        if title != "Start stream" && title != "Boost burst" {
+            let now = CACurrentMediaTime()
+            tapStart = Self.nextFrameClock ? min(touchUp ?? now, now) : now
+        }
         onTap?(title)
     }
 
     /// Call once the tap's result is laid out on screen (or, at launch, the first rows).
     public func finishTap() {
         let from = tapStart ?? SpikeClock.launch
-        ms = Int((CACurrentMediaTime() - from) * 1000)
         tapStart = nil
+        if Self.nextFrameClock && link == nil {
+            let l = CADisplayLink(target: self, selector: #selector(frame(_:)))
+            pendingFrom = from
+            l.add(to: .main, forMode: .common)
+            link = l
+            return
+        }
+        ms = Int((CACurrentMediaTime() - from) * 1000)
+    }
+
+    private var pendingFrom: CFTimeInterval = 0
+    @objc private func frame(_ l: CADisplayLink) {
+        l.invalidate(); link = nil
+        ms = Int((CACurrentMediaTime() - pendingFrom) * 1000)
+        show(lastState)
     }
 
     public func show(_ s: State) {
+        lastState = s
         let text = "first \(s.first) last \(s.last) loaded \(s.loaded) pinned \(s.pinned ? "yes" : "no") top \(s.top) y \(String(format: "%.1f", Double(s.y))) ms \(ms)"
         if text != lastText { lastText = text; stateLabel.text = text }
     }
