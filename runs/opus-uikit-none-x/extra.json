@@ -1,0 +1,8 @@
+{
+  "stack": "uikit",
+  "skills_arm": "none",
+  "inputs_tag": "v2-inputs",
+  "inputs_commit": "80cda43e4e09fa7be256938a568252f5fd8ea30b",
+  "stack_line": "Stack: UIKit only, no SwiftUI",
+  "skill_sentence": null
+}

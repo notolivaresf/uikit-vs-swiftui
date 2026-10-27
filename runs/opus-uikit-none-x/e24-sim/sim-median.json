@@ -1,0 +1,100 @@
+{
+  "runs": 3,
+  "measures": {
+    "first40_cold": {
+      "label": "First 40 rows, cold",
+      "unit": "ms",
+      "value": 167.0,
+      "values": [
+        184.0,
+        167.0,
+        167.0
+      ]
+    },
+    "first40_repeated": {
+      "label": "First 40 rows, repeated",
+      "unit": "ms",
+      "value": 649.0,
+      "values": [
+        649.0,
+        646.0,
+        654.0
+      ]
+    },
+    "stream_cpu": {
+      "label": "Stream CPU",
+      "unit": "s",
+      "value": 9.414,
+      "values": [
+        9.418,
+        9.38,
+        9.414
+      ]
+    },
+    "jump": {
+      "label": "Jump to message 2,500",
+      "unit": "ms",
+      "value": 44.0,
+      "values": [
+        41.0,
+        48.0,
+        44.0
+      ]
+    },
+    "older": {
+      "label": "Load older",
+      "unit": "ms",
+      "value": 43.0,
+      "values": [
+        43.0,
+        42.0,
+        54.0
+      ]
+    },
+    "text_bottom": {
+      "label": "Text size, at the bottom",
+      "unit": "ms",
+      "value": 46.0,
+      "values": [
+        45.0,
+        46.0,
+        52.0
+      ]
+    },
+    "text_mid": {
+      "label": "Text size, mid-list",
+      "unit": "ms",
+      "value": 64.0,
+      "values": [
+        64.0,
+        61.0,
+        65.0
+      ]
+    },
+    "memory": {
+      "label": "Peak memory",
+      "unit": "MB",
+      "value": 61.639,
+      "values": [
+        62.442,
+        61.639,
+        61.524
+      ]
+    },
+    "app_size": {
+      "label": "App size",
+      "unit": "MB",
+      "value": 1.38,
+      "values": [
+        1.38,
+        1.38,
+        1.38
+      ]
+    }
+  },
+  "checks_failed": [
+    "Long-press a message: select any range of its text and copy it. The harness recognises selection by the system's text-selection menu (Look Up, Translate, Select All...) appearing after a long press or a double tap on the text"
+  ],
+  "checks_passed": 12,
+  "checks_total": 13
+}
