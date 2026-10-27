@@ -42,6 +42,10 @@ Each cell is the median with the three passes in brackets. The control is the Ro
 | Load older (ms) | 45 [45, 49, 44] | 26 [26, 26, 24] | **+73 %** | 40 | 26 |
 | Text size at bottom (ms) | 47 [43, 47, 49] | 15 [15, 14, 15] | **+213 %** | 40 | 15 |
 | Text size mid-list (ms) | 48 [48, 48, 46] | 25 [26, 25, 25] | **+92 %** | 42 | 26 |
+| Jump to 2,500 (ms) | 50 [45, 56, 50] | 25 [24, 26, 25] | **+100 %** | 49 | 25 |
+| Load older (ms) | 45 [45, 49, 44] | 26 [26, 26, 24] | **+73 %** | 40 | 26 |
+| Text size at bottom (ms) | 47 [43, 47, 49] | 15 [15, 14, 15] | **+213 %** | 40 | 15 |
+| Text size mid-list (ms) | 48 [48, 48, 46] | 25 [26, 25, 25] | **+92 %** | 42 | 26 |
 | Peak memory (MB) | 76.0 [76.0, 75.7, 76.0] | 58.0 [58.3, 58.0, 57.5] | **+31 %** | 71.2 | 57.6 |
 | App size (MB, binary) | 0.74 | 0.79 | -6 % | 0.73 | 0.79 |
 
