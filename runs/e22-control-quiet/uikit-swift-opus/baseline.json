@@ -1,0 +1,98 @@
+{
+  "runs": 3,
+  "measures": {
+    "first40_cold": {
+      "label": "First 40 rows, cold",
+      "unit": "ms",
+      "value": 163.0,
+      "values": [
+        163.0,
+        173.0,
+        160.0
+      ]
+    },
+    "first40_repeated": {
+      "label": "First 40 rows, repeated",
+      "unit": "ms",
+      "value": 592.0,
+      "values": [
+        592.0,
+        603.0,
+        591.0
+      ]
+    },
+    "stream_cpu": {
+      "label": "Stream CPU",
+      "unit": "s",
+      "value": 6.303,
+      "values": [
+        6.22,
+        6.303,
+        6.325
+      ]
+    },
+    "jump": {
+      "label": "Jump to message 2,500",
+      "unit": "ms",
+      "value": 47.0,
+      "values": [
+        42.0,
+        47.0,
+        48.0
+      ]
+    },
+    "older": {
+      "label": "Load older",
+      "unit": "ms",
+      "value": 44.0,
+      "values": [
+        44.0,
+        38.0,
+        44.0
+      ]
+    },
+    "text_bottom": {
+      "label": "Text size, at the bottom",
+      "unit": "ms",
+      "value": 43.0,
+      "values": [
+        43.0,
+        43.0,
+        42.0
+      ]
+    },
+    "text_mid": {
+      "label": "Text size, mid-list",
+      "unit": "ms",
+      "value": 47.0,
+      "values": [
+        45.0,
+        47.0,
+        50.0
+      ]
+    },
+    "memory": {
+      "label": "Peak memory",
+      "unit": "MB",
+      "value": 54.627,
+      "values": [
+        54.692,
+        53.857,
+        54.627
+      ]
+    },
+    "app_size": {
+      "label": "App size",
+      "unit": "MB",
+      "value": 0.84,
+      "values": [
+        0.84,
+        0.84,
+        0.84
+      ]
+    }
+  },
+  "checks_failed": [],
+  "checks_passed": 13,
+  "checks_total": 13
+}

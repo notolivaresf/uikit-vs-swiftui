@@ -1,0 +1,8 @@
+{
+  "stack": "uikit",
+  "skills_arm": "ours-chatlist",
+  "inputs_tag": "v2-inputs",
+  "inputs_commit": "80cda43e4e09fa7be256938a568252f5fd8ea30b",
+  "stack_line": "Stack: UIKit only, no SwiftUI",
+  "skill_sentence": "Agent skills are installed in this project; use any that help."
+}
