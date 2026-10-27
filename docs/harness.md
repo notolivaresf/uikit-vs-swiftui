@@ -226,3 +226,14 @@ The plan, the measurements and the checks are in [round4-plan.md](round4-plan.md
 - `Harness/check-stack.sh <stack> <build folder> [<built .app>]`: source rules per stack, and with the .app an `nm -m` check of which framework each symbol is bound to.
 - `Harness/MacSmokeApp/`: the Mac stand-in (AppKit, a plain table, only the debug-bar contract), as `SmokeApp` is for the phone. Never a starting point for a build.
 - Needs: an unlocked, logged-in session with the display awake and Automation Mode on (`automationmodetool enable-automationmode-without-authentication`, once, admin password). With the screen locked the UI tests stop at "Timed out while enabling automation mode" and Instruments records no frames.
+
+## The common stopwatch (Round 5, 27 Oct)
+
+The four timed rows (jump to message 2,500, load older, text size at the bottom and mid-list) used to come only from the `ms` each app writes on its own state label, and each build started and stopped that clock at a different moment (`docs/round5-list-code-diff.md`). The common stopwatch times every build the same way, from outside the app's code:
+
+- `buildslot run --label "uvs: stopwatch" -- Harness/stopwatch.sh --sim <udid> --app-path <Release simulator .app> --out <new folder> [--tests ...]`
+- The harness injects `Harness/stopwatch/UVSStopwatch.m` (built by `Harness/stopwatch/build.sh`) into the app with `DYLD_INSERT_LIBRARIES`, set in `BenchCase.setUp` only when `UVS_STOPWATCH_DYLIB` is in the test runner's environment. On every touch that ends, before the app gets it, it paints an 8-cell code at the top centre of the window and flushes it, so the next frame carries the touch. It logs `seq, event timestamp, dispatch time, control label`.
+- `simctl io recordVideo` records the screen while the unchanged UI test runs; `BenchCase.recordLayout` prints `UVS_LAYOUT` (button, label and list rectangles) so the analysis knows where to look.
+- `Harness/stopwatch.py analyze` reads the video: touch = the frame where the code changes; result = the first frame from which the list area (status bar, debug bar buttons and state label left out) already shows the picture it settles on, or, when the list does not change (load older keeps the same rows on screen), the state label. Per tap it also keeps the list, label and whole-screen times, the dispatch lag and the app's own `ms`. `stopwatch.py median <pass files> --out median.json` gives the per-build median.
+- `scorecard.py --stopwatch <stopwatch.json or median.json>` shows the four rows twice: "(app-reported)" and "(stopwatch)".
+- Resolution: the video's time base is 1/600 s (1.7 ms); frames come about every 16.7 ms, so a reading moves in steps of one frame. Results and noise: `docs/round5-common-stopwatch.md`.

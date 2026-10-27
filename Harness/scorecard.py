@@ -117,6 +117,25 @@ def measures(s, size_mb):
          if "resize" in s else [])
 
 
+STOPWATCH_KEYS = ["jump", "older", "text_bottom", "text_mid"]
+
+
+def with_stopwatch(rows, sw):
+    """Round 5 (27 Oct): the four timed rows two ways. The app's own `ms` stays, marked app-reported (each build
+    starts and stops that clock where it likes); the common stopwatch (Harness/stopwatch.sh: touch to the first
+    frame that shows the result, read from a screen recording) follows each one as its own row."""
+    out = []
+    for key, label, unit, val, direction, full_only in rows:
+        if key not in STOPWATCH_KEYS:
+            out.append((key, label, unit, val, direction, full_only))
+            continue
+        r = sw.get("rows", {}).get(key, {})
+        v = r.get("stopwatch_ms", r.get("median_ms"))
+        out.append((key, label + " (app-reported)", unit, val, direction, full_only))
+        out.append((key + "_sw", label + " (stopwatch)", "ms", v, "low", False))
+    return out
+
+
 SIM_KEYS = ["first40_cold", "first40_repeated", "stream_cpu", "jump", "older", "text_bottom", "text_mid", "memory", "app_size"]
 
 
@@ -164,9 +183,9 @@ def only_row(a, s, bl, sim):
     row = [r for r in measures(s, a.app_size_mb) if r[0] == a.only][0]
     key, label, unit, val, direction, _ = row
     b = bl["measures"].get(key, {}).get("value")
-    print("%-30s %12s %12s" % ("Measure", "Yours", "Baseline"))
+    print("%-40s %12s %12s" % ("Measure", "Yours", "Baseline"))
     mark = "" if val is None or b is None else ("better" if val < b else "to beat")
-    print("%-30s %12s %12s  %s" % (label, fmt(val, unit) + " " + unit if val is not None else "not measured",
+    print("%-40s %12s %12s  %s" % (label, fmt(val, unit) + " " + unit if val is not None else "not measured",
                                    fmt(b, unit) + " " + unit if b is not None else "-", mark))
     checks = evaluate(s, a.stack_rule == "ok")
     if key in ("first40_cold", "first40_repeated"):   # one of the two readings is missing in a single run
@@ -195,6 +214,8 @@ def main():
     ap.add_argument("--only", help="simulator pass: print only this measure (a key of SIM_KEYS) and the checks it feeds")
     ap.add_argument("--json")
     ap.add_argument("--markdown", action="store_true")
+    ap.add_argument("--stopwatch", help="stopwatch.json or its median (Harness/stopwatch.py): adds the common "
+                    "stopwatch's rows and marks the app's own ms rows as app-reported")
     a = ap.parse_args()
     if a.aggregate:
         aggregate(a.aggregate, a.json)
@@ -216,6 +237,8 @@ def main():
     locks = json.load(open(a.locks)) if a.locks else {"ok": True, "changed": []}
     checks = evaluate(s, a.stack_rule == "ok")
     rows = measures(s, a.app_size_mb)
+    if a.stopwatch:
+        rows = with_stopwatch(rows, json.load(open(a.stopwatch)))
     failed = [(k, t) for k, t in CHECKS if not checks[k]]
 
     out = {"quick": a.quick, "locks_ok": locks["ok"], "locks_changed": locks["changed"],
@@ -225,9 +248,9 @@ def main():
     if a.markdown:
         lines.append(("| Measure | Yours | Baseline | |\n|---|---|---|---|" if sim else "| Measure | Yours | Best seen | |\n|---|---|---|---|"))
     else:
-        lines.append("%-30s %12s %12s" % ("Measure", "Yours", "Baseline" if sim else "Best seen"))
+        lines.append("%-40s %12s %12s" % ("Measure", "Yours", "Baseline" if sim else "Best seen"))
     if sim:
-        rows = [r for r in rows if r[0] in SIM_KEYS]
+        rows = [r for r in rows if r[0] in SIM_KEYS or r[0].endswith("_sw")]
     for key, label, unit, val, direction, full_only in rows:
         b = best["measures"].get(key, {}).get("best")
         skipped = a.quick and full_only and not sim
@@ -243,7 +266,7 @@ def main():
         if a.markdown:
             lines.append("| %s | %s | %s | %s |" % (label, shown, bshown, mark))
         else:
-            lines.append("%-30s %12s %12s  %s" % (label, shown, bshown, mark))
+            lines.append("%-40s %12s %12s  %s" % (label, shown, bshown, mark))
     lines.append("")
     lines.append("Checks passed: %d of %d" % (out["checks_passed"], out["checks_total"]))
     if failed:

@@ -39,7 +39,36 @@ class BenchCase: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication(bundleIdentifier: Bar.bundleID)
         app.launchArguments = ["-uvsBenchmark", "YES"]
+        // The common stopwatch (record.sh --stopwatch, simulator only): the harness's touch marker is injected
+        // into the app; the screen recording and Harness/stopwatch.py do the timing. Nothing the app does changes it.
+        let env = ProcessInfo.processInfo.environment
+        if let dylib = env["UVS_STOPWATCH_DYLIB"], !dylib.isEmpty {
+            app.launchEnvironment["DYLD_INSERT_LIBRARIES"] = dylib
+            app.launchEnvironment["UVS_STOPWATCH_LOG"] = env["UVS_STOPWATCH_LOG"] ?? ""
+        }
         XCUIDevice.shared.orientation = .portrait
+    }
+
+    /// Where the debug bar and the state label sit (points, portrait), for the stopwatch: the bar's buttons are
+    /// left out of the picture it compares (their highlight fades on its own), the label is read on its own.
+    func recordLayout(_ test: String) {
+        guard ProcessInfo.processInfo.environment["UVS_STOPWATCH_DYLIB"] != nil else { return }
+        func rect(_ e: XCUIElement) -> [Double]? {
+            guard e.exists else { return nil }
+            let f = e.frame
+            return [Double(f.minX), Double(f.minY), Double(f.width), Double(f.height)]
+        }
+        var buttons: [[Double]] = []
+        for title in [Bar.reset, Bar.jump, Bar.older, Bar.start, Bar.textSize, Bar.boostBurst] {
+            if let r = rect(button(title)) { buttons.append(r) }
+        }
+        var v: [String: Any] = ["buttons": buttons, "window": rect(app.windows.firstMatch) as Any,
+                                "label": rect(stateLabel) as Any, "list": rect(list) as Any]
+        v["test"] = test
+        if let data = try? JSONSerialization.data(withJSONObject: v, options: [.sortedKeys]),
+           let line = String(data: data, encoding: .utf8) {
+            print("UVS_LAYOUT \(line)")
+        }
     }
 
     override func tearDown() {
@@ -113,6 +142,7 @@ class BenchCase: XCTestCase {
     func waitForBar() {
         XCTAssertTrue(button(Bar.reset).waitForExistence(timeout: 30), "debug bar missing")
         XCTAssertTrue(stateLabel.waitForExistence(timeout: 30), "state label missing")
+        recordLayout(name)
     }
 
     func state() -> AppState { AppState(stateLabel.label) }

@@ -16,3 +16,6 @@ runs/**/*.mov
 runs/**/*.mp4
 runs/**/stderr.log
 runs/**/transcript.jsonl
+# Common stopwatch runs: keep stopwatch.json and median.json; logs and Info.plist copies carry local paths
+runs/stopwatch-r5/**/*.log
+runs/stopwatch-r5/**/app-Info.plist

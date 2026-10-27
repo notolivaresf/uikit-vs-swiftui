@@ -1,0 +1,365 @@
+{
+  "dir": "pass2",
+  "rows": {
+    "jump": {
+      "taps": [
+        {
+          "seq": 2,
+          "ms": 38.3,
+          "list_ms": 38.3,
+          "label_ms": 38.3,
+          "screen_ms": 38.3,
+          "touch_s": 9.3033,
+          "settle_window_s": 1.288,
+          "dispatch_lag_ms": 9.72,
+          "app_ms": 30
+        },
+        {
+          "seq": 4,
+          "ms": 35.0,
+          "list_ms": 35.0,
+          "label_ms": 35.0,
+          "screen_ms": 35.0,
+          "touch_s": 12.72,
+          "settle_window_s": 1.312,
+          "dispatch_lag_ms": 8.52,
+          "app_ms": 26
+        },
+        {
+          "seq": 6,
+          "ms": 33.3,
+          "list_ms": 33.3,
+          "label_ms": 33.3,
+          "screen_ms": 33.3,
+          "touch_s": 16.1867,
+          "settle_window_s": 0.513,
+          "dispatch_lag_ms": 13.73,
+          "app_ms": 25
+        }
+      ],
+      "touches_seen": 6,
+      "app_ms_readings": 3,
+      "frames": 332,
+      "frame_step_ms_median": 16.67,
+      "video_px": [
+        1206,
+        2622
+      ],
+      "window_pt": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "median_ms": 35.0,
+      "median_app_ms": 26,
+      "median_list_ms": 35.0,
+      "median_label_ms": 35.0,
+      "median_screen_ms": 35.0,
+      "median_dispatch_lag_ms": 9.72
+    },
+    "older": {
+      "taps": [
+        {
+          "seq": 2,
+          "ms": 40.0,
+          "list_ms": 40.0,
+          "label_ms": 40.0,
+          "screen_ms": 40.0,
+          "touch_s": 9.8633,
+          "settle_window_s": 1.29,
+          "dispatch_lag_ms": 10.5,
+          "app_ms": 33
+        },
+        {
+          "seq": 4,
+          "ms": 33.3,
+          "list_ms": 33.3,
+          "label_ms": 33.3,
+          "screen_ms": 33.3,
+          "touch_s": 13.9467,
+          "settle_window_s": 1.265,
+          "dispatch_lag_ms": 18.13,
+          "app_ms": 25
+        },
+        {
+          "seq": 6,
+          "ms": 35.0,
+          "list_ms": 35.0,
+          "label_ms": 35.0,
+          "screen_ms": 35.0,
+          "touch_s": 18.0133,
+          "settle_window_s": 0.508,
+          "dispatch_lag_ms": 7.78,
+          "app_ms": 26
+        }
+      ],
+      "touches_seen": 6,
+      "app_ms_readings": 3,
+      "frames": 334,
+      "frame_step_ms_median": 16.67,
+      "video_px": [
+        1206,
+        2622
+      ],
+      "window_pt": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "median_ms": 35.0,
+      "median_app_ms": 26,
+      "median_list_ms": 35.0,
+      "median_label_ms": 35.0,
+      "median_screen_ms": 35.0,
+      "median_dispatch_lag_ms": 10.5
+    },
+    "text_bottom": {
+      "taps": [
+        {
+          "seq": 2,
+          "ms": 25.0,
+          "list_ms": 25.0,
+          "label_ms": 25.0,
+          "screen_ms": 25.0,
+          "touch_s": 10.1533,
+          "settle_window_s": 1.28,
+          "dispatch_lag_ms": 12.15,
+          "app_ms": 16
+        },
+        {
+          "seq": 3,
+          "ms": 18.3,
+          "list_ms": 18.3,
+          "label_ms": 18.3,
+          "screen_ms": 18.3,
+          "touch_s": 11.5217,
+          "settle_window_s": 1.252,
+          "dispatch_lag_ms": 19.98,
+          "app_ms": 15
+        },
+        {
+          "seq": 4,
+          "ms": 21.7,
+          "list_ms": 21.7,
+          "label_ms": 21.7,
+          "screen_ms": 21.7,
+          "touch_s": 12.8533,
+          "settle_window_s": 1.908,
+          "dispatch_lag_ms": 12.9,
+          "app_ms": 15
+        },
+        {
+          "seq": 6,
+          "ms": 21.7,
+          "list_ms": 21.7,
+          "label_ms": 21.7,
+          "screen_ms": 21.7,
+          "touch_s": 16.905,
+          "settle_window_s": 1.255,
+          "dispatch_lag_ms": 13.06,
+          "app_ms": 14
+        },
+        {
+          "seq": 7,
+          "ms": 20.0,
+          "list_ms": 20.0,
+          "label_ms": 20.0,
+          "screen_ms": 20.0,
+          "touch_s": 18.2367,
+          "settle_window_s": 1.22,
+          "dispatch_lag_ms": 10.79,
+          "app_ms": 13
+        },
+        {
+          "seq": 8,
+          "ms": 20.0,
+          "list_ms": 20.0,
+          "label_ms": 20.0,
+          "screen_ms": 20.0,
+          "touch_s": 19.5367,
+          "settle_window_s": 1.917,
+          "dispatch_lag_ms": 13.85,
+          "app_ms": 14
+        },
+        {
+          "seq": 10,
+          "ms": 20.0,
+          "list_ms": 20.0,
+          "label_ms": 20.0,
+          "screen_ms": 20.0,
+          "touch_s": 23.505,
+          "settle_window_s": 1.265,
+          "dispatch_lag_ms": 20.03,
+          "app_ms": 14
+        },
+        {
+          "seq": 11,
+          "ms": 16.7,
+          "list_ms": 16.7,
+          "label_ms": 16.7,
+          "screen_ms": 16.7,
+          "touch_s": 24.855,
+          "settle_window_s": 1.282,
+          "dispatch_lag_ms": 17.12,
+          "app_ms": 13
+        },
+        {
+          "seq": 12,
+          "ms": 18.3,
+          "list_ms": 18.3,
+          "label_ms": 18.3,
+          "screen_ms": 18.3,
+          "touch_s": 26.2217,
+          "settle_window_s": 0.485,
+          "dispatch_lag_ms": 18.54,
+          "app_ms": 14
+        }
+      ],
+      "touches_seen": 12,
+      "app_ms_readings": 9,
+      "frames": 530,
+      "frame_step_ms_median": 16.67,
+      "video_px": [
+        1206,
+        2622
+      ],
+      "window_pt": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "median_ms": 20.0,
+      "median_app_ms": 14,
+      "median_list_ms": 20.0,
+      "median_label_ms": 20.0,
+      "median_screen_ms": 20.0,
+      "median_dispatch_lag_ms": 13.85
+    },
+    "text_mid": {
+      "taps": [
+        {
+          "seq": 3,
+          "ms": 33.3,
+          "list_ms": 33.3,
+          "label_ms": 33.3,
+          "screen_ms": 33.3,
+          "touch_s": 11.4083,
+          "settle_window_s": 1.292,
+          "dispatch_lag_ms": 5.34,
+          "app_ms": 28
+        },
+        {
+          "seq": 4,
+          "ms": 31.7,
+          "list_ms": 31.7,
+          "label_ms": 31.7,
+          "screen_ms": 31.7,
+          "touch_s": 12.775,
+          "settle_window_s": 1.273,
+          "dispatch_lag_ms": 9.36,
+          "app_ms": 27
+        },
+        {
+          "seq": 5,
+          "ms": 33.3,
+          "list_ms": 33.3,
+          "label_ms": null,
+          "screen_ms": 33.3,
+          "touch_s": 14.125,
+          "settle_window_s": 0.508,
+          "dispatch_lag_ms": 10.43,
+          "app_ms": 27
+        },
+        {
+          "seq": 8,
+          "ms": 30.0,
+          "list_ms": 30.0,
+          "label_ms": null,
+          "screen_ms": 30.0,
+          "touch_s": 29.6583,
+          "settle_window_s": 0.508,
+          "dispatch_lag_ms": 13.57,
+          "app_ms": 25
+        },
+        {
+          "seq": 9,
+          "ms": 30.0,
+          "list_ms": 30.0,
+          "label_ms": 30.0,
+          "screen_ms": 30.0,
+          "touch_s": 40.9933,
+          "settle_window_s": 1.283,
+          "dispatch_lag_ms": 6.58,
+          "app_ms": 26
+        },
+        {
+          "seq": 10,
+          "ms": 26.7,
+          "list_ms": 26.7,
+          "label_ms": 26.7,
+          "screen_ms": 26.7,
+          "touch_s": 42.36,
+          "settle_window_s": 1.885,
+          "dispatch_lag_ms": 15.2,
+          "app_ms": 24
+        },
+        {
+          "seq": 13,
+          "ms": 28.3,
+          "list_ms": 28.3,
+          "label_ms": 28.3,
+          "screen_ms": 28.3,
+          "touch_s": 47.7267,
+          "settle_window_s": 1.275,
+          "dispatch_lag_ms": 17.37,
+          "app_ms": 25
+        },
+        {
+          "seq": 14,
+          "ms": 31.7,
+          "list_ms": 31.7,
+          "label_ms": 31.7,
+          "screen_ms": 31.7,
+          "touch_s": 49.075,
+          "settle_window_s": 1.247,
+          "dispatch_lag_ms": 7.64,
+          "app_ms": 26
+        },
+        {
+          "seq": 15,
+          "ms": 28.3,
+          "list_ms": 28.3,
+          "label_ms": 28.3,
+          "screen_ms": 28.3,
+          "touch_s": 50.41,
+          "settle_window_s": 1.645,
+          "dispatch_lag_ms": 19.98,
+          "app_ms": 24
+        }
+      ],
+      "touches_seen": 15,
+      "app_ms_readings": 9,
+      "frames": 627,
+      "frame_step_ms_median": 16.67,
+      "video_px": [
+        1206,
+        2622
+      ],
+      "window_pt": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "median_ms": 30.0,
+      "median_app_ms": 26,
+      "median_list_ms": 30.0,
+      "median_label_ms": 30.0,
+      "median_screen_ms": 30.0,
+      "median_dispatch_lag_ms": 10.43
+    }
+  }
+}
