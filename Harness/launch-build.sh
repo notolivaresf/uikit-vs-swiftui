@@ -226,4 +226,7 @@ if os.path.exists(cfg):
 json.dump(d, open(out, "w"), indent=2)
 PY
 fi
-exec "${SUPERVISOR[@]}" "${MODEL_CMD[@]}"
+rc=0
+"${SUPERVISOR[@]}" "${MODEL_CMD[@]}" || rc=$?
+[ "$MODEL" = sol ] && "$HERE/codex-auth-sync.sh" "$CONFIG"
+exit "$rc"

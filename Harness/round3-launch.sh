@@ -114,4 +114,7 @@ open(path, "w").write(profile + "\n" + text)
 PY
   export CODEX_HOME="$CONFIG"
 fi
-exec "${SUP[@]}" "${MODEL_CMD[@]}"
+rc=0
+"${SUP[@]}" "${MODEL_CMD[@]}" || rc=$?
+[ "$MODEL" = sol ] && "$HERE/codex-auth-sync.sh" "$CONFIG"
+exit "$rc"
