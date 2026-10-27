@@ -1,0 +1,120 @@
+name: E13Spike
+options:
+  deploymentTarget:
+    iOS: "18.0"
+  defaultConfig: Release
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: ../../../CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+targetTemplates:
+  Sol:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sol
+      - path: Shared
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+targets:
+  # The E12 Sol build (skill v0.9.0) as shipped, plus the probe: 0.1 s repeating flush timer,
+  # trims with reloadData, prefetching off, eight cell classes in eight reuse pools, jump window 40 each side.
+  SolShipped:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolShipped } }
+  # Jump window 20 rows each side (the Opus E11 build's size).
+  SolJump20:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolJump20, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) JUMP20" } }
+  # One cell class in one reuse pool; code, image, file and boost views made on first need.
+  SolOneCell:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolOneCell, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) ONE_CELL" } }
+  # Cell prefetching on (UIKit's default).
+  SolPrefetchOn:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolPrefetchOn, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PREFETCH_ON" } }
+  # Live changes: one batch update per event as it arrives.
+  SolPerMsg:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolPerMsg, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) FLUSH_PERMSG" } }
+  # Live changes: grouped until the next main run-loop turn.
+  SolNextTurn:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolNextTurn, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) FLUSH_NEXTTURN" } }
+  # Live changes: leading edge (idle list applies at once), then at most once per display frame.
+  SolFrame:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolFrame, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) FLUSH_FRAME" } }
+  # Trim: delete the oldest rows and insert the new ones in one batch update (no reloadData).
+  SolTrimBatch:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolTrimBatch, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TRIM_BATCH" } }
+  SolFix:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolFix, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) ONE_CELL JUMP20 FLUSH_FRAME TRIM_BATCH" } }
+  SolHeader:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolHeader, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) CHEAP_HEADER" } }
+  SolFix2:
+    templates: [Sol]
+    settings: { base: { PRODUCT_NAME: SolFix2, SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) ONE_CELL JUMP20 FLUSH_NEXTTURN TRIM_BATCH CHEAP_HEADER" } }
+schemes:
+  SolShipped:
+    build: { targets: { SolShipped: all } }
+    run: { config: Release }
+  SolJump20:
+    build: { targets: { SolJump20: all } }
+    run: { config: Release }
+  SolOneCell:
+    build: { targets: { SolOneCell: all } }
+    run: { config: Release }
+  SolPrefetchOn:
+    build: { targets: { SolPrefetchOn: all } }
+    run: { config: Release }
+  SolPerMsg:
+    build: { targets: { SolPerMsg: all } }
+    run: { config: Release }
+  SolNextTurn:
+    build: { targets: { SolNextTurn: all } }
+    run: { config: Release }
+  SolFrame:
+    build: { targets: { SolFrame: all } }
+    run: { config: Release }
+  SolTrimBatch:
+    build: { targets: { SolTrimBatch: all } }
+    run: { config: Release }
+  SolFix:
+    build: { targets: { SolFix: all } }
+    run: { config: Release }
+  SolHeader:
+    build: { targets: { SolHeader: all } }
+    run: { config: Release }
+  SolFix2:
+    build: { targets: { SolFix2: all } }
+    run: { config: Release }

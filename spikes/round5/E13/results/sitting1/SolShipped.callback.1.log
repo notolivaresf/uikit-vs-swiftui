@@ -1,0 +1,12 @@
+MEM first-content now 28.4 peak 28.5
+CALLBACK bottom invalidate+layoutIfNeeded (no change) calls 0 offset 5201.7 -> 5201.7 top 49998@-106.3 -> 49998@-106.3
+CALLBACK bottom text change, invalidate+layoutIfNeeded calls 0 offset 5201.7 -> 5201.7 top 49998@-106.3 -> 49997@-55.0
+CALLBACK bottom text change, reloadData+layoutIfNeeded calls 0 offset 5201.7 -> 5201.7 top 49998@-106.3 -> 49997@-55.0
+CALLBACK bottom text change, empty performBatchUpdates calls 1 offset 5201.7 -> 5201.7 top 49998@-106.3 -> 49997@-55.0
+CALLBACK bottom text change, invalidateLayout() in performBatchUpdates calls 1 offset 5201.7 -> 5201.7 top 49998@-106.3 -> 49997@-55.0
+CALLBACK mid invalidate+layoutIfNeeded (no change) calls 0 offset 5309.3 -> 5309.3 top 2500@0.0 -> 2500@0.0
+CALLBACK mid text change, invalidate+layoutIfNeeded calls 0 offset 5309.3 -> 5309.3 top 2500@0.0 -> 2496@-76.3
+CALLBACK mid text change, reloadData+layoutIfNeeded calls 0 offset 5309.3 -> 5309.3 top 2500@0.0 -> 2496@-76.3
+CALLBACK mid text change, empty performBatchUpdates calls 1 offset 5309.3 -> 5309.3 top 2500@0.0 -> 2496@-76.3
+CALLBACK mid text change, invalidateLayout() in performBatchUpdates calls 1 offset 5309.3 -> 5309.3 top 2500@0.0 -> 2496@-76.3
+CALLBACK done

@@ -1,0 +1,1679 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0211AE22F348D36309797262 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = D936304628BE7F82F65D20A4 /* CampfireKit */; };
+		02C2D9B7EE3194D6D68AB4F5 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		04C2DCE373213B5F4BAA298D /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC0DA81386376CA70F8D2461 /* CampfireKit */; };
+		072DF67F80C69B4D5AE7874F /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		0776C560C37AF8E0DBEDD981 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		0801B9066659EB6A22C03963 /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		08CF22EB11A5A5D2796B1E00 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		10AB667F011CECFA46EE4C50 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		15A7702C46D20468C67FECC2 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		15EDDCF4728C67198D7ABFF1 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		16D4332047D3264CA3DE9065 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		170A424D5FE8B227313B301A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		17503F6B86DF6F9104A66FE8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		17A48B5B73889B9B79EB916D /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		192388402F918199F0E85B20 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		1D5BAE1ADA373371762F48E4 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		2ECA26E0C582E719F3C3E6C8 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		305817E4604C95E38F268815 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81B26C69B4E21D9C73F61CF0 /* CampfireKit */; };
+		39938E0A99B8E32F9115E11E /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		3A28E5A2381AD56F2F5566BD /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		3E80E30F418FDB6FBF397FC0 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		3FEC22514F603722E38D2EEE /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		46208FC10FA87592BD7D6A5F /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		46F667474C859E3C63A71ADF /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		499A32B3D1BBF4A6FE910FA2 /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		49D41CBA1670E67130D09AD1 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		4A503FC4CAFD34118106709C /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		4B5C505E3D4A1CA5F8987D80 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		4C26FE58AB6A58FDB5293EAE /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		4CAC3092C75FCE0A8666B8F5 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		4E52DEB9274D8D111ED6EFF3 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		4E99F6389CB3353340731C12 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		5123EFC5B4FDD012EC6590EC /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		52AA842FB796AD117ACDAB98 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F5B07767928F542798B1D32 /* CampfireKit */; };
+		5536C330698CBA19612DF00E /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		564E0B7E3586279FE9960399 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		5813CC2F84D74C761C5C788C /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		59D30A6BF5D9CD64C999A17D /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = E1E3F3E0F9C53B1DA744BD25 /* CampfireKit */; };
+		5AE666102D0087DDF4B33CA2 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		5C7A5C603309FB96519A8731 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5668D7546D876C9241773A4B /* CampfireKit */; };
+		5DFD49BE614137B185E7639E /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		5FAD7AB1FBE2B522125EBD62 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		60E0FC4B1C0255996F0570B5 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		626DB567FDA2D23A936842A9 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		62D28C5E869492DA2E473D7E /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		645CC49EC83E9E5B7BCE9022 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		67FDEACFCACFDEEAB321A616 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		684DB29075058D44ED65ECDA /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		6F1CC8E55266B417B998DD1D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		74376EFA595AB7D89A0A21DA /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		7518A4461C66C9185884AD94 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5C89C186065E7BCAACA0AFE5 /* CampfireKit */; };
+		79CE9991EFF845B9DA04FE12 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		7B1DE0CA6E51669ECEAC9C4C /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		85252D2CD2D1B4C37B5A65EC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		855030EDC664E555AD4C834F /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		8794887733CEBC03F6757754 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		89CC5080A405CC63EBF249F6 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		8AEF087667B35C78CACF26AC /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		9254FC70B852DD1455E5A8A6 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		9330A329BDFBF7E67BB1483B /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		94417A880A4D715AD97D34FA /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		9504B16263CB1CEE983D3298 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		953C68097E081A3B98404420 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0C1950D1E40E94559F21D586 /* CampfireKit */; };
+		98140297D185A7468875D934 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		9D3F24B2CC34CA49FC05A3FE /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		9D47544CA95F25E4BEABFFD4 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		9ED7569849A4A1992C739BEE /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3FE4E0282DD87E518636928 /* CampfireKit */; };
+		A1B002063456BF7E982C828E /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		A1CFECC26D618DB47056EFC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		A2928DD22D62B0131E5362E7 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		A695BACAF275CED9775F150B /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		A795DF676F90606300798347 /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		A957C25A46D08F704B0CE544 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		AA3C671EFE8057F33B5B9D2C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		AA74F66345A36AD4A2F7C029 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		AD925AFE36624A56581BDC8E /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		AE4CE6632C8773D578637043 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		AFB655496C5A23A5AE57B453 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		B4CA1EAB38C631FE300238F4 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		B645EB1FD551CA7A6505E5B7 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		B840FCE60458F3409F47448E /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		B8F46B595A1F44056AE83360 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		BB639B980F0A9C1726419AB6 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 10E463569DD91E81D3063095 /* CampfireKit */; };
+		BBF6B6E6235544EB1E7C44A6 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		BCCDAEABA4904DF66AF0C485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		BE074210CBC78CFC48931D5B /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		BECB643CF82D6762FF4400F9 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		C063CDF9A374FF7F906FC5A7 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		C0CF63C6B2C9FD9522812C9B /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		C1F0FEE7F5A7D15A9FB6434E /* ProbeMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */; };
+		C2EC29B7FBCC93882AD6EF97 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		C742F1E38071222076412A4E /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		C82E0358637812BEBC90E592 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		C9C7B588E42910E303FAFB9F /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		CAA4F2ED924865511E4A6AEA /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		CB24536FD8A68F32DA6A68C7 /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		CBBFD29E74A3E42950D894EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		CBD2BF112930C4FB91F16ECC /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		CCB2595CBD66A8061482AB04 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		CDBDBB74BB417B846F5055E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		CE4B9799197813D5CAE96D6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		D1A6C6464359288D38E61567 /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		D2E743864978BF423901BB42 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		D6F630E1E42D915E04054645 /* CampfireKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81F5482506C76622FA1597F7 /* CampfireKit */; };
+		D7005D4C72EBEAAF7C93A171 /* RoomChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */; };
+		D809EEBAA3923D1978C6027A /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		DC8B549901E47BAB8277FE79 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+		DD793F9AE97561936C336FDF /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		DF44001F1DADCB34FC828D9D /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		E420AF79FDB1B34486CCED70 /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		E5379BAAFF29E795EA4BDDC8 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		E6C917ED50A9BD9B37C40E38 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		EAEAFDE5ECBA609E9FE2C8A7 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		EB7C1610FA46706AEC3AA758 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E242296F454AFE02B30525B /* Style.swift */; };
+		EE9B170A1ACC7779EC4BF946 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7235923036B783EF8F92E /* RoomViewController.swift */; };
+		EF2AC84F9635A774E30EE9A2 /* Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */; };
+		F39683A704FF1268DB357DC0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27A30BE802E97DD230FDE34 /* AppDelegate.swift */; };
+		F7C1A5B7C48CFF5C052E9BD8 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE15053C30857424AB2B29 /* MessageCell.swift */; };
+		F81A2A66B80D52BDA5E08B6B /* ChatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3019060D2267AB89B23D934C /* ChatLayout.swift */; };
+		F8CFCC9D907D454C40B0D848 /* MessageGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */; };
+		FDECCBE1977A3C7851DDE847 /* CampfireIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0E242296F454AFE02B30525B /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		25B293D734FDED76E533A3A3 /* SolTrimBatch.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolTrimBatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3019060D2267AB89B23D934C /* ChatLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLayout.swift; sourceTree = "<group>"; };
+		3EDE15053C30857424AB2B29 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		512C9069B55F5A3770BA1515 /* SolHeader.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolHeader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Probe.swift; sourceTree = "<group>"; };
+		5E5C8368C65C265B7153A0E1 /* SolFix.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolFix.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AB10ED6F49871CB8F1A1027 /* SolShipped.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolShipped.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		71D077DBD7C85F54AF01512F /* SolPerMsg.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolPerMsg.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75726E05325EA29C2D5DA47B /* SolFix2.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolFix2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGeometry.swift; sourceTree = "<group>"; };
+		8AFC6E930050FE1884DCDFBC /* CampfireKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CampfireKit; path = ../../../CampfireKit; sourceTree = SOURCE_ROOT; };
+		A2678CD665264B5CC49E177A /* SolNextTurn.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolNextTurn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B27A30BE802E97DD230FDE34 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B7C7235923036B783EF8F92E /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
+		C13224EE09B20780E0BCF975 /* SolPrefetchOn.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolPrefetchOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB7F1F59B0F032FFA85A7A51 /* SolOneCell.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolOneCell.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D723F3567B78959734DC148D /* SolFrame.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomChrome.swift; sourceTree = "<group>"; };
+		E6D5D03EAE40EA8F32DF4393 /* SolJump20.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolJump20.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeMemory.swift; sourceTree = "<group>"; };
+		EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampfireIcons.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0F805C4DD4C01FB12463595C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ED7569849A4A1992C739BEE /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		26A8725043DB5A6C0DC777D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				305817E4604C95E38F268815 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2AD940ADCACD529464473A07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59D30A6BF5D9CD64C999A17D /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B95DAA090B03201C691F7F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52AA842FB796AD117ACDAB98 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		548BB7F9FBE24711B382B3B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0211AE22F348D36309797262 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D1AA3A7B9B4C579C27BEFF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6F630E1E42D915E04054645 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FEC6A4F98D61E04D1C086D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C7A5C603309FB96519A8731 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAF09736720B0CD048A6489E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7518A4461C66C9185884AD94 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF1E307DBDD6A8ADC575F07A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04C2DCE373213B5F4BAA298D /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8D3987EC34A9D525A087B52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB639B980F0A9C1726419AB6 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F90F6BC36DB85A44D31E6FC8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				953C68097E081A3B98404420 /* CampfireKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1884E2FC80EBD0E19DF25901 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5E5C8368C65C265B7153A0E1 /* SolFix.app */,
+				75726E05325EA29C2D5DA47B /* SolFix2.app */,
+				D723F3567B78959734DC148D /* SolFrame.app */,
+				512C9069B55F5A3770BA1515 /* SolHeader.app */,
+				E6D5D03EAE40EA8F32DF4393 /* SolJump20.app */,
+				A2678CD665264B5CC49E177A /* SolNextTurn.app */,
+				CB7F1F59B0F032FFA85A7A51 /* SolOneCell.app */,
+				71D077DBD7C85F54AF01512F /* SolPerMsg.app */,
+				C13224EE09B20780E0BCF975 /* SolPrefetchOn.app */,
+				6AB10ED6F49871CB8F1A1027 /* SolShipped.app */,
+				25B293D734FDED76E533A3A3 /* SolTrimBatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4AD6DC25FE53F3BB5C296BCD /* Sol */ = {
+			isa = PBXGroup;
+			children = (
+				B27A30BE802E97DD230FDE34 /* AppDelegate.swift */,
+				EEEAB3BC7DEE33989E19BC02 /* CampfireIcons.swift */,
+				3019060D2267AB89B23D934C /* ChatLayout.swift */,
+				3EDE15053C30857424AB2B29 /* MessageCell.swift */,
+				7C0AE7ED408ED310DA6464E4 /* MessageGeometry.swift */,
+				E2DFA6920DAA2A10E0666F5E /* RoomChrome.swift */,
+				B7C7235923036B783EF8F92E /* RoomViewController.swift */,
+				0E242296F454AFE02B30525B /* Style.swift */,
+			);
+			path = Sol;
+			sourceTree = "<group>";
+		};
+		75844ECB5C7F3A172888B58E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				52E7B456F8D7F8F85EDF2CC4 /* Probe.swift */,
+				EBDEA492816BC750AEFCF46F /* ProbeMemory.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		7DE9052E1F901166E0E842F2 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				8AFC6E930050FE1884DCDFBC /* CampfireKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		CB898903DC462FD3104812E2 = {
+			isa = PBXGroup;
+			children = (
+				7DE9052E1F901166E0E842F2 /* Packages */,
+				75844ECB5C7F3A172888B58E /* Shared */,
+				4AD6DC25FE53F3BB5C296BCD /* Sol */,
+				1884E2FC80EBD0E19DF25901 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		20087E2A2FCA992FDFAB8977 /* SolNextTurn */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CC290311F9D03BC750B857E /* Build configuration list for PBXNativeTarget "SolNextTurn" */;
+			buildPhases = (
+				4B3D6C752C209493CFF06651 /* Sources */,
+				5D1AA3A7B9B4C579C27BEFF9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolNextTurn;
+			packageProductDependencies = (
+				81F5482506C76622FA1597F7 /* CampfireKit */,
+			);
+			productName = SolNextTurn;
+			productReference = A2678CD665264B5CC49E177A /* SolNextTurn.app */;
+			productType = "com.apple.product-type.application";
+		};
+		23ADA6653C9DB0519644D5D8 /* SolOneCell */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9491E2F521D100F0EC6BD1B /* Build configuration list for PBXNativeTarget "SolOneCell" */;
+			buildPhases = (
+				CE9FF6B41F24819EC62217A6 /* Sources */,
+				26A8725043DB5A6C0DC777D4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolOneCell;
+			packageProductDependencies = (
+				81B26C69B4E21D9C73F61CF0 /* CampfireKit */,
+			);
+			productName = SolOneCell;
+			productReference = CB7F1F59B0F032FFA85A7A51 /* SolOneCell.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2606E2E1A9748C53507059CB /* SolPrefetchOn */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A43F34F9189C9E390847CA22 /* Build configuration list for PBXNativeTarget "SolPrefetchOn" */;
+			buildPhases = (
+				252A19B8097CAC6579DB1E13 /* Sources */,
+				AAF09736720B0CD048A6489E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolPrefetchOn;
+			packageProductDependencies = (
+				5C89C186065E7BCAACA0AFE5 /* CampfireKit */,
+			);
+			productName = SolPrefetchOn;
+			productReference = C13224EE09B20780E0BCF975 /* SolPrefetchOn.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2A2C5CFD19AED52016832A36 /* SolFix */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0541491F45375327C65D19D /* Build configuration list for PBXNativeTarget "SolFix" */;
+			buildPhases = (
+				95048A7E10899432210A619C /* Sources */,
+				2B95DAA090B03201C691F7F6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolFix;
+			packageProductDependencies = (
+				3F5B07767928F542798B1D32 /* CampfireKit */,
+			);
+			productName = SolFix;
+			productReference = 5E5C8368C65C265B7153A0E1 /* SolFix.app */;
+			productType = "com.apple.product-type.application";
+		};
+		416FBFC83A9D9973FA495B33 /* SolHeader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DE36CE41A367F26DC617070D /* Build configuration list for PBXNativeTarget "SolHeader" */;
+			buildPhases = (
+				4CF292B6840B1DA69DE85A31 /* Sources */,
+				F90F6BC36DB85A44D31E6FC8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolHeader;
+			packageProductDependencies = (
+				0C1950D1E40E94559F21D586 /* CampfireKit */,
+			);
+			productName = SolHeader;
+			productReference = 512C9069B55F5A3770BA1515 /* SolHeader.app */;
+			productType = "com.apple.product-type.application";
+		};
+		561E3C53C480D052778609F6 /* SolFrame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA70DBEA48A1B35D81292D20 /* Build configuration list for PBXNativeTarget "SolFrame" */;
+			buildPhases = (
+				3474755D68B084A6A3826DDF /* Sources */,
+				0F805C4DD4C01FB12463595C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolFrame;
+			packageProductDependencies = (
+				A3FE4E0282DD87E518636928 /* CampfireKit */,
+			);
+			productName = SolFrame;
+			productReference = D723F3567B78959734DC148D /* SolFrame.app */;
+			productType = "com.apple.product-type.application";
+		};
+		75E8196F3EA8FA92B38D2D73 /* SolTrimBatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 206D971461188DA5A360A25B /* Build configuration list for PBXNativeTarget "SolTrimBatch" */;
+			buildPhases = (
+				CE6B849EB78F654B5072254F /* Sources */,
+				BF1E307DBDD6A8ADC575F07A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolTrimBatch;
+			packageProductDependencies = (
+				DC0DA81386376CA70F8D2461 /* CampfireKit */,
+			);
+			productName = SolTrimBatch;
+			productReference = 25B293D734FDED76E533A3A3 /* SolTrimBatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7A9EFB01CB67799FEC2411FE /* SolFix2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4491C67DA70C7B419D401E6 /* Build configuration list for PBXNativeTarget "SolFix2" */;
+			buildPhases = (
+				8E68182AE437C1F7CB3CDEC3 /* Sources */,
+				C8D3987EC34A9D525A087B52 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolFix2;
+			packageProductDependencies = (
+				10E463569DD91E81D3063095 /* CampfireKit */,
+			);
+			productName = SolFix2;
+			productReference = 75726E05325EA29C2D5DA47B /* SolFix2.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AB76AB0CECC7B3D71E22D107 /* SolShipped */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FB7FDAFCD20712F0872E647 /* Build configuration list for PBXNativeTarget "SolShipped" */;
+			buildPhases = (
+				CFA7D198EEDD188930F3B264 /* Sources */,
+				548BB7F9FBE24711B382B3B7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolShipped;
+			packageProductDependencies = (
+				D936304628BE7F82F65D20A4 /* CampfireKit */,
+			);
+			productName = SolShipped;
+			productReference = 6AB10ED6F49871CB8F1A1027 /* SolShipped.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C9CA86068A682EB66FA4565C /* SolJump20 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CED9274DB5323D405ADA51E /* Build configuration list for PBXNativeTarget "SolJump20" */;
+			buildPhases = (
+				60E332677DE90484F200E992 /* Sources */,
+				7FEC6A4F98D61E04D1C086D3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolJump20;
+			packageProductDependencies = (
+				5668D7546D876C9241773A4B /* CampfireKit */,
+			);
+			productName = SolJump20;
+			productReference = E6D5D03EAE40EA8F32DF4393 /* SolJump20.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DC4FDAB2D3E55F9FF42DAD42 /* SolPerMsg */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EB138B9D95AB04B84C3CB4E5 /* Build configuration list for PBXNativeTarget "SolPerMsg" */;
+			buildPhases = (
+				9A152EEABC7B56ACF09A9A45 /* Sources */,
+				2AD940ADCACD529464473A07 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolPerMsg;
+			packageProductDependencies = (
+				E1E3F3E0F9C53B1DA744BD25 /* CampfireKit */,
+			);
+			productName = SolPerMsg;
+			productReference = 71D077DBD7C85F54AF01512F /* SolPerMsg.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		827950C46C0C55F92A70675F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					20087E2A2FCA992FDFAB8977 = {
+						ProvisioningStyle = Automatic;
+					};
+					23ADA6653C9DB0519644D5D8 = {
+						ProvisioningStyle = Automatic;
+					};
+					2606E2E1A9748C53507059CB = {
+						ProvisioningStyle = Automatic;
+					};
+					2A2C5CFD19AED52016832A36 = {
+						ProvisioningStyle = Automatic;
+					};
+					416FBFC83A9D9973FA495B33 = {
+						ProvisioningStyle = Automatic;
+					};
+					561E3C53C480D052778609F6 = {
+						ProvisioningStyle = Automatic;
+					};
+					75E8196F3EA8FA92B38D2D73 = {
+						ProvisioningStyle = Automatic;
+					};
+					7A9EFB01CB67799FEC2411FE = {
+						ProvisioningStyle = Automatic;
+					};
+					AB76AB0CECC7B3D71E22D107 = {
+						ProvisioningStyle = Automatic;
+					};
+					C9CA86068A682EB66FA4565C = {
+						ProvisioningStyle = Automatic;
+					};
+					DC4FDAB2D3E55F9FF42DAD42 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E55378E9E84D582060BFB210 /* Build configuration list for PBXProject "E13Spike" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CB898903DC462FD3104812E2;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				014938DBDD083043F30A26A9 /* XCLocalSwiftPackageReference "../../../CampfireKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1884E2FC80EBD0E19DF25901 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB76AB0CECC7B3D71E22D107 /* SolShipped */,
+				C9CA86068A682EB66FA4565C /* SolJump20 */,
+				23ADA6653C9DB0519644D5D8 /* SolOneCell */,
+				2606E2E1A9748C53507059CB /* SolPrefetchOn */,
+				DC4FDAB2D3E55F9FF42DAD42 /* SolPerMsg */,
+				20087E2A2FCA992FDFAB8977 /* SolNextTurn */,
+				561E3C53C480D052778609F6 /* SolFrame */,
+				75E8196F3EA8FA92B38D2D73 /* SolTrimBatch */,
+				2A2C5CFD19AED52016832A36 /* SolFix */,
+				416FBFC83A9D9973FA495B33 /* SolHeader */,
+				7A9EFB01CB67799FEC2411FE /* SolFix2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		252A19B8097CAC6579DB1E13 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDBDBB74BB417B846F5055E1 /* AppDelegate.swift in Sources */,
+				AD925AFE36624A56581BDC8E /* CampfireIcons.swift in Sources */,
+				F81A2A66B80D52BDA5E08B6B /* ChatLayout.swift in Sources */,
+				EAEAFDE5ECBA609E9FE2C8A7 /* MessageCell.swift in Sources */,
+				4CAC3092C75FCE0A8666B8F5 /* MessageGeometry.swift in Sources */,
+				499A32B3D1BBF4A6FE910FA2 /* Probe.swift in Sources */,
+				89CC5080A405CC63EBF249F6 /* ProbeMemory.swift in Sources */,
+				39938E0A99B8E32F9115E11E /* RoomChrome.swift in Sources */,
+				B8F46B595A1F44056AE83360 /* RoomViewController.swift in Sources */,
+				BBF6B6E6235544EB1E7C44A6 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3474755D68B084A6A3826DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17503F6B86DF6F9104A66FE8 /* AppDelegate.swift in Sources */,
+				4E52DEB9274D8D111ED6EFF3 /* CampfireIcons.swift in Sources */,
+				4C26FE58AB6A58FDB5293EAE /* ChatLayout.swift in Sources */,
+				85252D2CD2D1B4C37B5A65EC /* MessageCell.swift in Sources */,
+				A2928DD22D62B0131E5362E7 /* MessageGeometry.swift in Sources */,
+				E420AF79FDB1B34486CCED70 /* Probe.swift in Sources */,
+				46F667474C859E3C63A71ADF /* ProbeMemory.swift in Sources */,
+				CCB2595CBD66A8061482AB04 /* RoomChrome.swift in Sources */,
+				60E0FC4B1C0255996F0570B5 /* RoomViewController.swift in Sources */,
+				C9C7B588E42910E303FAFB9F /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B3D6C752C209493CFF06651 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBBFD29E74A3E42950D894EA /* AppDelegate.swift in Sources */,
+				FDECCBE1977A3C7851DDE847 /* CampfireIcons.swift in Sources */,
+				D1A6C6464359288D38E61567 /* ChatLayout.swift in Sources */,
+				C063CDF9A374FF7F906FC5A7 /* MessageCell.swift in Sources */,
+				B645EB1FD551CA7A6505E5B7 /* MessageGeometry.swift in Sources */,
+				072DF67F80C69B4D5AE7874F /* Probe.swift in Sources */,
+				A795DF676F90606300798347 /* ProbeMemory.swift in Sources */,
+				1D5BAE1ADA373371762F48E4 /* RoomChrome.swift in Sources */,
+				EE9B170A1ACC7779EC4BF946 /* RoomViewController.swift in Sources */,
+				62D28C5E869492DA2E473D7E /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CF292B6840B1DA69DE85A31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1CFECC26D618DB47056EFC5 /* AppDelegate.swift in Sources */,
+				5536C330698CBA19612DF00E /* CampfireIcons.swift in Sources */,
+				AA74F66345A36AD4A2F7C029 /* ChatLayout.swift in Sources */,
+				CAA4F2ED924865511E4A6AEA /* MessageCell.swift in Sources */,
+				F8CFCC9D907D454C40B0D848 /* MessageGeometry.swift in Sources */,
+				CB24536FD8A68F32DA6A68C7 /* Probe.swift in Sources */,
+				3E80E30F418FDB6FBF397FC0 /* ProbeMemory.swift in Sources */,
+				3A28E5A2381AD56F2F5566BD /* RoomChrome.swift in Sources */,
+				192388402F918199F0E85B20 /* RoomViewController.swift in Sources */,
+				9D47544CA95F25E4BEABFFD4 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60E332677DE90484F200E992 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCCDAEABA4904DF66AF0C485 /* AppDelegate.swift in Sources */,
+				AE4CE6632C8773D578637043 /* CampfireIcons.swift in Sources */,
+				BECB643CF82D6762FF4400F9 /* ChatLayout.swift in Sources */,
+				D2E743864978BF423901BB42 /* MessageCell.swift in Sources */,
+				C2EC29B7FBCC93882AD6EF97 /* MessageGeometry.swift in Sources */,
+				4A503FC4CAFD34118106709C /* Probe.swift in Sources */,
+				5FAD7AB1FBE2B522125EBD62 /* ProbeMemory.swift in Sources */,
+				94417A880A4D715AD97D34FA /* RoomChrome.swift in Sources */,
+				9D3F24B2CC34CA49FC05A3FE /* RoomViewController.swift in Sources */,
+				BE074210CBC78CFC48931D5B /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E68182AE437C1F7CB3CDEC3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67FDEACFCACFDEEAB321A616 /* AppDelegate.swift in Sources */,
+				49D41CBA1670E67130D09AD1 /* CampfireIcons.swift in Sources */,
+				9254FC70B852DD1455E5A8A6 /* ChatLayout.swift in Sources */,
+				08CF22EB11A5A5D2796B1E00 /* MessageCell.swift in Sources */,
+				9504B16263CB1CEE983D3298 /* MessageGeometry.swift in Sources */,
+				0801B9066659EB6A22C03963 /* Probe.swift in Sources */,
+				8794887733CEBC03F6757754 /* ProbeMemory.swift in Sources */,
+				4E99F6389CB3353340731C12 /* RoomChrome.swift in Sources */,
+				AFB655496C5A23A5AE57B453 /* RoomViewController.swift in Sources */,
+				5AE666102D0087DDF4B33CA2 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95048A7E10899432210A619C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				170A424D5FE8B227313B301A /* AppDelegate.swift in Sources */,
+				DC8B549901E47BAB8277FE79 /* CampfireIcons.swift in Sources */,
+				4B5C505E3D4A1CA5F8987D80 /* ChatLayout.swift in Sources */,
+				6F1CC8E55266B417B998DD1D /* MessageCell.swift in Sources */,
+				564E0B7E3586279FE9960399 /* MessageGeometry.swift in Sources */,
+				DD793F9AE97561936C336FDF /* Probe.swift in Sources */,
+				C1F0FEE7F5A7D15A9FB6434E /* ProbeMemory.swift in Sources */,
+				7B1DE0CA6E51669ECEAC9C4C /* RoomChrome.swift in Sources */,
+				CBD2BF112930C4FB91F16ECC /* RoomViewController.swift in Sources */,
+				D809EEBAA3923D1978C6027A /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A152EEABC7B56ACF09A9A45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA3C671EFE8057F33B5B9D2C /* AppDelegate.swift in Sources */,
+				8AEF087667B35C78CACF26AC /* CampfireIcons.swift in Sources */,
+				2ECA26E0C582E719F3C3E6C8 /* ChatLayout.swift in Sources */,
+				626DB567FDA2D23A936842A9 /* MessageCell.swift in Sources */,
+				855030EDC664E555AD4C834F /* MessageGeometry.swift in Sources */,
+				C0CF63C6B2C9FD9522812C9B /* Probe.swift in Sources */,
+				0776C560C37AF8E0DBEDD981 /* ProbeMemory.swift in Sources */,
+				02C2D9B7EE3194D6D68AB4F5 /* RoomChrome.swift in Sources */,
+				10AB667F011CECFA46EE4C50 /* RoomViewController.swift in Sources */,
+				15A7702C46D20468C67FECC2 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE6B849EB78F654B5072254F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F39683A704FF1268DB357DC0 /* AppDelegate.swift in Sources */,
+				A695BACAF275CED9775F150B /* CampfireIcons.swift in Sources */,
+				3FEC22514F603722E38D2EEE /* ChatLayout.swift in Sources */,
+				F7C1A5B7C48CFF5C052E9BD8 /* MessageCell.swift in Sources */,
+				645CC49EC83E9E5B7BCE9022 /* MessageGeometry.swift in Sources */,
+				DF44001F1DADCB34FC828D9D /* Probe.swift in Sources */,
+				A1B002063456BF7E982C828E /* ProbeMemory.swift in Sources */,
+				5DFD49BE614137B185E7639E /* RoomChrome.swift in Sources */,
+				9330A329BDFBF7E67BB1483B /* RoomViewController.swift in Sources */,
+				98140297D185A7468875D934 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9FF6B41F24819EC62217A6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A957C25A46D08F704B0CE544 /* AppDelegate.swift in Sources */,
+				B4CA1EAB38C631FE300238F4 /* CampfireIcons.swift in Sources */,
+				17A48B5B73889B9B79EB916D /* ChatLayout.swift in Sources */,
+				C82E0358637812BEBC90E592 /* MessageCell.swift in Sources */,
+				5123EFC5B4FDD012EC6590EC /* MessageGeometry.swift in Sources */,
+				B840FCE60458F3409F47448E /* Probe.swift in Sources */,
+				46208FC10FA87592BD7D6A5F /* ProbeMemory.swift in Sources */,
+				D7005D4C72EBEAAF7C93A171 /* RoomChrome.swift in Sources */,
+				E6C917ED50A9BD9B37C40E38 /* RoomViewController.swift in Sources */,
+				684DB29075058D44ED65ECDA /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFA7D198EEDD188930F3B264 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE4B9799197813D5CAE96D6C /* AppDelegate.swift in Sources */,
+				74376EFA595AB7D89A0A21DA /* CampfireIcons.swift in Sources */,
+				5813CC2F84D74C761C5C788C /* ChatLayout.swift in Sources */,
+				15EDDCF4728C67198D7ABFF1 /* MessageCell.swift in Sources */,
+				E5379BAAFF29E795EA4BDDC8 /* MessageGeometry.swift in Sources */,
+				EF2AC84F9635A774E30EE9A2 /* Probe.swift in Sources */,
+				16D4332047D3264CA3DE9065 /* ProbeMemory.swift in Sources */,
+				79CE9991EFF845B9DA04FE12 /* RoomChrome.swift in Sources */,
+				C742F1E38071222076412A4E /* RoomViewController.swift in Sources */,
+				EB7C1610FA46706AEC3AA758 /* Style.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		09B4DE3C9664E1499CE34AAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolPrefetchOn;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) PREFETCH_ON";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		0B64144DCF2AE33AE63E3960 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFix;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL JUMP20 FLUSH_FRAME TRIM_BATCH";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		0F0A181931C4247990B35BB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolJump20;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) JUMP20";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		177F7E73A524ECF9D3420904 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFix2;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL JUMP20 FLUSH_NEXTTURN TRIM_BATCH CHEAP_HEADER";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		198792F63770151854E8472F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFrame;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_FRAME";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		21E63DECE59A73339762D6E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolTrimBatch;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TRIM_BATCH";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		2531A29F243A9208338BDBF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2C6D11327656A5868F5320E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolPerMsg;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_PERMSG";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		36A5E17A7BED32E4699F5513 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFix2;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL JUMP20 FLUSH_NEXTTURN TRIM_BATCH CHEAP_HEADER";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		4366F886801C66E189D3A5AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolHeader;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CHEAP_HEADER";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		6A55F3F1D3D10C6C4454AD00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolPrefetchOn;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) PREFETCH_ON";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		6BBD51C468AABC32B2ABEB06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolOneCell;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		764F5BFA27492A87B389FC84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFrame;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_FRAME";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		773B16E15414ACC346393E19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolFix;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL JUMP20 FLUSH_FRAME TRIM_BATCH";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		8D69C9D170E064244320BF40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9936C53FC001AFD8BEEE5576 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolHeader;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CHEAP_HEADER";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		9DFB92660D3AC48FB78AB28B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolJump20;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) JUMP20";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A57BCE3DB4949BCC8E485013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolNextTurn;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_NEXTTURN";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B0AD222702AAFD7B8BBFCE7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolShipped;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		CA773D4359CD8D0361C4D41E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolPerMsg;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_PERMSG";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CC18B787D941C2C697CD2E94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolTrimBatch;
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TRIM_BATCH";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		D74C0094A0666984D5329B8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolOneCell;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ONE_CELL";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E732545B11F40628D79E3326 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolNextTurn;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FLUSH_NEXTTURN";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F30647C6C8C87E7518DBEA9E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Campfire;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIViewControllerBasedStatusBarAppearance = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = campfire.bench;
+				PRODUCT_NAME = SolShipped;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0CC290311F9D03BC750B857E /* Build configuration list for PBXNativeTarget "SolNextTurn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E732545B11F40628D79E3326 /* Debug */,
+				A57BCE3DB4949BCC8E485013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0CED9274DB5323D405ADA51E /* Build configuration list for PBXNativeTarget "SolJump20" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0F0A181931C4247990B35BB2 /* Debug */,
+				9DFB92660D3AC48FB78AB28B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		206D971461188DA5A360A25B /* Build configuration list for PBXNativeTarget "SolTrimBatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21E63DECE59A73339762D6E1 /* Debug */,
+				CC18B787D941C2C697CD2E94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2FB7FDAFCD20712F0872E647 /* Build configuration list for PBXNativeTarget "SolShipped" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F30647C6C8C87E7518DBEA9E /* Debug */,
+				B0AD222702AAFD7B8BBFCE7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0541491F45375327C65D19D /* Build configuration list for PBXNativeTarget "SolFix" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				773B16E15414ACC346393E19 /* Debug */,
+				0B64144DCF2AE33AE63E3960 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A43F34F9189C9E390847CA22 /* Build configuration list for PBXNativeTarget "SolPrefetchOn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A55F3F1D3D10C6C4454AD00 /* Debug */,
+				09B4DE3C9664E1499CE34AAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4491C67DA70C7B419D401E6 /* Build configuration list for PBXNativeTarget "SolFix2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36A5E17A7BED32E4699F5513 /* Debug */,
+				177F7E73A524ECF9D3420904 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9491E2F521D100F0EC6BD1B /* Build configuration list for PBXNativeTarget "SolOneCell" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D74C0094A0666984D5329B8B /* Debug */,
+				6BBD51C468AABC32B2ABEB06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA70DBEA48A1B35D81292D20 /* Build configuration list for PBXNativeTarget "SolFrame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				764F5BFA27492A87B389FC84 /* Debug */,
+				198792F63770151854E8472F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DE36CE41A367F26DC617070D /* Build configuration list for PBXNativeTarget "SolHeader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4366F886801C66E189D3A5AC /* Debug */,
+				9936C53FC001AFD8BEEE5576 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E55378E9E84D582060BFB210 /* Build configuration list for PBXProject "E13Spike" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2531A29F243A9208338BDBF0 /* Debug */,
+				8D69C9D170E064244320BF40 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EB138B9D95AB04B84C3CB4E5 /* Build configuration list for PBXNativeTarget "SolPerMsg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA773D4359CD8D0361C4D41E /* Debug */,
+				2C6D11327656A5868F5320E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		014938DBDD083043F30A26A9 /* XCLocalSwiftPackageReference "../../../CampfireKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../CampfireKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C1950D1E40E94559F21D586 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		10E463569DD91E81D3063095 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		3F5B07767928F542798B1D32 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		5668D7546D876C9241773A4B /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		5C89C186065E7BCAACA0AFE5 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		81B26C69B4E21D9C73F61CF0 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		81F5482506C76622FA1597F7 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		A3FE4E0282DD87E518636928 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		D936304628BE7F82F65D20A4 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		DC0DA81386376CA70F8D2461 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+		E1E3F3E0F9C53B1DA744BD25 /* CampfireKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CampfireKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 827950C46C0C55F92A70675F /* Project object */;
+}

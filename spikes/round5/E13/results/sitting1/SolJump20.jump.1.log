@@ -1,0 +1,4 @@
+MEM first-content now 28.3 peak 28.4
+JUMPMS 49.5 31.9 15.2 35.7 49.9 32.7 31.6 31.9 32.2 49.7 32.7 32.4 median 32.7
+PHASES JUMPMS: measure 41 16.5 | layout-rows 0.1 | reload+offset 2.1 | pre-layout 0.0 | layoutIfNeeded 9.9 | action-returned 0.1 | to-frame 5.4
+MEM after-JUMPMS now 30.8 peak 32.4

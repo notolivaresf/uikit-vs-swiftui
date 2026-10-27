@@ -1,0 +1,4 @@
+MEM first-content now 28.5 peak 28.5
+OLDERMS 32.4 33.1 33.0 33.2 16.5 48.3 33.2 32.0 33.2 33.2 33.1 16.6 median 33.1
+PHASES OLDERMS: measure-page 16.6 | batch-insert 1.6 | pre-layout 0.0 | layoutIfNeeded 1.6 | action-returned 0.1 | to-frame 12.9
+MEM after-OLDERMS now 29.8 peak 31.0

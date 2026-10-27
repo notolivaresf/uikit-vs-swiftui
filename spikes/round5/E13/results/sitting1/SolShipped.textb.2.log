@@ -1,0 +1,4 @@
+MEM first-content now 28.5 peak 28.5
+TEXTBMS 30.2 49.3 33.3 33.1 16.1 33.4 33.2 33.3 32.4 33.3 33.0 33.2 median 33.2
+PHASES TEXTBMS: measure 40 18.2 | layout-rows 0.1 | reload+restore 0.5 | pre-layout 0.0 | layoutIfNeeded 3.0 | action-returned 0.1 | to-frame 11.0
+MEM after-TEXTBMS now 31.3 peak 31.7

@@ -1,0 +1,3 @@
+MEM first-content now 28.3 peak 28.4
+PROBE stream start rate 20.0
+STREAMCPU 5.244 wall 29.97 updates 300 trims 170 trim-ms 1853 cells 1550 created 31 mem-now 51.3 mem-peak 58.3 lat-med 66.1 lat-p95 103.0 lat-max 117.6 n 600
