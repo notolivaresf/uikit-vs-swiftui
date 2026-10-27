@@ -1,0 +1,130 @@
+{
+  "model": "opus",
+  "side": "uikit",
+  "requested_model": "claude-opus-5-5",
+  "model_version": "claude-opus-5-5",
+  "effort": "high",
+  "cli_version": "2.1.306 (Claude Code)",
+  "level": "L2",
+  "start": "2026-10-27T19:48:51+00:00",
+  "stop": "2026-10-27T20:18:58+00:00",
+  "wall_seconds": 1807,
+  "idle_gaps_over_20min": {
+    "count": 0,
+    "seconds": 0,
+    "gaps_seconds": []
+  },
+  "exit_code": 0,
+  "time_limit_s": 7200,
+  "stopped_by_limit": false,
+  "commits": 0,
+  "transcript": "transcript.jsonl",
+  "turns": 72,
+  "builds_total": 12,
+  "builds_failed": 1,
+  "isolation_check": {
+    "mcp_servers": [],
+    "skills": [
+      "uikit-chat-list"
+    ],
+    "slash_commands": [
+      "uikit-chat-list",
+      "advisor",
+      "agents",
+      "auto-mode-setup",
+      "autocompact",
+      "clear",
+      "color",
+      "compact",
+      "config",
+      "output-style",
+      "context",
+      "effort",
+      "fast",
+      "focus",
+      "heapdump",
+      "init",
+      "mcp",
+      "import",
+      "model",
+      "__remote-workflow",
+      "workflow-launch-exec",
+      "reload-plugins",
+      "reload-skills",
+      "rename",
+      "ultrareview",
+      "security-review",
+      "usage-credits",
+      "extra-usage",
+      "usage",
+      "insights",
+      "recap",
+      "skill-doctor",
+      "goal",
+      "design-consent",
+      "design-revoke",
+      "list-agents",
+      "team-onboarding"
+    ],
+    "agents": [
+      "claude",
+      "Explore",
+      "general-purpose",
+      "Plan",
+      "statusline-setup"
+    ],
+    "plugins": [
+      {
+        "name": "cc-plugin-agents-md",
+        "path": "builtin",
+        "source": "cc-plugin-agents-md@builtin"
+      },
+      {
+        "name": "cc-plugin-telemetry",
+        "path": "builtin",
+        "source": "cc-plugin-telemetry@builtin"
+      },
+      {
+        "name": "cc-plugin-plugin-authoring",
+        "path": "builtin",
+        "source": "cc-plugin-plugin-authoring@builtin"
+      }
+    ]
+  },
+  "skill_isolation": {
+    "expected": [
+      "uikit-chat-list"
+    ],
+    "error": null,
+    "checked": "claude init event"
+  },
+  "skillset": {
+    "kind": "ours-chatlist",
+    "installed": true,
+    "install_dirs": [
+      ".claude/skills",
+      ".agents/skills"
+    ],
+    "skills": [
+      {
+        "folder": "uikit-chat-list",
+        "name": "uikit-chat-list",
+        "source": "git tag v0.11.4-thin4 of ~/olivares-burgos/uikit-skill",
+        "tag": "v0.11.4-thin4",
+        "commit": "5fd6ca842913df4be9f15f98a0399d00b7c62f3d",
+        "version": "0.9.0",
+        "hash": "c1d1ef66c79d63678ad569e42e811bb28fd65d5281ffa8ce0e32cdae9f4ff9cd",
+        "file_count": 1
+      }
+    ],
+    "expected_names": [
+      "uikit-chat-list"
+    ]
+  },
+  "stack": "uikit",
+  "skills_arm": "ours-chatlist",
+  "inputs_tag": "v2-inputs",
+  "inputs_commit": "80cda43e4e09fa7be256938a568252f5fd8ea30b",
+  "stack_line": "Stack: UIKit only, no SwiftUI",
+  "skill_sentence": "Agent skills are installed in this project; use any that help."
+}
