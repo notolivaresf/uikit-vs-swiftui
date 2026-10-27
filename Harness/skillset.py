@@ -16,7 +16,7 @@ Sources
   ours-slim  git archive of tag UVS_SLIM_TAG (default v0.2-slim) of UVS_SKILL_REPO
              (default ~/olivares-burgos/uikit-skill), folder skills/uikit-specialist-slim
   ours-full  same repo, tag UVS_FULL_TAG (default v0.1), folder skills/uikit-specialist
-  ours-chatlist  same repo, tag CHATLIST_TAG (v0.10.0; UVS_CHATLIST_TAG overrides), folder skills/uikit-chat-list only
+  ours-chatlist  same repo, tag CHATLIST_TAG (v0.11.2-thin2; UVS_CHATLIST_TAG overrides), folder skills/uikit-chat-list only
   ours-pair  the two Swift skills vendored in this repo, skills/uikit/{uikit-specialist,
              uikit-whats-new-27} (copied from uikit-skill tag v0.3-pair, see skills/README.md)
   ours-objc-pair  skills/uikit-objc/{uikit-specialist-objc,uikit-whats-new-27-objc} of this repo
@@ -35,7 +35,7 @@ import argparse, glob, hashlib, io, json, os, re, shutil, subprocess, sys, tarfi
 
 APPLE_SKILLS = ["swiftui-specialist", "swiftui-whats-new-27"]
 # The one place to change the pinned tag of the chat-list skill (UVS_CHATLIST_TAG overrides it for a test).
-CHATLIST_TAG = "v0.10.0"
+CHATLIST_TAG = "v0.11.2-thin2"
 OURS = {"ours-slim": ("uikit-specialist-slim", "UVS_SLIM_TAG", "v0.2-slim"),
         "ours-full": ("uikit-specialist", "UVS_FULL_TAG", "v0.1"),
         "ours-chatlist": ("uikit-chat-list", "UVS_CHATLIST_TAG", CHATLIST_TAG)}
