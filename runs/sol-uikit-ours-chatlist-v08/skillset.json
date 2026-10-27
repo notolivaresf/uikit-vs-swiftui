@@ -1,0 +1,23 @@
+{
+  "kind": "ours-chatlist",
+  "installed": true,
+  "install_dirs": [
+    ".claude/skills",
+    ".agents/skills"
+  ],
+  "skills": [
+    {
+      "folder": "uikit-chat-list",
+      "name": "uikit-chat-list",
+      "source": "git tag v0.8.0 of /Users/amazinghumans/olivares-burgos/uikit-skill",
+      "tag": "v0.8.0",
+      "commit": "ca01e2a15cc209fdbd7ff54d5cd1505ff9ccefb0",
+      "version": "0.8.0",
+      "hash": "a97884b5cf63908681ff76729457342d5cdac47da5d03a2d88f1de97f0155bbf",
+      "file_count": 3
+    }
+  ],
+  "expected_names": [
+    "uikit-chat-list"
+  ]
+}

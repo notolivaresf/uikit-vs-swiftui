@@ -1,0 +1,575 @@
+{
+  "device": "iPhone 12, iOS 26.0",
+  "iterations_per_test": {
+    "default": 3,
+    "testFling": 1,
+    "testMemory": 1
+  },
+  "launch_ms": {
+    "cold_instruments_app_launch": {
+      "median": null,
+      "max": null,
+      "n": 0,
+      "missing": 0
+    },
+    "freshly_installed": true,
+    "launch_trace_mode": "template",
+    "repeated_xctest_launch": null
+  },
+  "time_to_40_rows_ms": {
+    "cold_app": {
+      "median": 163.0,
+      "max": 163.0,
+      "n": 1,
+      "missing": 0
+    },
+    "repeated_app": {
+      "median": 637.0,
+      "max": 656.0,
+      "n": 3,
+      "missing": 0
+    },
+    "repeated_xctest_clock_upper_bound": 5757.9
+  },
+  "fling": {
+    "instruments": null,
+    "xctest_fps_deceleration": null,
+    "xctest_fps_dragging": null,
+    "xctest_hitch_metrics": {},
+    "cpu_s": null
+  },
+  "jump": {
+    "app_ms": {
+      "median": 47.0,
+      "max": 68.0,
+      "n": 3,
+      "missing": 0
+    },
+    "drift_pt": {
+      "median": 0.0,
+      "max": 0.0,
+      "n": 3,
+      "missing": 0
+    },
+    "xctest_clock_upper_bound_ms": 417.6
+  },
+  "load_older": {
+    "app_ms": {
+      "median": 50.0,
+      "max": 50.0,
+      "n": 3,
+      "missing": 0
+    },
+    "drift_pt": {
+      "median": 0.0,
+      "max": 0.0,
+      "n": 3,
+      "missing": 0
+    },
+    "xctest_clock_upper_bound_ms": 403.4
+  },
+  "stream": {
+    "instruments_tap_to_stream_done": null,
+    "messages_added": {
+      "median": 600.0,
+      "max": 600.0,
+      "n": 1,
+      "missing": 0
+    },
+    "xctest_hitch_metrics": {},
+    "ends_pinned": "yes",
+    "cpu_s": 7.235
+  },
+  "text_size": {
+    "at_bottom": {
+      "relayout_ms": {
+        "median": 50.0,
+        "max": 53.0,
+        "n": 9,
+        "missing": 0
+      },
+      "stays_pinned": "yes",
+      "label_changed_every_step": "yes",
+      "xctest_hitch_metrics": {}
+    },
+    "mid_scroll": {
+      "relayout_ms": {
+        "median": 49.0,
+        "max": 52.0,
+        "n": 9,
+        "missing": 0
+      },
+      "drift_pt": {
+        "median": 0.0,
+        "max": 0.0,
+        "n": 6,
+        "missing": 3
+      },
+      "label_changed_every_step": "8 of 9",
+      "xctest_hitch_metrics": {}
+    }
+  },
+  "rotation": {
+    "at_bottom": {
+      "stays_pinned": "yes",
+      "xctest_hitch_metrics": {}
+    },
+    "at_2500": {
+      "drift_pt": {
+        "median": 0.0,
+        "max": 0.0,
+        "n": 2,
+        "missing": 0
+      },
+      "round_trip_drift_pt": {
+        "median": 0.0,
+        "max": 0.0,
+        "n": 1,
+        "missing": 0
+      },
+      "xctest_hitch_metrics": {}
+    }
+  },
+  "boost_burst": {
+    "stays_pinned": "yes",
+    "room_moved_so_boosts_landed": "yes",
+    "xctest_hitch_metrics": {}
+  },
+  "text_selection_and_context_menu": {
+    "context_menu": "yes",
+    "text_selection": "yes",
+    "selection_on_long_press": "no"
+  },
+  "memory_mb": {
+    "peak_footprint": 63.72,
+    "growth_over_scenario": 57.69,
+    "footprint_at_end": 57.69,
+    "instruments_allocations_from_launch": null
+  },
+  "drift_note": "drift_pt missing = a different row ended up at the top (moved by at least a row)",
+  "all_xctest_metrics": {
+    "testJumpTo2500": {
+      "Clock Monotonic Time (s)": {
+        "median": 0.41758536900000004,
+        "min": 0.413008621,
+        "max": 0.43943685200000004,
+        "n": 3
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 387620.129,
+        "min": 384142.999,
+        "max": 492359.635,
+        "n": 3
+      },
+      "CPU Time (bench) (s)": {
+        "median": 0.06891280000000001,
+        "min": 0.063732655,
+        "max": 0.08534240200000001,
+        "n": 3
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 45844.736,
+        "min": 44468.48,
+        "max": 45926.656,
+        "n": 3
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 153341.209,
+        "min": 152687.846,
+        "max": 195633.02,
+        "n": 3
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 43600.128,
+        "min": 43305.216,
+        "max": 43698.432,
+        "n": 3
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": -507.904,
+        "min": -524.288,
+        "max": 1392.64,
+        "n": 3
+      }
+    },
+    "testLiveStream": {
+      "Clock Monotonic Time (s)": {
+        "median": 29.944580461,
+        "min": 29.944580461,
+        "max": 29.944580461,
+        "n": 1
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 35098689.131,
+        "min": 35098689.131,
+        "max": 35098689.131,
+        "n": 1
+      },
+      "CPU Time (bench) (s)": {
+        "median": 7.235168935000001,
+        "min": 7.235168935000001,
+        "max": 7.235168935000001,
+        "n": 1
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 63719.776,
+        "min": 63719.776,
+        "max": 63719.776,
+        "n": 1
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 57690.464,
+        "min": 57690.464,
+        "max": 57690.464,
+        "n": 1
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 14465488.975,
+        "min": 14465488.975,
+        "max": 14465488.975,
+        "n": 1
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": 57690.464,
+        "min": 57690.464,
+        "max": 57690.464,
+        "n": 1
+      }
+    },
+    "testLoadOlder": {
+      "Clock Monotonic Time (s)": {
+        "median": 0.40342573200000004,
+        "min": 0.384777333,
+        "max": 0.40688113000000004,
+        "n": 3
+      },
+      "CPU Instructions Retired (bench) (kI)": {
+        "median": 227328.096,
+        "min": 227224.096,
+        "max": 250444.689,
+        "n": 3
+      },
+      "CPU Time (bench) (s)": {
+        "median": 0.045209511,
+        "min": 0.035722111,
+        "max": 0.047652127,
+        "n": 3
+      },
+      "Memory Peak Physical (bench) (kB)": {
+        "median": 42191.128,
+        "min": 42191.128,
+        "max": 42273.048,
+        "n": 3
+      },
+      "CPU Cycles (bench) (kC)": {
+        "median": 91915.52,
+        "min": 89924.511,
+        "max": 105014.564,
+        "n": 3
+      },
+      "Absolute Memory Physical (bench) (kB)": {
+        "median": 42174.744,
+        "min": 42174.744,
+        "max": 42256.664,
+        "n": 3
+      },
+      "Memory Physical (bench) (kB)": {
+        "median": 114.688,
+        "min": 114.688,
+        "max": 196.608,
+        "n": 3
+      }
+    },
+    "testTimeTo40Rows": {
+      "Clock Monotonic Time (s)": {
+        "median": 5.757859436,
+        "min": 5.706901438,
+        "max": 6.823689942000001,
+        "n": 3
+      }
+    },
+    "testBoostBurst": {
+      "Clock Monotonic Time (s)": {
+        "median": 2.558831853,
+        "min": 2.558831853,
+        "max": 2.558831853,
+        "n": 1
+      }
+    },
+    "testRotationAt2500": {
+      "Clock Monotonic Time (s)": {
+        "median": 3.134929495,
+        "min": 3.134929495,
+        "max": 3.134929495,
+        "n": 1
+      }
+    },
+    "testRotationAtBottom": {
+      "Clock Monotonic Time (s)": {
+        "median": 3.439261466,
+        "min": 3.439261466,
+        "max": 3.439261466,
+        "n": 1
+      }
+    },
+    "testTextSizeAtBottom": {
+      "Clock Monotonic Time (s)": {
+        "median": 3.3332772860000004,
+        "min": 3.3064922730000004,
+        "max": 3.3475886640000003,
+        "n": 3
+      }
+    },
+    "testTextSizeMidScroll": {
+      "Clock Monotonic Time (s)": {
+        "median": 3.37872144,
+        "min": 3.3774594600000003,
+        "max": 13.355334424,
+        "n": 3
+      }
+    }
+  },
+  "all_results": {
+    "testJumpTo2500": [
+      {
+        "app_ms": 68,
+        "drift_pt": 0,
+        "top": 2500,
+        "y": 0
+      },
+      {
+        "app_ms": 47,
+        "drift_pt": 0,
+        "top": 2500,
+        "y": 0
+      },
+      {
+        "app_ms": 45,
+        "drift_pt": 0,
+        "top": 2500,
+        "y": 0
+      }
+    ],
+    "testLiveStream": [
+      {
+        "added": 600,
+        "loaded": 316,
+        "pinned": true
+      }
+    ],
+    "testLoadOlder": [
+      {
+        "app_ms": 50,
+        "drift_pt": 0,
+        "top_after": 49998,
+        "top_before": 49998
+      },
+      {
+        "app_ms": 35,
+        "drift_pt": 0,
+        "top_after": 49998,
+        "top_before": 49998
+      },
+      {
+        "app_ms": 50,
+        "drift_pt": 0,
+        "top_after": 49998,
+        "top_before": 49998
+      }
+    ],
+    "testTimeTo40Rows": [
+      {
+        "app_ms": 656,
+        "loaded": 40
+      },
+      {
+        "app_ms": 622,
+        "loaded": 40
+      },
+      {
+        "app_ms": 637,
+        "loaded": 40
+      }
+    ],
+    "testBoostBurst": [
+      {
+        "pinned": true,
+        "room_moved": true
+      }
+    ],
+    "testRotationAt2500": [
+      {
+        "drift_landscape_pt": 0,
+        "drift_portrait_pt": 0,
+        "drift_round_trip_pt": 0,
+        "top_before": 2500,
+        "top_landscape": 2500,
+        "top_portrait": 2500
+      }
+    ],
+    "testRotationAtBottom": [
+      {
+        "pinned_landscape": true,
+        "pinned_portrait": true
+      }
+    ],
+    "testTextSelectionAndContextMenu": [
+      {
+        "context_menu": true,
+        "selection_on_double_tap": true,
+        "selection_on_long_press": false,
+        "text_selection": true
+      }
+    ],
+    "testTextSizeAtBottom": [
+      {
+        "steps": [
+          {
+            "app_ms": 53,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 44,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 40,
+            "label_changed": true,
+            "pinned": true
+          }
+        ]
+      },
+      {
+        "steps": [
+          {
+            "app_ms": 40,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 52,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 52,
+            "label_changed": true,
+            "pinned": true
+          }
+        ]
+      },
+      {
+        "steps": [
+          {
+            "app_ms": 48,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 51,
+            "label_changed": true,
+            "pinned": true
+          },
+          {
+            "app_ms": 50,
+            "label_changed": true,
+            "pinned": true
+          }
+        ]
+      }
+    ],
+    "testTextSizeMidScroll": [
+      {
+        "steps": [
+          {
+            "app_ms": 52,
+            "drift_pt": null,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2500
+          },
+          {
+            "app_ms": 40,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2499
+          },
+          {
+            "app_ms": 39,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2499
+          }
+        ]
+      },
+      {
+        "steps": [
+          {
+            "app_ms": 50,
+            "drift_pt": null,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2500
+          },
+          {
+            "app_ms": 50,
+            "drift_pt": 0,
+            "label_changed": false,
+            "top_after": 2499,
+            "top_before": 2499
+          },
+          {
+            "app_ms": 49,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2499
+          }
+        ]
+      },
+      {
+        "steps": [
+          {
+            "app_ms": 41,
+            "drift_pt": null,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2500
+          },
+          {
+            "app_ms": 47,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2499
+          },
+          {
+            "app_ms": 50,
+            "drift_pt": 0,
+            "label_changed": true,
+            "top_after": 2499,
+            "top_before": 2499
+          }
+        ]
+      }
+    ],
+    "testLaunchState": [
+      {
+        "app_ms": 163,
+        "loaded": 40
+      }
+    ]
+  },
+  "missing": [
+    "cold launch",
+    "fling fps (trace)",
+    "fling hitches (trace)",
+    "fling cpu",
+    "stream fps (trace)",
+    "stream hitches (trace)"
+  ]
+}
