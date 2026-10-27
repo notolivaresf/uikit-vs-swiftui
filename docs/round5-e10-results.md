@@ -1,6 +1,6 @@
 # Round 5, E10: validation round 4 with skill v0.9.0
 
-Run 27 Oct (UTC; local evening of 26 Oct). Same method as E9 (`docs/round5-e9-results.md`, runbook `docs/round5-e7-runbook.md`), strictly one thing at a time: Opus build (nothing scoring), three scored passes, the Opus control re-measured in the same sitting, then one Sol attempt. Nothing else ran on the two kept simulators (`uvs-r3-a`, `uvs-r3-b`) while scoring ran. Skill `uikit-chat-list` v0.9.0, installed alone; the Opus init skill list was exactly `uikit-chat-list`. Prompt unchanged. Raw data: `runs/opus-uikit-ours-chatlist-v09/` (meta, transcript), the Sol stub in `runs/sol-uikit-ours-chatlist-v09/`; scored passes and the control re-measure are in the local `~/uvs-builds/e10/` (not committed).
+Run 27 Oct (UTC; local evening of 26 Oct). Same method as E9 (`docs/round5-e9-results.md`, runbook `docs/round5-e7-runbook.md`), strictly one thing at a time: Opus build (nothing scoring), three scored passes, the Opus control re-measured in the same sitting, then one Sol attempt. Nothing else ran on the two kept simulators (`uvs-r3-a`, `uvs-r3-b`) while scoring ran. Skill `uikit-chat-list` v0.9.0, installed alone; the Opus init skill list was exactly `uikit-chat-list`. Prompt unchanged. Raw data: scored passes in `runs/opus-uikit-ours-chatlist-v09/e10-sim/`, control re-measure in `runs/e10-control-quiet/`; meta, transcript and the Sol stub stay local under `runs/` (their meta files hold home paths).
 
 ## In plain words
 
