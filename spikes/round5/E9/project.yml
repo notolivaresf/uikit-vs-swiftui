@@ -1,0 +1,172 @@
+name: E9Spike
+options:
+  deploymentTarget:
+    iOS: "18.0"
+  defaultConfig: Release
+  createIntermediateGroups: true
+packages:
+  CampfireKit:
+    path: ../../../CampfireKit
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+targetTemplates:
+  E9:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        excludes: [Info.plist]
+      - path: Shared
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        INFOPLIST_FILE: App/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Campfire
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+targets:
+  # The E9 Opus build (skill v0.8.0) as shipped, plus the probe.
+  E9Shipped:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9Shipped
+  # Text size fix: a row showing less than 1 pt below the header does not count as the top row.
+  E9TopFix:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9TopFix
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TOP_FIX"
+  # Text size fix, other route: row tops and bottoms snapped to device pixels in the layout (as the control does).
+  E9PixelTops:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9PixelTops
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) PIXEL_TOPS"
+  # Cell setup skips the text and frame of a text view when they are unchanged (as the control does for text).
+  E9CellSkip:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9CellSkip
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) CELL_SKIP"
+  # Memory: cell prefetching off (the control turns it off).
+  E9NoPrefetch:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9NoPrefetch
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) NO_PREFETCH"
+  # Prefetching off and unchanged text skipped together.
+  E9CellSkipNoPrefetch:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9CellSkipNoPrefetch
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) CELL_SKIP NO_PREFETCH"
+  # Text views on TextKit 1 (as the control), measurer unchanged.
+  E9TK1:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9TK1
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TK1"
+  # TextKit 1 text views and pixel-snapped row edges together (the candidate fix set).
+  E9TK1PixelTops:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9TK1PixelTops
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TK1 PIXEL_TOPS"
+  # The full TextKit 1 pairing (text views and measurer) with pixel-snapped row edges.
+  E9TK1Pair:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9TK1Pair
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TK1 TK1_MEASURE PIXEL_TOPS"
+  # The full fix set: TextKit 1 pairing, pixel-snapped row edges, prefetching off.
+  E9Fix:
+    templates: [E9]
+    settings:
+      base:
+        PRODUCT_NAME: E9Fix
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TK1 TK1_MEASURE PIXEL_TOPS NO_PREFETCH"
+  # The Opus control (Round 2 tree) from the E8 spike, with its probe hooks.
+  E9Ctrl:
+    type: application
+    platform: iOS
+    sources:
+      - path: Control
+        excludes: [Info.plist]
+      - path: Shared
+    dependencies:
+      - package: CampfireKit
+        product: CampfireKit
+    settings:
+      base:
+        INFOPLIST_FILE: Control/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        PRODUCT_BUNDLE_IDENTIFIER: campfire.bench
+        PRODUCT_NAME: E9Ctrl
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+      configs:
+        Release:
+          DEPLOYMENT_POSTPROCESSING: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_STYLE: all
+          DEAD_CODE_STRIPPING: YES
+schemes:
+  E9Fix:
+    build: { targets: { E9Fix: all } }
+    run: { config: Release }
+  E9TK1Pair:
+    build: { targets: { E9TK1Pair: all } }
+    run: { config: Release }
+  E9TK1:
+    build: { targets: { E9TK1: all } }
+    run: { config: Release }
+  E9TK1PixelTops:
+    build: { targets: { E9TK1PixelTops: all } }
+    run: { config: Release }
+  E9NoPrefetch:
+    build: { targets: { E9NoPrefetch: all } }
+    run: { config: Release }
+  E9CellSkipNoPrefetch:
+    build: { targets: { E9CellSkipNoPrefetch: all } }
+    run: { config: Release }
+  E9PixelTops:
+    build: { targets: { E9PixelTops: all } }
+    run: { config: Release }
+  E9TopFix:
+    build: { targets: { E9TopFix: all } }
+    run: { config: Release }
+  E9CellSkip:
+    build: { targets: { E9CellSkip: all } }
+    run: { config: Release }
+  E9Shipped:
+    build: { targets: { E9Shipped: all } }
+    run: { config: Release }
+  E9Ctrl:
+    build: { targets: { E9Ctrl: all } }
+    run: { config: Release }
