@@ -68,6 +68,12 @@ def skill_name(files, folder):
     return m.group(1)
 
 
+def tilde(path):
+    """Home-relative form (~/...) so records never carry the home path."""
+    home = os.path.expanduser("~")
+    return "~" + path[len(home):] if path.startswith(home + os.sep) else path
+
+
 def ours(kind):
     folder, tag_env, default_tag = OURS[kind]
     repo = os.environ.get("UVS_SKILL_REPO", os.path.expanduser("~/olivares-burgos/uikit-skill"))
@@ -91,7 +97,7 @@ def ours(kind):
     except ValueError:
         plugin_version = None
     return [dict(folder=folder, name=skill_name(files, folder), files=files,
-                 source="git tag %s of %s" % (tag, repo), tag=tag, commit=commit,
+                 source="git tag %s of %s" % (tag, tilde(repo)), tag=tag, commit=commit,
                  version=plugin_version or tag)]
 
 
@@ -136,7 +142,7 @@ def apple():
                 p = os.path.join(root, n)
                 files[name + "/" + os.path.relpath(p, base)] = open(p, "rb").read()
         out.append(dict(folder=name, name=skill_name(files, name), files=files,
-                        source="local export " + d, tag=None, commit=None, version=os.path.basename(d)))
+                        source="local export " + tilde(d), tag=None, commit=None, version=os.path.basename(d)))
     return out
 
 

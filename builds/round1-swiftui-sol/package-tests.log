@@ -1,5 +1,5 @@
 Building for production...
-[0/7] /Users/amazinghumans/uvs-builds/sol-swiftui/CampfireKit/.build/arm64-apple-macosx/release/CampfireKitPackageTests.derived/runner.swift
+[0/7] ~/uvs-builds/sol-swiftui/CampfireKit/.build/arm64-apple-macosx/release/CampfireKitPackageTests.derived/runner.swift
 [1/7] Write sources
 [4/7] Write swift-version--32010AED7ABC631F.txt
 [6/8] Compiling CampfireKit Generator.swift
