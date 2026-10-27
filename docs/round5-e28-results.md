@@ -87,3 +87,53 @@ So E26's pass was not pure luck on checks, wall time and the hung-test fix: the 
 1. thin4's time fix and check result are repeatable (two of two Opus builds: 13 of 13, wall under the bar, no hung run).
 2. The list-row speed of an Opus thin4 build is not settled: E26 beat the control by 43 to 59 % on load older and text size, E28 is 11 to 18 % worse. Nothing in thin4 touches the list code, so read this as build-to-build spread until a third sample says otherwise.
 3. Next: a third Opus thin4 sample, scored on `uvs-r3-a` like E26, or re-score this build's app on `uvs-r3-a` to rule out the simulator.
+
+## Re-score: simulator vs build
+
+Run 27 Oct (local), no new agent build. Question: is E28's miss on load older (+18 %) and text size mid-list (+11 %) the build or the simulator? Method as in E26 and E28: `Harness/record.sh` on the build's Release simulator app, three passes, scored with `Harness/scorecard.py --sim` (13 of 13 in every pass), median of three; the Opus control re-measured in the same sitting with `Harness/round3-baseline.sh uikit-swift-opus --runs 3`. Raw data: `runs/e29-rescore/` (`e28-on-a/`, `e26-on-b/`, `control-on-a/`).
+
+One fact found on the way: the control's bench folder is pinned to `uvs-r3-a` (its `.bench/sim` file says `a`). So in E28 the build ran on `uvs-r3-b` while the control it was compared with always ran on `uvs-r3-a`. The re-score puts the build on the control's simulator.
+
+### 2x2, median of three passes (ms unless noted)
+
+| Row | E28 on r3-b (original) | E28 on r3-a (re-score) | E26 on r3-a (original) | E26 on r3-b (re-score) |
+|---|---|---|---|---|
+| Load older | 45 | **44** | 17 | 16 |
+| Text size, bottom | 45 | 45 | 22 | 26 |
+| Text size, mid-list | 50 | 44 | 25 | 26 |
+| First 40 rows, cold | 152 | 158 | 122 | 124 |
+| First 40 rows, repeated | 617 | 621 | 496 | 495 |
+
+Per-pass values for the re-scores: E28 on r3-a: older [44, 46, 38], bottom [45, 45, 50], mid [44, 46, 44], cold [158, 157, 162], repeated [621, 622, 620]. E26 on r3-b: older [16, 16, 27], bottom [27, 21, 26], mid [23, 26, 26], cold [119, 124, 125], repeated [495, 498, 494].
+
+### Each one's control (the control always runs on r3-a)
+
+| Row | Control, E28 sitting | Control, E26 sitting | Control, re-score sitting (this one) |
+|---|---|---|---|
+| Load older | 38 | 41 | 39 [34, 39, 39] |
+| Text size, bottom | 43 | 39 | 44 [46, 44, 42] |
+| Text size, mid-list | 45 | 44 | 48 [48, 48, 51] |
+| First 40 rows, cold | 166 | 163 | 164 [164, 160, 172] |
+| First 40 rows, repeated | 588 | 590 | 596 [590, 596, 606] |
+
+### Build against the re-score control (same sitting)
+
+| Row | E28 on r3-a vs control | E26 on r3-b vs control |
+|---|---|---|
+| Load older | 44 vs 39: **+13 %** | 16 vs 39: -59 % |
+| Text size, bottom | 45 vs 44: +2 % | 26 vs 44: -41 % |
+| Text size, mid-list | 44 vs 48: -8 % | 26 vs 48: -46 % |
+| First 40 rows, cold | 158 vs 164: -4 % | 124 vs 164: -24 % |
+| First 40 rows, repeated | 621 vs 596: +4 % | 495 vs 596: -17 % |
+
+### What the re-score shows
+
+- **The gap is the build, not the simulator.** E28 scores about the same on both simulators (older 45 then 44, text mid 50 then 44, bottom 45 then 45); E26 scores about the same on both (older 17 then 16, text 22 / 25 then 26 / 26). Neither build moved with the simulator. The two builds differ by 2 to 3 times on load older and text size on either one.
+- The control did not move either (older 38, 41, 39; mid 45, 44, 48 across the three sittings).
+- On r3-a, the simulator E26 was scored on, E28 is still 44 ms on load older against E26's 17 and the control's 39.
+
+### Verdict on bar 3 for E28 on uvs-r3-a
+
+**E28 does not pass bar 3 on uvs-r3-a, by one row.** Load older is 44 ms against a same-sitting control of 39 ms, +13 % (the line is +10 %; the 5 ms gap is also about the spread between the control's own passes, 34 to 39). Text size mid-list, which missed on r3-b (+11 %), is now -8 % and passes; the other three rows pass. Checks are 13 of 13 and the wall time bar was already met, so the build misses the bar on a single speed row, and only just. Against the control from the E28 sitting (older 38) the same row would be +16 %.
+
+The E26 pass stands as a build result, not a simulator result: E26 on r3-b is as far ahead of the control as on r3-a. The spread between two thin4 Opus builds (E26 about 17 ms on load older, E28 about 44 ms) is build-to-build and is the thing left to explain; nothing in the skill touches the list code.
