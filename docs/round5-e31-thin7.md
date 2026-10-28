@@ -68,3 +68,34 @@ One build per arm and a slow service day (32.9 tokens per second for e31a): one 
 ## E31b (28 Oct, 10:15 to 10:40 UTC)
 
 `UVS_CHATLIST_TAG=v0.11.7-thin7 UVS_NAME_SUFFIX=-e31b ...` as e31a. Checks 13, 13, 13; stack ok. Wall 1,511 s, 68 turns, 13 builds (5 failed), 54.2k output tokens, 41.8 tokens/s, waiting 214 s, corrected 1,217 s. Stopwatch medians (ms) build [passes] against control in the same sitting: jump 20.0 [20.0, 25.0, 20.0] / 35.0; load older 16.7 [x3] / 35.0; text bottom 20.0 [x3] / 20.0; text mid 18.3 [x3] / 26.7. Raw data: `runs/sol-uikit-ours-chatlist-e31b/`, `runs/stopwatch-r5/e31b-thin7/`, `e31b-control-sol/`.
+
+## E31c (28 Oct, 11:08 to 11:34 UTC)
+
+Checks 13, 13, 13; stack ok. Wall 1,597 s, 60 turns, 14 builds (3 failed), 55.9k output tokens, 37.8 tokens/s, waiting 117 s, corrected 1,153 s. Stopwatch medians (ms) build [passes] / control in the same sitting: jump 18.3 [18.3, 18.3, 20.0] / 33.3; load older 15.0 [16.7, 15.0, 15.0] / 33.3; text bottom 23.3 [x3] / 20.0; text mid 21.7 [21.7, 23.3, 21.7] / 28.3. Raw data: `runs/sol-uikit-ours-chatlist-e31c/`, `runs/stopwatch-r5/e31c-thin7/`, `e31c-control-sol/`.
+
+## Median of three (e31a, e31b, e31c)
+
+| Run | Checks (3 passes) | Wall (s) | Turns | Builds (failed) | Output tokens | Tokens/s | Waiting (s) | Corrected (s) | Jump | Load older | Text bottom | Text mid |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| e31a | 13 x3 | 1,922 | 72 | 13 (3) | 60.4k | 32.9 | 81 | 1,200 | 18.3 | 16.7 | 18.3 | 21.7 |
+| e31b | 13 x3 | 1,511 | 68 | 13 (5) | 54.2k | 41.8 | 214 | 1,217 | 20.0 | 16.7 | 20.0 | 18.3 |
+| e31c | 13 x3 | 1,597 | 60 | 14 (3) | 55.9k | 37.8 | 117 | 1,153 | 18.3 | 15.0 | 23.3 | 21.7 |
+| **Median of three** | 13 x3 | **1,597** | 68 | 13 (3) | 55.9k | 37.8 | 117 | **1,200** | **18.3** | **16.7** | **20.0** | **21.7** |
+| Control, same sitting (median of the three sittings' medians) | | | | | | | | | 35.0 | 33.3 | 20.0 | 28.3 |
+
+Simulator scorecard medians for e31b / e31c: first 40 cold 138 / 136 ms, repeated 586 / 586 ms, stream CPU 6.7 / 7.5 s, app-reported jump 17 / 14, load older 10 / 8, text bottom 17 / 18, text mid 15 / 16 ms, memory 56.8 / 52.8 MB, app size 0.72 / 0.74 MB.
+
+## Against the bars (median of three)
+
+| Bar | Result |
+|---|---|
+| 1. 13 of 13 | **Yes**, all nine passes |
+| 2. Wall at most 1,491 s, raw and corrected | Corrected **Yes** (1,200 s, -20 %). Raw **No** (1,597 s, +7 % over the bar, 106 s); only e31b (1,511 s, 20 s over) came close, and none of the three is under 1,491 s. Model speed was 32.9 to 41.8 tokens/s against 54.0 for the 27 Oct controls, so the raw miss is service speed. |
+| 3. No stopwatch row slower than control by more than max(10 %, 17 ms) | **Yes**: jump -16.7 ms, load older -16.6, text bottom 0.0, text mid -6.6. Worst single build: e31c text bottom 23.3 against 20.0 (+3.3). |
+
+## Rerun loop and downloads
+
+- **Downloads: stayed gone.** None of e31a, e31b, e31c ran a clone, curl, web fetch or image tool.
+- **Live-stream rerun loop: mostly gone.** Test commands per build: 6, 8, 8. No build reran the live-stream test five or six times as E30 did. e31b ran the stream-pinned test on its own twice (after two whole-suite runs); e31c reran the reference geometry test four times. Waiting on commands: 81, 214, 117 s (thin6 median 236 s). Failed builds 3, 5, 3 (thin6 9).
+
+Verdict: FAIL on bar 2 raw wall (median 1,597 s against 1,491 s); bars 1 and 3 and the speed-corrected wall pass.
