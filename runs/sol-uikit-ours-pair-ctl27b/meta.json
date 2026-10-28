@@ -1,0 +1,69 @@
+{
+  "model": "sol",
+  "side": "uikit",
+  "requested_model": "gpt-6.1-sol",
+  "model_version": "gpt-6.1-sol",
+  "effort": "high",
+  "cli_version": "codex-cli 0.162.1",
+  "level": "L2",
+  "start": "2026-10-28T00:06:51+00:00",
+  "stop": "2026-10-28T00:27:35+00:00",
+  "wall_seconds": 1244,
+  "idle_gaps_over_20min": {
+    "count": 0,
+    "seconds": 0,
+    "gaps_seconds": []
+  },
+  "exit_code": 0,
+  "time_limit_s": 7200,
+  "stopped_by_limit": false,
+  "commits": 0,
+  "transcript": "transcript.jsonl",
+  "turns": 74,
+  "builds_total": 16,
+  "builds_failed": 8,
+  "skillset": {
+    "kind": "ours-pair",
+    "installed": true,
+    "install_dirs": [
+      ".claude/skills",
+      ".agents/skills"
+    ],
+    "skills": [
+      {
+        "folder": "uikit-specialist",
+        "name": "uikit-specialist",
+        "source": "vendored in this repo: skills/uikit/uikit-specialist",
+        "tag": "v0.3-pair",
+        "commit": "131b2a90a78a2b9359de728f021ba8db146c8f58",
+        "version": "v0.3-pair",
+        "hash": "d0efa31320575071a130ddf8649dba282c7b928af8ae906e9d639c98ea3a9974",
+        "file_count": 16
+      },
+      {
+        "folder": "uikit-whats-new-27",
+        "name": "uikit-whats-new-27",
+        "source": "vendored in this repo: skills/uikit/uikit-whats-new-27",
+        "tag": "v0.3-pair",
+        "commit": "131b2a90a78a2b9359de728f021ba8db146c8f58",
+        "version": "v0.3-pair",
+        "hash": "0be4f5408dcf79409cedcd731ae1d9abd930e9b1c79d2a33956db63cb09b1334",
+        "file_count": 11
+      }
+    ],
+    "expected_names": [
+      "uikit-specialist",
+      "uikit-whats-new-27"
+    ]
+  },
+  "stack": "uikit",
+  "skills_arm": "ours-pair",
+  "inputs_tag": "v2-inputs",
+  "inputs_commit": "80cda43e4e09fa7be256938a568252f5fd8ea30b",
+  "stack_line": "Stack: UIKit only, no SwiftUI",
+  "skill_sentence": "Agent skills are installed in this project; use any that help.",
+  "codex_config": {
+    "host_skills_disabled": 24,
+    "config_sha256": "9f6364a63c6db5488057a3086577cb9e05cd20e91e3971970ac3ea013101d4a8"
+  }
+}
