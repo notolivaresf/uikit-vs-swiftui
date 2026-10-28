@@ -42,7 +42,7 @@ Stopwatch medians in the same sitting (ms, lower is faster), thin7 against the S
 | Text size at the bottom | 20.0 | 20.0 |
 | Text size mid-list | 21.7 | 28.3 |
 
-The ctl28b build itself read 65.0, 46.7, 25.0 and 40.0 ms on those rows. One bar was missed: raw wall against the old 1,491 s target (1,597 s), which the corrected wall passes. A control run at the same speed took 2,524 s, so a slow morning does not explain the gap.
+The ctl28b build itself read 65.0, 46.7, 25.0 and 40.0 ms on those rows. One bar was missed: raw wall against the old 1,491 s target (1,597 s), which the corrected wall passes. That miss comes from slow model service, not the skill: the control, run at the same speed, took 2,524 s, and every thin7 build beat it.
 
 ## Opus: e32 against earlier Opus builds and the Opus control
 
