@@ -1,0 +1,14 @@
+Measure                                         Yours     Baseline
+First 40 rows, cold                            215 ms            -  
+First 40 rows, repeated                        666 ms            -  
+Stream CPU                                     12.0 s            -  
+Jump to message 2,500                           65 ms            -  
+Load older                                      61 ms            -  
+Text size, at the bottom                        18 ms            -  
+Text size, mid-list                             32 ms            -  
+Peak memory                                   52.8 MB            -  
+App size                                      3.77 MB            -  
+
+Checks passed: 12 of 13
+Checks failed:
+  - Long-press a message: select any range of its text and copy it. The harness recognises selection by the system's text-selection menu (Look Up, Translate, Select All...) appearing after a long press or a double tap on the text
