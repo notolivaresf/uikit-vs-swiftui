@@ -1,0 +1,34 @@
+{
+  "kind": "ours-pair",
+  "installed": true,
+  "install_dirs": [
+    ".claude/skills",
+    ".agents/skills"
+  ],
+  "skills": [
+    {
+      "folder": "uikit-specialist",
+      "name": "uikit-specialist",
+      "source": "vendored in this repo: skills/uikit/uikit-specialist",
+      "tag": "v0.3-pair",
+      "commit": "131b2a90a78a2b9359de728f021ba8db146c8f58",
+      "version": "v0.3-pair",
+      "hash": "d0efa31320575071a130ddf8649dba282c7b928af8ae906e9d639c98ea3a9974",
+      "file_count": 16
+    },
+    {
+      "folder": "uikit-whats-new-27",
+      "name": "uikit-whats-new-27",
+      "source": "vendored in this repo: skills/uikit/uikit-whats-new-27",
+      "tag": "v0.3-pair",
+      "commit": "131b2a90a78a2b9359de728f021ba8db146c8f58",
+      "version": "v0.3-pair",
+      "hash": "0be4f5408dcf79409cedcd731ae1d9abd930e9b1c79d2a33956db63cb09b1334",
+      "file_count": 11
+    }
+  ],
+  "expected_names": [
+    "uikit-specialist",
+    "uikit-whats-new-27"
+  ]
+}

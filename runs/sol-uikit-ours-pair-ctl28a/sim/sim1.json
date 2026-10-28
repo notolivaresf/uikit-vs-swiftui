@@ -1,0 +1,91 @@
+{
+  "quick": false,
+  "locks_ok": true,
+  "locks_changed": [],
+  "checks_passed": 13,
+  "checks_total": 13,
+  "checks_failed": [],
+  "measures": [
+    {
+      "key": "first40_cold",
+      "label": "First 40 rows, cold",
+      "unit": "ms",
+      "value": 209.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "first40_repeated",
+      "label": "First 40 rows, repeated",
+      "unit": "ms",
+      "value": 653.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "stream_cpu",
+      "label": "Stream CPU",
+      "unit": "s",
+      "value": 11.581,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "jump",
+      "label": "Jump to message 2,500",
+      "unit": "ms",
+      "value": 43.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "older",
+      "label": "Load older",
+      "unit": "ms",
+      "value": 35.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "text_bottom",
+      "label": "Text size, at the bottom",
+      "unit": "ms",
+      "value": 24.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "text_mid",
+      "label": "Text size, mid-list",
+      "unit": "ms",
+      "value": 40.0,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "memory",
+      "label": "Peak memory",
+      "unit": "MB",
+      "value": 58.018,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    },
+    {
+      "key": "app_size",
+      "label": "App size",
+      "unit": "MB",
+      "value": 3.89,
+      "best": null,
+      "met": null,
+      "skipped_in_quick": false
+    }
+  ]
+}
