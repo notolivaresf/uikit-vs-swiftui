@@ -76,3 +76,5 @@ Wall 1,938 s, 95 turns, 16 builds (9 failed), 0 commits, exit 0, not stopped by 
 1. thin6 holds what thin5 gained: 13 of 13 three times, every stopwatch row level with or better than the control, and the app-reported rows and memory a little better than thin5.
 2. Wall time is the only open bar, and E30 is further from it than E29: 1,938 s against 1,491 s, 14 % over even when corrected for speed. The extra cost is waiting on commands (370 s, 9 failed builds), not tokens.
 3. Against the best control run (1,244 s) every build misses; against the control median the spread of the controls (1,244 to 1,996 s) is wider than the gap, so one sample either way is weak evidence.
+
+Repeats (E30b, E30c) and the median of three: `docs/round5-e30-repeats.md`.

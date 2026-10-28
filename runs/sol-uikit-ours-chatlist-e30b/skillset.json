@@ -1,0 +1,23 @@
+{
+  "kind": "ours-chatlist",
+  "installed": true,
+  "install_dirs": [
+    ".claude/skills",
+    ".agents/skills"
+  ],
+  "skills": [
+    {
+      "folder": "uikit-chat-list",
+      "name": "uikit-chat-list",
+      "source": "git tag v0.11.6-thin6 of ~/olivares-burgos/uikit-skill",
+      "tag": "v0.11.6-thin6",
+      "commit": "087285f5328e25d756a0311a99bb3eb428a8b573",
+      "version": "0.9.0",
+      "hash": "b30d6b3dfb62615e81adf3e3cd713e9bd773158088e32c618d24953b677bc2bf",
+      "file_count": 1
+    }
+  ],
+  "expected_names": [
+    "uikit-chat-list"
+  ]
+}
