@@ -99,3 +99,17 @@ Simulator scorecard medians for e31b / e31c: first 40 cold 138 / 136 ms, repeate
 - **Live-stream rerun loop: mostly gone.** Test commands per build: 6, 8, 8. No build reran the live-stream test five or six times as E30 did. e31b ran the stream-pinned test on its own twice (after two whole-suite runs); e31c reran the reference geometry test four times. Waiting on commands: 81, 214, 117 s (thin6 median 236 s). Failed builds 3, 5, 3 (thin6 9).
 
 Verdict: FAIL on bar 2 raw wall (median 1,597 s against 1,491 s); bars 1 and 3 and the speed-corrected wall pass.
+
+## ctl28b: same-morning control (28 Oct, 12:03 to 12:45 UTC)
+
+`UVS_NAME_SUFFIX=-ctl28b UVS_TIME_LIMIT_S=7200 Harness/launch-build.sh sol uikit --skills ours-pair`, the same line as ctl28a, started right after e31c so the model ran at the same service speed as the thin7 builds. Scored the same way (stack ok, Release simulator build, three `record.sh --sim` passes on `uvs-r3-a`, stopwatch three passes with the Sol control alternating). Tokens per second and corrected time use the method that reproduces ctl28a (46.9 tok/s, 2,001 s) and e31c (37.8, 1,153 s). Raw data: `runs/sol-uikit-ours-pair-ctl28b/`, `runs/stopwatch-r5/ctl28b-ctl/`, `ctl28b-control-sol/`.
+
+| Run | Checks (3 passes) | Wall (s) | Turns | Builds (failed) | Output tokens | Tokens/s | Waiting (s) | Corrected (s) | Jump | Load older | Text bottom | Text mid |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ctl28a | 13 x3 | 2,268 | 119 | 22 (13) | 95.3k | 46.9 | 235 | 2,001 | 46.7 | 36.7 | 28.3 | 46.7 |
+| **ctl28b** | 12 x3 | **2,524** | 84 | 14 (0) | 77.0k | 34.4 | 286 | **1,712** | 65.0 | 46.7 | 25.0 | 40.0 |
+| thin7 median of three | 13 x3 | 1,597 | 68 | 13 (3) | 55.9k | 37.8 | 117 | 1,200 | 18.3 | 16.7 | 20.0 | 21.7 |
+
+ctl28b stopwatch passes (ms): jump 65.0 [66.7, 65.0, 65.0], load older 46.7 [50.0, 45.0, 46.7], text bottom 25.0 [23.3, 25.0, 26.7], text mid 40.0 [x3]; Sol control in the same sitting 35.0 / 31.7 / 20.0 / 31.7. The failed check in all three passes is the long-press context menu (Copy and Reply). Simulator scorecard medians: first 40 cold 223 ms, repeated 670 ms, stream CPU 10.7 s, app-reported jump 57, load older 48, text bottom 23, text mid 39 ms, memory 58.9 MB, app size 1.27 MB.
+
+**Same-morning control.** The control ran at 34.4 tokens per second, between e31a (32.9) and e31c (37.8), so the speed did not drift between the thin7 builds and the control. Against it, the thin7 median is 927 s faster raw (1,597 s against 2,524 s, -37 %) and 512 s faster corrected to 54.0 tok/s (1,200 s against 1,712 s, -30 %). Every thin7 build (1,511 to 1,922 s) beat ctl28b, and ctl28a (2,268 s) as well. The control used 77.0k tokens against 55.9k, 84 turns against 68, and its build was slower than the Sol control on all four stopwatch rows (jump +30.0 ms, load older +15.0, text bottom +5.0, text mid +8.3), where thin7 was faster on three and level on one. So the raw-wall gap to the 27 Oct control bar (1,491 s) is not explained by a slow morning alone: a control running at the same speed took 2,524 s.
