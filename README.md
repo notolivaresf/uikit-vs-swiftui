@@ -1,5 +1,9 @@
 # The Experiment
 
+## Round 5: a thinned chat-list skill
+
+A UIKit chat-list skill cut from 2,962 to 826 words and frozen at v1.0.0, scored against same-sitting controls with Sol and Opus. Write-up: [Round 5 summary](docs/round5-summary.md).
+
 ## Round 3: three hours to optimise
 
 Each of the six Round 2 builds went back to its agent for three hours to get faster and smaller. Write-up: [Round 3](docs/results-round3.md).
