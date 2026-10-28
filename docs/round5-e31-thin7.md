@@ -64,3 +64,7 @@ From the command lists in each `transcript.jsonl` (see `docs/round5-thin6-time-b
 | Rerun loop and downloads | Gone in e31a; present in ctl28a |
 
 One build per arm and a slow service day (32.9 tokens per second for e31a): one sample is weak evidence for the raw wall, but the counts that do not depend on speed (72 turns, 3 failed builds, 81 s waiting, 6 test commands, no downloads) all moved the right way. A repeat or two of e31a would settle bar 2.
+
+## E31b (28 Oct, 10:15 to 10:40 UTC)
+
+`UVS_CHATLIST_TAG=v0.11.7-thin7 UVS_NAME_SUFFIX=-e31b ...` as e31a. Checks 13, 13, 13; stack ok. Wall 1,511 s, 68 turns, 13 builds (5 failed), 54.2k output tokens, 41.8 tokens/s, waiting 214 s, corrected 1,217 s. Stopwatch medians (ms) build [passes] against control in the same sitting: jump 20.0 [20.0, 25.0, 20.0] / 35.0; load older 16.7 [x3] / 35.0; text bottom 20.0 [x3] / 20.0; text mid 18.3 [x3] / 26.7. Raw data: `runs/sol-uikit-ours-chatlist-e31b/`, `runs/stopwatch-r5/e31b-thin7/`, `e31b-control-sol/`.
