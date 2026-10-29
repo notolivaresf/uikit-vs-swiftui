@@ -1,0 +1,12 @@
+Measure                                         Yours     Baseline
+First 40 rows, cold                            127 ms            -  
+First 40 rows, repeated                        486 ms            -  
+Stream CPU                                      6.6 s            -  
+Jump to message 2,500                           16 ms            -  
+Load older                                      11 ms            -  
+Text size, at the bottom                        20 ms            -  
+Text size, mid-list                             17 ms            -  
+Peak memory                                   59.2 MB            -  
+App size                                      0.73 MB            -  
+
+Checks passed: 13 of 13

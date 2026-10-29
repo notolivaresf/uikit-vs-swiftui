@@ -1,0 +1,23 @@
+{
+  "kind": "ours-list",
+  "installed": true,
+  "install_dirs": [
+    ".claude/skills",
+    ".agents/skills"
+  ],
+  "skills": [
+    {
+      "folder": "uikit-list",
+      "name": "uikit-list",
+      "source": "git tag v1.1.0-general1 of ~/olivares-burgos/uikit-skill",
+      "tag": "v1.1.0-general1",
+      "commit": "37778cdd29dd1799e93e1ece4ec55a2e4d108b0d",
+      "version": "0.9.0",
+      "hash": "e6955bad14767bc3e487df73d354665a73c6e6070a6d96ddffaa77d816bf01ad",
+      "file_count": 1
+    }
+  ],
+  "expected_names": [
+    "uikit-list"
+  ]
+}

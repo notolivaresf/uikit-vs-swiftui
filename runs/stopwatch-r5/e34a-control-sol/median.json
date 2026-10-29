@@ -1,0 +1,61 @@
+{
+  "passes": 3,
+  "rows": {
+    "jump": {
+      "stopwatch_ms": 38.3,
+      "stopwatch_passes": [
+        38.3,
+        33.3,
+        40.0
+      ],
+      "app_ms": 32,
+      "app_passes": [
+        30,
+        32,
+        32
+      ]
+    },
+    "older": {
+      "stopwatch_ms": 38.3,
+      "stopwatch_passes": [
+        40.0,
+        38.3,
+        33.3
+      ],
+      "app_ms": 31,
+      "app_passes": [
+        32,
+        29,
+        31
+      ]
+    },
+    "text_bottom": {
+      "stopwatch_ms": 23.3,
+      "stopwatch_passes": [
+        23.3,
+        21.7,
+        23.3
+      ],
+      "app_ms": 19,
+      "app_passes": [
+        19,
+        19,
+        19
+      ]
+    },
+    "text_mid": {
+      "stopwatch_ms": 33.3,
+      "stopwatch_passes": [
+        33.3,
+        33.3,
+        33.3
+      ],
+      "app_ms": 30,
+      "app_passes": [
+        31,
+        30,
+        30
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "model": "sol",
+  "side": "uikit",
+  "requested_model": "gpt-6.1-sol",
+  "model_version": "gpt-6.1-sol",
+  "effort": "high",
+  "cli_version": "codex-cli 0.162.1",
+  "level": "L2",
+  "start": "2026-10-28T21:18:26+00:00",
+  "stop": "2026-10-28T21:39:42+00:00",
+  "wall_seconds": 1276,
+  "idle_gaps_over_20min": {
+    "count": 0,
+    "seconds": 0,
+    "gaps_seconds": []
+  },
+  "exit_code": 0,
+  "time_limit_s": 7200,
+  "stopped_by_limit": false,
+  "commits": 0,
+  "transcript": "transcript.jsonl",
+  "turns": 91,
+  "builds_total": 16,
+  "builds_failed": 0,
+  "skillset": {
+    "kind": "ours-list",
+    "installed": true,
+    "install_dirs": [
+      ".claude/skills",
+      ".agents/skills"
+    ],
+    "skills": [
+      {
+        "folder": "uikit-list",
+        "name": "uikit-list",
+        "source": "git tag v1.1.0-general1 of ~/olivares-burgos/uikit-skill",
+        "tag": "v1.1.0-general1",
+        "commit": "37778cdd29dd1799e93e1ece4ec55a2e4d108b0d",
+        "version": "0.9.0",
+        "hash": "e6955bad14767bc3e487df73d354665a73c6e6070a6d96ddffaa77d816bf01ad",
+        "file_count": 1
+      }
+    ],
+    "expected_names": [
+      "uikit-list"
+    ]
+  },
+  "stack": "uikit",
+  "skills_arm": "ours-list",
+  "inputs_tag": "v2-inputs",
+  "inputs_commit": "80cda43e4e09fa7be256938a568252f5fd8ea30b",
+  "stack_line": "Stack: UIKit only, no SwiftUI",
+  "skill_sentence": "Agent skills are installed in this project; use any that help.",
+  "codex_config": {
+    "host_skills_disabled": 24,
+    "config_sha256": "9f6364a63c6db5488057a3086577cb9e05cd20e91e3971970ac3ea013101d4a8"
+  }
+}
